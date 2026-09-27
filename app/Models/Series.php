@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 
 class Series extends Model
@@ -160,5 +161,23 @@ class Series extends Model
         }
 
         return $this->posterUrl();
+    }
+
+    public function reviews(): MorphMany
+    {
+        return $this->morphMany(Review::class, 'reviewable')->approved()->latest();
+    }
+
+    public function watchlists(): MorphMany
+    {
+        return $this->morphMany(Watchlist::class, 'watchable');
+    }
+
+    public function recalculateRating(): void
+    {
+        $avg = $this->reviews()->avg('rating') ?: 0;
+        $this->update([
+            'average_rating' => round($avg, 2),
+        ]);
     }
 }

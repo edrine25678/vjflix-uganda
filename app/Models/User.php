@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,6 +27,7 @@ class User extends Authenticatable
         'role',
         'profile_photo',
         'preferred_language',
+        'preferred_vj_id',
         'is_active',
         'provider_id',
     ];
@@ -111,5 +114,28 @@ class User extends Authenticatable
             ->where('progress_seconds', '>=', 10)
             ->limit($limit)
             ->get();
+    }
+
+    public function preferredVj(): BelongsTo
+    {
+        return $this->belongsTo(Vj::class, 'preferred_vj_id');
+    }
+
+    public function watchlists(): HasMany
+    {
+        return $this->hasMany(Watchlist::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function isInWatchlist(Model $watchable): bool
+    {
+        return $this->watchlists()
+            ->where('watchable_type', get_class($watchable))
+            ->where('watchable_id', $watchable->getKey())
+            ->exists();
     }
 }

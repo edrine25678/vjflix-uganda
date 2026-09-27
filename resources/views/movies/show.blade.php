@@ -92,10 +92,7 @@
                             </a>
                         @endif
 
-                        <button type="button" class="inline-flex items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 px-4 py-3.5 text-sm font-semibold text-slate-300 transition-all">
-                            <x-bi-plus-circle class="h-5 w-5 mr-2 text-slate-400" />
-                            My List
-                        </button>
+                        <x-watchlist-button type="movie" :id="$movie->id" size="lg" />
                     </div>
                 </div>
             </div>
@@ -157,6 +154,9 @@
                 </div>
             </section>
         @endif
+
+        <!-- Ratings & Reviews Section -->
+        <x-review-section :item="$movie" type="movie" />
     </main>
 
     <x-footer />

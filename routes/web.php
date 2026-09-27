@@ -7,11 +7,15 @@ use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
 use App\Http\Controllers\Admin\VjController as AdminVjController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SessionsController;
+use App\Http\Controllers\StreamController;
 use App\Http\Controllers\VelflixController;
 use App\Http\Controllers\VjController;
+use App\Http\Controllers\WatchlistController;
 use Illuminate\Support\Facades\Route;
 
 // Public Landing Page & Newsletter
@@ -56,6 +60,19 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [SessionsController::class, 'destroy'])->name('logout');
     Route::get('/movies', [VelflixController::class, 'index'])->name('velflix.index');
     Route::get('/movie/{watch}', [VelflixController::class, 'show'])->name('movies.show');
+
+    // Watchlist / My List
+    Route::get('/my-list', [WatchlistController::class, 'index'])->name('watchlist.index');
+    Route::post('/watchlist/toggle', [WatchlistController::class, 'toggle'])->name('watchlist.toggle');
+
+    // Ratings & Reviews
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+
+    // User Profile & Preferences
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
 // Admin CMS Console

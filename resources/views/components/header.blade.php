@@ -18,15 +18,15 @@
                 <a href="{{ route('velflix.index') }}" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors {{ request()->routeIs('velflix.index') ? 'text-amber-400 bg-slate-800/80 font-semibold' : '' }}">
                     Movies
                 </a>
-                <a href="/vjs" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors {{ request()->is('vjs*') ? 'text-amber-400 bg-slate-800/80 font-semibold' : '' }}">
-                    Ugandan VJs
-                </a>
                 <a href="/series" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors {{ request()->is('series*') ? 'text-amber-400 bg-slate-800/80 font-semibold' : '' }}">
                     Series
                 </a>
+                <a href="/vjs" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors {{ request()->is('vjs*') ? 'text-amber-400 bg-slate-800/80 font-semibold' : '' }}">
+                    Ugandan VJs
+                </a>
                 @auth
-                    <a href="/dashboard" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors {{ request()->is('dashboard*') ? 'text-amber-400 bg-slate-800/80 font-semibold' : '' }}">
-                        My Library
+                    <a href="{{ route('watchlist.index') }}" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors {{ request()->routeIs('watchlist.*') ? 'text-amber-400 bg-slate-800/80 font-semibold' : '' }}">
+                        My List
                     </a>
                 @endauth
             </nav>
@@ -64,9 +64,13 @@
                         </div>
 
                         <div class="py-1">
-                            <a href="/dashboard" class="flex items-center px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
-                                <x-bi-play-circle class="h-4 w-4 mr-2 text-amber-400" />
-                                Continue Watching & Library
+                            <a href="{{ route('watchlist.index') }}" class="flex items-center px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors {{ request()->routeIs('watchlist.*') ? 'text-amber-400 font-semibold' : '' }}">
+                                <x-bi-bookmark class="h-4 w-4 mr-2 text-amber-400" />
+                                My List & Saved
+                            </a>
+                            <a href="{{ route('profile.show') }}" class="flex items-center px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors {{ request()->routeIs('profile.*') ? 'text-amber-400 font-semibold' : '' }}">
+                                <x-bi-gear class="h-4 w-4 mr-2 text-amber-400" />
+                                Profile & Preferences
                             </a>
                             <a href="/vjs" class="flex items-center px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
                                 <x-bi-mic class="h-4 w-4 mr-2 text-amber-400" />

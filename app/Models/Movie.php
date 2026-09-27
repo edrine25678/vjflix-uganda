@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 
 class Movie extends Model
@@ -126,5 +127,26 @@ class Movie extends Model
     public function scopeTrending(Builder $query): Builder
     {
         return $query->where('trending', true)->published();
+    }
+
+    public function reviews(): MorphMany
+    {
+        return $this->morphMany(Review::class, 'reviewable')->approved()->latest();
+    }
+
+    public function watchlists(): MorphMany
+    {
+        return $this->morphMany(Watchlist::class, 'watchable');
+    }
+
+    public function recalculateRating(): void
+    {
+        $avg = $this->reviews()->avg('rating') ?: 0;
+        $count = $this->reviews()->count();
+
+        $this->update([
+            'average_rating' => round($avg, 2),
+            'ratings_count' => $count,
+        ]);
     }
 }

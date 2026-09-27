@@ -70,15 +70,17 @@
                         {{ $series->description ?: $series->synopsis }}
                     </p>
 
-                    <!-- Quick Start Button -->
-                    @if ($firstEpisode)
-                        <div class="mt-6 flex flex-wrap items-center justify-center md:justify-start gap-4">
+                    <!-- Action Buttons -->
+                    <div class="mt-6 flex flex-wrap items-center justify-center md:justify-start gap-4">
+                        @if ($firstEpisode)
                             <a href="{{ route('series.watch', [$series->slug, $series->seasons->first()->season_number, $firstEpisode->episode_number]) }}" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-6 py-3.5 text-sm font-extrabold text-black shadow-xl shadow-amber-500/20 hover:from-amber-400 hover:to-yellow-400 transition-all hover:scale-105">
                                 <x-bi-play-fill class="h-6 w-6 mr-1.5" />
                                 WATCH EPISODE 1 (S1 E1)
                             </a>
-                        </div>
-                    @endif
+                        @endif
+
+                        <x-watchlist-button type="series" :id="$series->id" size="lg" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -201,6 +203,9 @@
                 </div>
             </section>
         @endif
+
+        <!-- Ratings & Reviews Section -->
+        <x-review-section :item="$series" type="series" />
     </main>
 
     <x-footer />

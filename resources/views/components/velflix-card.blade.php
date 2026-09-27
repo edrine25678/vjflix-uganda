@@ -63,9 +63,13 @@
                 <x-bi-play-fill class="h-4 w-4 mr-1 text-amber-400" />
                 <span>Watch</span>
             </a>
-            <button type="button" class="text-slate-400 hover:text-amber-400 transition-colors" title="Save to My List">
-                <x-bi-plus-circle class="h-4 w-4" />
-            </button>
+            @if ($isModel)
+                <x-watchlist-button type="movie" :id="$movie->id" size="sm" :iconOnly="true" />
+            @else
+                <button type="button" class="text-slate-400 hover:text-amber-400 transition-colors" title="Save to My List">
+                    <x-bi-plus-circle class="h-4 w-4" />
+                </button>
+            @endif
         </div>
     </div>
 </div>

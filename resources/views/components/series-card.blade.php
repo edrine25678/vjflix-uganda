@@ -62,7 +62,7 @@
                 <x-bi-play-fill class="h-4 w-4 mr-1 text-amber-400" />
                 <span>Episodes</span>
             </a>
-            <span class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">HD Dubbed</span>
+            <x-watchlist-button type="series" :id="$series->id" size="sm" :iconOnly="true" />
         </div>
     </div>
 </div>
