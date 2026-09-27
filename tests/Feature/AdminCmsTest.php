@@ -50,6 +50,7 @@ test('admin can create a new movie translation', function () {
     $this->assertDatabaseHas('movies', [
         'title' => 'The Equalizer 3 (Luganda)',
         'vj_id' => $vj->id,
+        'video_url' => 'https://example.com/stream.mp4',
     ]);
 });
 

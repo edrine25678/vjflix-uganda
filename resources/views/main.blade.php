@@ -95,6 +95,66 @@
             </section>
         @endif
 
+        <!-- Continue Watching Shelf -->
+        @if (isset($continueWatching) && $continueWatching->isNotEmpty())
+            <section class="my-6">
+                <div class="mb-3 flex items-center justify-between">
+                    <h2 class="text-lg md:text-xl font-extrabold tracking-wide text-white flex items-center gap-2">
+                        <span class="w-1.5 h-5 rounded-full bg-amber-500 inline-block"></span>
+                        Continue Watching For {{ auth()->user()->name }} 🍿
+                    </h2>
+                </div>
+
+                <div class="flex overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth space-x-4">
+                    @foreach ($continueWatching as $item)
+                        @php
+                            $target = $item->watchable;
+                            $isMovie = $target instanceof \App\Models\Movie;
+                            $url = $isMovie 
+                                ? route('movies.show', $target->slug) . '#player'
+                                : ($target && $target->season && $target->season->series 
+                                    ? route('series.watch', [$target->season->series->slug, $target->season->season_number, $target->episode_number])
+                                    : '#');
+                            $poster = $isMovie ? $target->posterUrl() : ($target ? $target->thumbnailUrl() : '');
+                            $title = $isMovie ? $target->title : ($target ? $target->title : 'Episode');
+                            $subtitle = $isMovie ? ($target->vj ? $target->vj->stage_name : 'Luganda') : ($target && $target->season && $target->season->series ? $target->season->series->title . ' · S' . $target->season->season_number . ':E' . $target->episode_number : '');
+                        @endphp
+
+                        @if ($target)
+                            <div class="group relative flex flex-col overflow-hidden rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 transition-all duration-300 w-52 sm:w-60 flex-shrink-0 shadow-lg">
+                                <a href="{{ $url }}" class="relative block aspect-video w-full overflow-hidden bg-slate-800">
+                                    <img src="{{ $poster }}" alt="{{ $title }}" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div class="rounded-full bg-amber-500 p-2.5 text-black shadow-lg">
+                                            <x-bi-play-fill class="h-5 w-5" />
+                                        </div>
+                                    </div>
+                                    <!-- Progress Bar Overlay -->
+                                    <div class="absolute bottom-0 inset-x-0 h-1.5 bg-slate-950/80">
+                                        <div class="h-full bg-amber-500" style="width: {{ $item->percentage() }}%"></div>
+                                    </div>
+                                </a>
+
+                                <div class="p-3 flex flex-col justify-between flex-grow">
+                                    <div>
+                                        <a href="{{ $url }}" class="font-bold text-xs text-white truncate block group-hover:text-amber-400 transition-colors">
+                                            {{ $title }}
+                                        </a>
+                                        <p class="text-[11px] text-slate-400 truncate mt-0.5">{{ $subtitle }}</p>
+                                    </div>
+
+                                    <div class="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
+                                        <span class="text-amber-400 font-bold">{{ $item->percentage() }}% watched</span>
+                                        <span>{{ $item->remainingFormatted() }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
         <!-- Trending in Uganda -->
         @if ($trending->isNotEmpty())
             <x-movies :movies="$trending" category="Trending in Uganda 🔥" />

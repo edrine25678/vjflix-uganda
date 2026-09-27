@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -89,5 +90,26 @@ class User extends Authenticatable
         }
 
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=f59e0b&color=000';
+    }
+
+    /**
+     * User's watch progress history across movies and episodes.
+     */
+    public function watchProgress(): HasMany
+    {
+        return $this->hasMany(WatchProgress::class)->latest('last_watched_at');
+    }
+
+    /**
+     * Get active in-progress media for "Continue Watching" shelf.
+     */
+    public function continueWatching(int $limit = 10)
+    {
+        return $this->watchProgress()
+            ->with(['watchable'])
+            ->where('completed', false)
+            ->where('progress_seconds', '>=', 10)
+            ->limit($limit)
+            ->get();
     }
 }

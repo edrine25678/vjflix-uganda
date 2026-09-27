@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title ?? 'VJFlix Uganda — Your Movies. Your VJs. Your Language.' }}</title>
     <meta name="description" content="Watch movies and series translated by Uganda's top Video Jockeys (VJs) like VJ Junior, VJ Jingo, VJ Emmy, VJ Ice P, and more.">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

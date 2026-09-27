@@ -22,6 +22,7 @@ class Movie extends Model
         'poster',
         'backdrop',
         'trailer_url',
+        'video_url',
         'video_path',
         'duration',
         'release_year',

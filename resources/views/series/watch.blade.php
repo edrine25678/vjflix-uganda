@@ -14,17 +14,14 @@
         </nav>
 
         <!-- Video Player Viewport Container -->
-        <div class="relative w-full rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl aspect-video max-h-[70vh]">
-            <video 
-                id="vjflix-player" 
-                controls 
-                preload="metadata"
-                poster="{{ $episode->thumbnailUrl() }}" 
-                class="w-full h-full object-contain">
-                <source src="{{ $episode->streamUrl() }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
+        <x-video-player 
+            :src="route('stream.episode', [$series->slug, $season->season_number, $episode->episode_number])" 
+            :poster="$episode->thumbnailUrl()" 
+            :title="$series->title . ' · S' . $season->season_number . ':E' . $episode->episode_number . ' - ' . $episode->title" 
+            :vj="$episode->vj ? $episode->vj->stage_name : ($series->vj ? $series->vj->stage_name : null)" 
+            type="episode" 
+            :id="$episode->id" 
+            :nextUrl="$nextEpisode ? route('series.watch', [$series->slug, $season->season_number, $nextEpisode->episode_number]) : null" />
 
         <!-- Episode Controls & Meta Bar -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">

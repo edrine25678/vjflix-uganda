@@ -66,11 +66,14 @@ class VelflixController extends Controller
 
         $genres = Genre::where('is_active', true)->pluck('name', 'id');
 
+        $continueWatching = auth()->check() ? auth()->user()->continueWatching(8) : collect();
+
         return view('main', [
             'heroMovie' => $heroMovie,
             'trending' => $trending,
             'latestTranslations' => $latestTranslations,
             'popularVjs' => $popularVjs,
+            'continueWatching' => $continueWatching,
             'actionMovies' => $actionMovies,
             'comedyMovies' => $comedyMovies,
             'sciFiMovies' => $sciFiMovies,

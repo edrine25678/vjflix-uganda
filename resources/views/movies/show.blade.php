@@ -80,10 +80,10 @@
 
                     <!-- Action Buttons -->
                     <div class="mt-8 flex flex-wrap items-center justify-center md:justify-start gap-4">
-                        <button type="button" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-6 py-3.5 text-sm font-extrabold text-black shadow-xl shadow-amber-500/20 hover:from-amber-400 hover:to-yellow-400 transition-all hover:scale-105">
+                        <a href="#player" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-6 py-3.5 text-sm font-extrabold text-black shadow-xl shadow-amber-500/20 hover:from-amber-400 hover:to-yellow-400 transition-all hover:scale-105">
                             <x-bi-play-fill class="h-6 w-6 mr-1.5" />
                             STREAM IN LUGANDA
-                        </button>
+                        </a>
 
                         @if ($movie->trailer_url)
                             <a href="{{ $movie->trailer_url }}" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 px-5 py-3.5 text-sm font-bold text-slate-200 transition-all">
@@ -100,6 +100,17 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Live Stream Video Player Section -->
+    <div id="player" class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+        <x-video-player 
+            :src="route('stream.movie', $movie->slug)" 
+            :poster="$movie->backdropUrl()" 
+            :title="$movie->title" 
+            :vj="$movie->vj ? $movie->vj->stage_name : null" 
+            type="movie" 
+            :id="$movie->id" />
     </div>
 
     <!-- Related Sections -->

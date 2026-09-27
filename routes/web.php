@@ -27,6 +27,16 @@ Route::get('/series', [SeriesController::class, 'index'])->name('series.index');
 Route::get('/series/{slug}', [SeriesController::class, 'show'])->name('series.show');
 Route::get('/series/{slug}/season/{season}/episode/{episode}', [SeriesController::class, 'watch'])->name('series.watch');
 
+// Media Streaming Delivery (HTTP 206 Partial Content Byte-Range Serving)
+Route::get('/stream/movie/{slug}', [\App\Http\Controllers\StreamController::class, 'streamMovie'])->name('stream.movie');
+Route::get('/stream/series/{seriesSlug}/season/{season}/episode/{episode}', [\App\Http\Controllers\StreamController::class, 'streamEpisode'])->name('stream.episode');
+
+// Watch Progress & Resume API
+Route::middleware('auth')->group(function () {
+    Route::post('/api/progress', [\App\Http\Controllers\StreamController::class, 'updateProgress'])->name('progress.update');
+    Route::get('/api/progress/{type}/{id}', [\App\Http\Controllers\StreamController::class, 'getProgress'])->name('progress.get');
+});
+
 // Authentication (Guest Only)
 Route::middleware('guest')->group(function () {
     Route::get('login', [SessionsController::class, 'create'])->name('login');
