@@ -47,6 +47,16 @@ class Vj extends Model
         return $this->hasMany(Movie::class);
     }
 
+    public function series(): HasMany
+    {
+        return $this->hasMany(Series::class);
+    }
+
+    public function episodes(): HasMany
+    {
+        return $this->hasMany(Episode::class);
+    }
+
     public function avatarUrl(): string
     {
         if ($this->profile_photo) {

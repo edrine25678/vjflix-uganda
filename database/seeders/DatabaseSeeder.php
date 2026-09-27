@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Episode;
 use App\Models\Genre;
 use App\Models\Language;
 use App\Models\Movie;
 use App\Models\Role;
+use App\Models\Season;
+use App\Models\Series;
 use App\Models\User;
 use App\Models\Vj;
 use Illuminate\Database\Seeder;
@@ -376,6 +379,219 @@ class DatabaseSeeder extends Seeder
                 }
             }
             $movie->genres()->sync($genreIds);
+        }
+
+        // 6. TV Series, Seasons, and Episodes translated by Ugandan VJs
+        $seriesData = [
+            [
+                'title' => 'Money Heist (Luganda)',
+                'slug' => 'money-heist-luganda',
+                'synopsis' => 'An unusual group of robbers attempt to carry out the most perfect robbery in Spanish history, translated with high intensity and sharp slang by VJ Junior.',
+                'description' => 'To carry out the biggest heist in history, a mysterious man called The Professor recruits a band of eight robbers who have a single characteristic: none of them has anything to lose. VJ Junior elevates every scene with legendary Luganda dubbing, punchy catchphrases, and rapid translations.',
+                'poster' => 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=600&q=80',
+                'backdrop' => 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1200&q=80',
+                'vj_id' => $vjModels['vj-junior']->id,
+                'first_air_year' => 2021,
+                'status' => 'published',
+                'featured' => true,
+                'trending' => true,
+                'views' => 380000,
+                'average_rating' => 4.95,
+                'published_at' => now(),
+                'genres' => ['action', 'crime', 'drama'],
+                'seasons' => [
+                    [
+                        'season_number' => 1,
+                        'title' => 'Part 1: The Royal Mint',
+                        'overview' => 'The Professor orchestrates the infiltration into the Royal Mint of Spain.',
+                        'release_year' => 2021,
+                        'episodes' => [
+                            [
+                                'episode_number' => 1,
+                                'title' => 'Ekitundu 1: Omulimu Gutandise (Do as Planned)',
+                                'overview' => 'The Professor recruits Tokyo, Berlin, Nairobi, Rio, Denver, Moscow, Helsinki, and Oslo.',
+                                'duration' => 47,
+                                'views' => 140000,
+                                'is_free' => true,
+                            ],
+                            [
+                                'episode_number' => 2,
+                                'title' => 'Ekitundu 2: Okulumba kwa Poliisi (Lethal Mistake)',
+                                'overview' => 'Hostage negotiator Raquel makes first contact with The Professor while gunfire erupts outside.',
+                                'duration' => 42,
+                                'views' => 110000,
+                                'is_free' => false,
+                            ],
+                            [
+                                'episode_number' => 3,
+                                'title' => 'Ekitundu 3: Okulwana kw\'omu Mint (Misfire)',
+                                'overview' => 'Police storm the entrance perimeter as Berlin initiates contingency Protocol 4.',
+                                'duration' => 50,
+                                'views' => 95000,
+                                'is_free' => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'title' => 'Prison Break: The Escape (Luganda)',
+                'slug' => 'prison-break-luganda',
+                'synopsis' => 'Michael Scofield enters Fox River State Penitentiary with the blueprints tattooed on his body, masterfully narrated by VJ Jingo.',
+                'description' => 'Due to a political conspiracy, an innocent man is sent to death row and his only hope is his brother, who makes it his mission to deliberately get himself sent to the same prison in order to break the both of them out from the inside. VJ Jingo delivers classic old-school proverbs and thrilling play-by-play commentary.',
+                'poster' => 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80',
+                'backdrop' => 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80',
+                'vj_id' => $vjModels['vj-jingo']->id,
+                'first_air_year' => 2020,
+                'status' => 'published',
+                'featured' => false,
+                'trending' => true,
+                'views' => 290000,
+                'average_rating' => 4.90,
+                'published_at' => now(),
+                'genres' => ['action', 'crime', 'drama'],
+                'seasons' => [
+                    [
+                        'season_number' => 1,
+                        'title' => 'Season 1: Fox River Infiltration',
+                        'overview' => 'Michael maps every inch of the prison pipelines and builds his crew.',
+                        'release_year' => 2020,
+                        'episodes' => [
+                            [
+                                'episode_number' => 1,
+                                'title' => 'Ekitundu 1: Okuyingira Ekomera (Pilot)',
+                                'overview' => 'Michael Scofield stages a bank robbery in Chicago to get sentenced to Fox River.',
+                                'duration' => 44,
+                                'views' => 135000,
+                                'is_free' => true,
+                            ],
+                            [
+                                'episode_number' => 2,
+                                'title' => 'Ekitundu 2: Entalo z\'omu Kkomera (Allen)',
+                                'overview' => 'T-Bag sparks racial tension in the courtyard while Michael hunts for an Allen bolt.',
+                                'duration' => 43,
+                                'views' => 105000,
+                                'is_free' => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'title' => 'Squid Game (Luganda)',
+                'slug' => 'squid-game-luganda',
+                'synopsis' => 'Hundreds of cash-strapped players accept a strange invitation to compete in children\'s games with deadly stakes. Voiced by VJ Emmy.',
+                'description' => 'Hundreds of desperate contestants accept an invitation to compete in traditional playground games for a 45.6 billion won jackpot, but the stakes are fatal. VJ Emmy brings his signature rapid-fire comedic punchlines and nail-biting suspense to this Korean phenomenon.',
+                'poster' => 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80',
+                'backdrop' => 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80',
+                'vj_id' => $vjModels['vj-emmy']->id,
+                'first_air_year' => 2022,
+                'status' => 'published',
+                'featured' => false,
+                'trending' => true,
+                'views' => 310000,
+                'average_rating' => 4.88,
+                'published_at' => now(),
+                'genres' => ['action', 'drama', 'sci-fi-fantasy'],
+                'seasons' => [
+                    [
+                        'season_number' => 1,
+                        'title' => 'Season 1: Survival Games',
+                        'overview' => 'Contestants are trapped on an isolated island facing ruthless childhood games.',
+                        'release_year' => 2022,
+                        'episodes' => [
+                            [
+                                'episode_number' => 1,
+                                'title' => 'Ekitundu 1: Akazannyo k\'Omunyeera (Red Light, Green Light)',
+                                'overview' => 'Player 456 enters the arena and faces the deadly giant robot doll.',
+                                'duration' => 59,
+                                'views' => 160000,
+                                'is_free' => true,
+                            ],
+                            [
+                                'episode_number' => 2,
+                                'title' => 'Ekitundu 2: Obulamu bw\'Ensi (Hell)',
+                                'overview' => 'After voting to leave, players realize life outside is worse and return to the island.',
+                                'duration' => 62,
+                                'views' => 125000,
+                                'is_free' => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'title' => 'All of Us Are Dead (Luganda)',
+                'slug' => 'all-of-us-are-dead-luganda',
+                'synopsis' => 'A high school becomes ground zero for a zombie virus outbreak. Translated by VJ Ice P.',
+                'description' => 'Trapped high school students must fight their way out or turn into one of the rabid infected. VJ Ice P injects non-stop thrill and fierce Ugandan translations into every corridor fight.',
+                'poster' => 'https://images.unsplash.com/photo-1509281373149-e957c6296406?auto=format&fit=crop&w=600&q=80',
+                'backdrop' => 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80',
+                'vj_id' => $vjModels['vj-ice-p']->id,
+                'first_air_year' => 2023,
+                'status' => 'published',
+                'featured' => false,
+                'trending' => false,
+                'views' => 180000,
+                'average_rating' => 4.79,
+                'published_at' => now(),
+                'genres' => ['action', 'sci-fi-fantasy', 'horror'],
+                'seasons' => [
+                    [
+                        'season_number' => 1,
+                        'title' => 'Season 1: Hyosan High Outbreak',
+                        'overview' => 'Students barricade themselves in classrooms as infection spreads like wildfire.',
+                        'release_year' => 2023,
+                        'episodes' => [
+                            [
+                                'episode_number' => 1,
+                                'title' => 'Ekitundu 1: Obulwadde Butandise (Infection Starts)',
+                                'overview' => 'A bitten student collapses in the science lab and turns violently aggressive.',
+                                'duration' => 53,
+                                'views' => 95000,
+                                'is_free' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        foreach ($seriesData as $sData) {
+            $genreSlugs = $sData['genres'];
+            $seasonsData = $sData['seasons'];
+            unset($sData['genres'], $sData['seasons']);
+
+            $series = Series::updateOrCreate(['slug' => $sData['slug']], $sData);
+
+            $genreIds = [];
+            foreach ($genreSlugs as $gSlug) {
+                if (isset($genreModels[$gSlug])) {
+                    $genreIds[] = $genreModels[$gSlug]->id;
+                }
+            }
+            $series->genres()->sync($genreIds);
+
+            foreach ($seasonsData as $seasonData) {
+                $episodesData = $seasonData['episodes'];
+                unset($seasonData['episodes']);
+
+                $season = Season::updateOrCreate(
+                    ['series_id' => $series->id, 'season_number' => $seasonData['season_number']],
+                    array_merge($seasonData, ['series_id' => $series->id])
+                );
+
+                foreach ($episodesData as $epData) {
+                    Episode::updateOrCreate(
+                        ['season_id' => $season->id, 'episode_number' => $epData['episode_number']],
+                        array_merge($epData, [
+                            'season_id' => $season->id,
+                            'vj_id' => $series->vj_id,
+                            'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                        ])
+                    );
+                }
+            }
         }
     }
 }
