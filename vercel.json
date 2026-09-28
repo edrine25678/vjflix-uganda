@@ -16,8 +16,11 @@
     }
   ],
   "env": {
+    "APP_NAME": "VJFlix Uganda",
     "APP_ENV": "production",
+    "APP_KEY": "base64:ISNIzGH7bOWdd2VcWmvps+PjcAaeXstgrsoyYP9vzkg=",
     "APP_DEBUG": "false",
+    "APP_URL": "https://vjflix-uganda-k5mdgd26v-edrine25678.vercel.app",
     "LOG_CHANNEL": "stderr",
     "LOG_LEVEL": "error",
 
@@ -48,6 +51,7 @@
     "DB_PORT": "5432",
     "DB_DATABASE": "neondb",
     "DB_USERNAME": "neondb_owner",
+    "DB_PASSWORD": "npg_xE1dIwqtc6oV",
     "DB_SSLMODE": "require",
     "DB_EMULATE_PREPARES": "true"
   }
