@@ -21,6 +21,12 @@
     "LOG_CHANNEL": "stderr",
     "LOG_LEVEL": "error",
 
+    "APP_TIMEZONE": "Africa/Kampala",
+    "TIMEZONE": "Africa/Kampala",
+    "APP_LOCALE": "en",
+    "APP_FALLBACK_LOCALE": "en",
+    "APP_FAKER_LOCALE": "en_US",
+
     "CACHE_STORE": "array",
     "SESSION_DRIVER": "cookie",
     "QUEUE_CONNECTION": "sync",
