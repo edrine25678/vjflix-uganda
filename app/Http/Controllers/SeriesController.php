@@ -77,9 +77,9 @@ class SeriesController extends Controller
             'seasons' => fn ($q) => $q->orderBy('season_number'),
             'seasons.episodes' => fn ($q) => $q->orderBy('episode_number')->with('vj'),
         ])
-        ->where('slug', $slug)
-        ->orWhere('id', $slug)
-        ->first();
+            ->where('slug', $slug)
+            ->orWhere('id', $slug)
+            ->first();
 
         if (! $series) {
             abort(404, 'Series translation not found.');

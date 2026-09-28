@@ -26,7 +26,7 @@ class SeriesController extends Controller
 
         if ($search) {
             $query->where('title', 'like', "%{$search}%")
-                  ->orWhereHas('vj', fn ($q) => $q->where('stage_name', 'like', "%{$search}%"));
+                ->orWhereHas('vj', fn ($q) => $q->where('stage_name', 'like', "%{$search}%"));
         }
 
         $series = $query->latest()->paginate(15);
@@ -115,7 +115,7 @@ class SeriesController extends Controller
             'series_id' => $series->id,
             'season_number' => 1,
             'title' => 'Season 1',
-            'overview' => 'Official Season 1 translated by ' . ($series->vj ? $series->vj->stage_name : 'Ugandan VJ'),
+            'overview' => 'Official Season 1 translated by '.($series->vj ? $series->vj->stage_name : 'Ugandan VJ'),
             'release_year' => $series->first_air_year,
         ]);
 

@@ -6,37 +6,47 @@ use App\Http\Controllers\Controller;
 use App\Models\Episode;
 use App\Models\Movie;
 use App\Models\Series;
-use App\Models\User;
+use App\Models\Subscription;
 use App\Models\Vj;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use App\Services\AnalyticsService;
 
 class DashboardController extends Controller
 {
+    protected AnalyticsService $analyticsService;
+
+    public function __construct(AnalyticsService $analyticsService)
+    {
+        $this->analyticsService = $analyticsService;
+    }
+
     /**
      * Display the Admin CMS metrics and overview.
      */
-    public function index(): View|Factory
+    public function index()
     {
         $stats = [
-            'total_movies' => Movie::count(),
-            'total_series' => Series::count(),
+            'total_movies' => Movie::where('status', 'published')->count(),
+            'total_series' => Series::where('status', 'published')->count(),
             'total_episodes' => Episode::count(),
-            'total_vjs' => Vj::count(),
-            'total_users' => User::count(),
+            'total_vjs' => Vj::where('is_active', true)->count(),
             'total_movie_views' => Movie::sum('views'),
-            'total_series_views' => Series::sum('views'),
+            'total_series_views' => Episode::sum('views'),
+            'active_subscriptions' => Subscription::active()->count(),
         ];
 
-        $recentMovies = Movie::with('vj')->latest()->limit(5)->get();
-        $recentSeries = Series::with('vj')->latest()->limit(5)->get();
-        $topVjs = Vj::withCount(['movies', 'series'])->orderByDesc('views_count')->limit(5)->get();
+        $recentMovies = Movie::where('status', 'published')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
 
-        return view('admin.dashboard', [
-            'stats' => $stats,
-            'recentMovies' => $recentMovies,
-            'recentSeries' => $recentSeries,
-            'topVjs' => $topVjs,
-        ]);
+        $recentSeries = Series::where('status', 'published')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        // Add analytics summary
+        $platformStats = $this->analyticsService->getPlatformStats();
+
+        return view('admin.dashboard', compact('stats', 'recentMovies', 'recentSeries', 'platformStats'));
     }
 }

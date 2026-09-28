@@ -37,7 +37,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
 
@@ -99,6 +99,18 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+
+        'payments' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/payments.log'),
+            'level' => 'info',
+            'days' => 30,
+        ],
+
+        'deprecations' => [
+            'channel' => env('LOG_DEPRECATIONS_CHANNEL', 'null'),
+            'trace' => env('LOG_DEPRECATIONS_TRACE', false),
         ],
     ],
 

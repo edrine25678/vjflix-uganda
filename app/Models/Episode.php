@@ -13,7 +13,7 @@ class Episode extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'season_id',
@@ -82,7 +82,7 @@ class Episode extends Model
     public function streamUrl(): string
     {
         if (! empty($this->video_path)) {
-            return asset('storage/' . $this->video_path);
+            return asset('storage/'.$this->video_path);
         }
 
         if (! empty($this->video_url)) {
@@ -103,7 +103,7 @@ class Episode extends Model
                 return $this->thumbnail;
             }
 
-            return asset('storage/' . $this->thumbnail);
+            return asset('storage/'.$this->thumbnail);
         }
 
         if ($this->season && $this->season->series) {

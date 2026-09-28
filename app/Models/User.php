@@ -17,7 +17,7 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -35,7 +35,7 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -89,10 +89,10 @@ class User extends Authenticatable
     public function avatarUrl(): string
     {
         if ($this->profile_photo) {
-            return asset('storage/' . $this->profile_photo);
+            return asset('storage/'.$this->profile_photo);
         }
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=f59e0b&color=000';
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=f59e0b&color=000';
     }
 
     /**
@@ -129,6 +129,16 @@ class User extends Authenticatable
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     public function isInWatchlist(Model $watchable): bool

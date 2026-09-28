@@ -15,10 +15,11 @@ test('users can authenticate using the login screen', function () {
         'password' => 'password',
     ]);
 
-    $response = $this->post('/login', [
-        'email' => $user->email,
-        'password' => 'password',
-    ]);
+    $response = $this
+        ->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
 
     $this->assertAuthenticatedAs($user);
     $response->assertRedirect('/movies');
@@ -30,10 +31,11 @@ test('users cannot authenticate with invalid password', function () {
         'password' => 'password',
     ]);
 
-    $this->from('/login')->post('/login', [
-        'email' => $user->email,
-        'password' => 'wrong-password',
-    ]);
+    $this->from('/login')
+        ->post('/login', [
+            'email' => $user->email,
+            'password' => 'wrong-password',
+        ]);
 
     $this->assertGuest();
 });

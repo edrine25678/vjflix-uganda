@@ -25,7 +25,7 @@ class MovieController extends Controller
 
         if ($search) {
             $query->where('title', 'like', "%{$search}%")
-                  ->orWhereHas('vj', fn ($q) => $q->where('stage_name', 'like', "%{$search}%"));
+                ->orWhereHas('vj', fn ($q) => $q->where('stage_name', 'like', "%{$search}%"));
         }
 
         $movies = $query->latest()->paginate(15);

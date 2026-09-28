@@ -7,11 +7,9 @@ use MailchimpMarketing\ApiClient;
 class Newsletter
 {
     /**
-     * @param  string  $email
-     * @param  string|null  $list
      * @return mixed
      */
-    public function subscribe(string $email, string $list = null)
+    public function subscribe(string $email, ?string $list = null)
     {
         $list ??= config('services.mailchimp.lists.subscribers');
 
@@ -23,11 +21,11 @@ class Newsletter
     }
 
     /**
-     * @return \MailchimpMarketing\ApiClient
+     * @return ApiClient
      */
     protected function client()
     {
-        return (new ApiClient() )->setConfig([
+        return (new ApiClient)->setConfig([
             'apiKey' => config('services.mailchimp.key'),
             'server' => 'us5',
         ]);

@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use App\Models\Series;
 use App\Models\Watchlist;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 

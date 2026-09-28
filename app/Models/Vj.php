@@ -63,10 +63,11 @@ class Vj extends Model
             if (Str::startsWith($this->profile_photo, ['http://', 'https://'])) {
                 return $this->profile_photo;
             }
-            return asset('storage/' . $this->profile_photo);
+
+            return asset('storage/'.$this->profile_photo);
         }
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->stage_name) . '&background=f59e0b&color=000&size=256';
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->stage_name).'&background=f59e0b&color=000&size=256';
     }
 
     public function coverUrl(): string
@@ -75,7 +76,8 @@ class Vj extends Model
             if (Str::startsWith($this->cover_photo, ['http://', 'https://'])) {
                 return $this->cover_photo;
             }
-            return asset('storage/' . $this->cover_photo);
+
+            return asset('storage/'.$this->cover_photo);
         }
 
         return asset('img/home-full-page.png');

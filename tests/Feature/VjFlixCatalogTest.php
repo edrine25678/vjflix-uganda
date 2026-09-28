@@ -4,6 +4,7 @@ use App\Models\Genre;
 use App\Models\Movie;
 use App\Models\User;
 use App\Models\Vj;
+use App\Services\AnalyticsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -69,7 +70,7 @@ test('authenticated user can view movie details page', function () {
     ]);
     $movie->genres()->attach($genre);
 
-    $response = $this->actingAs($user)->get('/movie/' . $movie->slug);
+    $response = $this->actingAs($user)->get('/movie/'.$movie->slug);
 
     $response->assertStatus(200);
     $response->assertSee('John Wick 4 (Luganda)');
@@ -87,6 +88,15 @@ test('non-admin user cannot access admin dashboard', function () {
 
 test('admin user can access admin dashboard', function () {
     $adminUser = User::factory()->create(['role' => 'super_admin']);
+
+    // Mock the AnalyticsService
+    $analyticsServiceMock = Mockery::mock(AnalyticsService::class);
+    $analyticsServiceMock->shouldReceive('getPlatformStats')->andReturn([
+        'total_users' => 10,
+        'active_subscriptions' => 5,
+        'total_revenue' => 50000,
+    ]);
+    $this->app->instance(AnalyticsService::class, $analyticsServiceMock);
 
     $response = $this->actingAs($adminUser)->get('/admin');
 

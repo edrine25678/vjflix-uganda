@@ -16,10 +16,11 @@ test('authenticated user can toggle movie in watchlist', function () {
     $movie = Movie::factory()->create(['vj_id' => $vj->id, 'title' => 'John Wick 4 (Luganda)']);
 
     // Add to watchlist
-    $response = $this->actingAs($user)->postJson('/watchlist/toggle', [
-        'watchable_type' => 'movie',
-        'watchable_id' => $movie->id,
-    ]);
+    $response = $this->actingAs($user)
+        ->postJson('/watchlist/toggle', [
+            'watchable_type' => 'movie',
+            'watchable_id' => $movie->id,
+        ]);
 
     $response->assertStatus(200);
     $response->assertJson([
@@ -34,10 +35,11 @@ test('authenticated user can toggle movie in watchlist', function () {
     ]);
 
     // Remove from watchlist
-    $response2 = $this->actingAs($user)->postJson('/watchlist/toggle', [
-        'watchable_type' => 'movie',
-        'watchable_id' => $movie->id,
-    ]);
+    $response2 = $this->actingAs($user)
+        ->postJson('/watchlist/toggle', [
+            'watchable_type' => 'movie',
+            'watchable_id' => $movie->id,
+        ]);
 
     $response2->assertStatus(200);
     $response2->assertJson([
@@ -57,10 +59,11 @@ test('authenticated user can toggle series in watchlist', function () {
     $vj = Vj::factory()->create();
     $series = Series::factory()->create(['vj_id' => $vj->id, 'title' => 'Breaking Bad (Luganda)']);
 
-    $response = $this->actingAs($user)->postJson('/watchlist/toggle', [
-        'watchable_type' => 'series',
-        'watchable_id' => $series->id,
-    ]);
+    $response = $this->actingAs($user)
+        ->postJson('/watchlist/toggle', [
+            'watchable_type' => 'series',
+            'watchable_id' => $series->id,
+        ]);
 
     $response->assertStatus(200);
     $response->assertJson([
@@ -79,10 +82,11 @@ test('unauthenticated user cannot toggle watchlist', function () {
     $vj = Vj::factory()->create();
     $movie = Movie::factory()->create(['vj_id' => $vj->id]);
 
-    $response = $this->postJson('/watchlist/toggle', [
-        'watchable_type' => 'movie',
-        'watchable_id' => $movie->id,
-    ]);
+    $response = $this
+        ->postJson('/watchlist/toggle', [
+            'watchable_type' => 'movie',
+            'watchable_id' => $movie->id,
+        ]);
 
     $response->assertStatus(401);
 });
@@ -130,13 +134,14 @@ test('user can submit review and recalculate movie average rating', function () 
         'ratings_count' => 0,
     ]);
 
-    $response = $this->actingAs($user)->post('/reviews', [
-        'reviewable_type' => 'movie',
-        'reviewable_id' => $movie->id,
-        'rating' => 5,
-        'title' => 'Top notch commentary',
-        'body' => 'The translations in this action movie were hilarious and accurate.',
-    ]);
+    $response = $this->actingAs($user)
+        ->post('/reviews', [
+            'reviewable_type' => 'movie',
+            'reviewable_id' => $movie->id,
+            'rating' => 5,
+            'title' => 'Top notch commentary',
+            'body' => 'The translations in this action movie were hilarious and accurate.',
+        ]);
 
     $response->assertRedirect();
 
@@ -166,13 +171,14 @@ test('user can update their previous review', function () {
         'title' => 'Initial review',
     ]);
 
-    $response = $this->actingAs($user)->postJson('/reviews', [
-        'reviewable_type' => 'movie',
-        'reviewable_id' => $movie->id,
-        'rating' => 4,
-        'title' => 'Revised title',
-        'body' => 'Still great, but sound was slightly low in part 2.',
-    ]);
+    $response = $this->actingAs($user)
+        ->postJson('/reviews', [
+            'reviewable_type' => 'movie',
+            'reviewable_id' => $movie->id,
+            'rating' => 4,
+            'title' => 'Revised title',
+            'body' => 'Still great, but sound was slightly low in part 2.',
+        ]);
 
     $response->assertStatus(200);
 
@@ -202,7 +208,8 @@ test('user can delete their review', function () {
     $movie->recalculateRating();
     expect((float) $movie->fresh()->average_rating)->toBe(5.0);
 
-    $response = $this->actingAs($user)->delete("/reviews/{$review->id}");
+    $response = $this->actingAs($user)
+        ->delete("/reviews/{$review->id}");
 
     $response->assertRedirect();
     $this->assertDatabaseMissing('reviews', ['id' => $review->id]);
@@ -219,12 +226,13 @@ test('user can update profile and preferred vj preferences', function () {
 
     $vj = Vj::factory()->create(['stage_name' => 'VJ Emmy']);
 
-    $response = $this->actingAs($user)->put('/profile', [
-        'name' => 'John K. Musisi',
-        'email' => 'john@example.com',
-        'preferred_language' => 'Runyankole',
-        'preferred_vj_id' => $vj->id,
-    ]);
+    $response = $this->actingAs($user)
+        ->put('/profile', [
+            'name' => 'John K. Musisi',
+            'email' => 'john@example.com',
+            'preferred_language' => 'Runyankole',
+            'preferred_vj_id' => $vj->id,
+        ]);
 
     $response->assertRedirect();
 

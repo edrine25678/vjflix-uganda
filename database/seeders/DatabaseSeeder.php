@@ -12,8 +12,6 @@ use App\Models\Series;
 use App\Models\User;
 use App\Models\Vj;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,6 +22,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call([
+            PlanSeeder::class,
+        ]);
         // 1. Roles
         $roles = [
             ['name' => 'super_admin', 'label' => 'Super Administrator', 'description' => 'Full system access and billing control'],

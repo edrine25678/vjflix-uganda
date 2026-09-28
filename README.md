@@ -33,6 +33,45 @@ see full page [here](https://raw.githubusercontent.com/josuapsianturi/velflix/ma
 
 ![Detail movies](https://raw.githubusercontent.com/josuapsianturi/velflix/main/public/img/details-movie.png)
 
+<a name="features"></a>
+## Features
+
+### Content & Streaming
+- Movie and series catalog with Luganda translations
+- Video streaming with progress tracking
+- Episode management for TV series
+- Genre-based browsing
+- Search functionality
+
+### User Experience
+- Personalized AI recommendations
+- Watchlist management
+- Reviews and ratings system
+- Watch history tracking
+- User profiles
+
+### Monetization
+- Subscription plans (Free, Basic, Premium, Annual)
+- MTN Mobile Money integration
+- Airtel Money integration
+- Payment status tracking
+- Subscription management
+
+### Analytics
+- Platform statistics dashboard
+- User analytics
+- Content performance metrics
+- Revenue tracking
+- Daily active users monitoring
+
+### Admin Features
+- Content management (movies, series, episodes)
+- VJ profile management
+- Genre management
+- Subscription plan management
+- Payment tracking
+- Analytics dashboard
+
 <a name="requirements"></a>
 ## Requirements
 
@@ -63,10 +102,16 @@ Here is how you can run the project locally:
 
 1. Copy .env.example file to .env file
     ```sh
-    cp .env.example .env
-    ```
-1. Create database `velflix` (you can change database name)
-
+    Tp .env.example .env:
+   - 
+    ``- 
+- assword
+    - Roles (super_admin, content_manager, vj_manager, subscriber, user)
+    - Lnguage (Englih, Luganda, Sahili)
+    - Genres (Actin, Comedy, Drama, Horor, Romance, Thriller)
+    - VJs (Ugandan narrators)
+    - Sample movies an series
+    - Subscription plans (Free, Basic, Premium, Annual)
 1. Create account and get an API key themoviedb [ here](https://www.themoviedb.org/settings/api). Make sure to copy `API Read Access Token (v4 auth)`.
 
 1. Go to `.env` file 
@@ -126,7 +171,115 @@ Here is how you can run the project locally:
  - Go to Profile > Extras > API keys
  - Create a key and copy API key
  - open the velflix project, go to `.env` file and paste it into `MAILCHIMP_KEY=paste API key here`
- - Go to web.php and paste this code at the bottom or you can follow the documentation [here](https://mailchimp.com/developer/marketing/api/lists/get-lists-info/)
+ - Go to configuration"></a>
+## Configuration
+
+### Payment Gateway Configuration
+
+For production payment integration, configure the following in `.env`:
+
+```env
+# MTN Mobile Money
+MTN_MOMO_API_KEY=your_api_key
+MTN_MOMO_API_SECRET=your_api_secret
+MTN_MOMO_ENVIRONMENT=production
+MTN_MOMO_CALLBACK_URL=https://yourdomain.com/payments/callback/mtn
+
+# Airtel Money
+AIRTEL_MONEY_CLIENT_ID=your_client_id
+AIRTEL_MONEY_CLIENT_SECRET=your_client_secret
+AIRTEL_MONEY_ENVIRONMENT=production
+AIRTEL_MONEY_CALLBACK_URL=https://yourdomain.com/payments/callback/airtel
+```
+
+> **Note**: Payment services are currently in sandbox mode. Configure with real credentials for production.
+
+<a name="environment-variables"></a>
+## Environment Variables
+
+Key environment variables to configure:
+
+```env
+APP_NAME=VJFlix
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://yourdomain.com
+
+# Database
+DB_CONNECTION=pgsql
+DB_HOST=your_db_host
+DB_PORT=5432
+DB_DATABASE=velflix
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
+
+# TMDB API
+TMDB_TOKEN=your_tmdb_api_token
+
+# Mailchimp (optional)
+MAILCHIMP_KEY=your_mailchimp_key
+MAILCHIMP_LIST_SUBSCRIBERS=your_list_id
+
+# Google Socialite (optional)
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_REDIRECT=https://yourdomain.com/login/google/callback
+
+# Payment Gateways
+MTN_MOMO_API_KEY=
+MTN_MOMO_API_SECRET=
+MTN_MOMO_ENVIRONMENT=sandbox
+MTN_MOMO_CALLBACK_URL=
+
+AIRTEL_MONEY_CLIENT_ID=
+AIRTEL_MONEY_CLIENT_SECRET=
+AIRTEL_MONEY_ENVIRONMENT=sandbox
+AIRTEL_MONEY_CALLBACK_URL=
+```
+
+<a name="deployment"></a>
+## Deployment
+
+### Production Checklist
+
+1. **Environment Setup**
+   - Set `APP_ENV=production` and `APP_DEBUG=false`
+   - Configure production database credentials
+   - Set strong `APP_KEY` (run `php artisan key:generate`)
+   - Configure proper `APP_URL`
+
+2. **Dependencies**
+   - Run `composer install --optimize-autoloader --no-dev`
+   - Run `npm install && npm run build`
+   - Clear and cache configurations: `php artisan config:cache`
+   - Cache routes: `php artisan route:cache`
+   - Cache views: `php artisan view:cache`
+
+3. **Database**
+   - Run migrations: `php artisan migrate --force`
+   - Run seeders: `php artisan db:seed --force`
+   - Ensure database indexes are created
+
+4. **Storage**
+   - Set storage link: `php artisan storage:link`
+   - Configure proper file permissions for `storage` directory
+   - Ensure uploads directory is writable
+
+5. **Queue Workers** (if using queues)
+   - Configure queue driver in `.env`
+   - Start queue worker: `php artisan queue:work --daemon`
+
+6. **SSL/HTTPS**
+   - Enable SSL certificate
+   - Force HTTPS in production
+   - Configure trusted proxies if behind load balancer
+
+7. **Monitoring**
+   - Set up error logging
+   - Configure payment logging channel
+   - Monitor disk space for uploads
+
+<a name="web.php and paste this code at the bottom or you can follow the documentation [here](https://mailchimp.com/developer/marketing/api/lists/get-lists-info/)
  ```php
     Route::get('ping', function() {
     $mailchimp = new MailchimpMarketing\ApiClient();

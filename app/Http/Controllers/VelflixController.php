@@ -86,7 +86,6 @@ class VelflixController extends Controller
      * Display a specific movie translation.
      *
      * @param  string|int  $id
-     * @return View|Factory
      */
     public function show($id): View|Factory
     {

@@ -16,12 +16,13 @@ test('authenticated user can record movie watch progress via api', function () {
     $vj = Vj::factory()->create(['stage_name' => 'VJ Junior']);
     $movie = Movie::factory()->create(['vj_id' => $vj->id]);
 
-    $response = $this->actingAs($user)->postJson('/api/progress', [
-        'watchable_type' => 'movie',
-        'watchable_id' => $movie->id,
-        'progress_seconds' => 360,
-        'duration_seconds' => 7200,
-    ]);
+    $response = $this->actingAs($user)
+        ->postJson('/api/progress', [
+            'watchable_type' => 'movie',
+            'watchable_id' => $movie->id,
+            'progress_seconds' => 360,
+            'duration_seconds' => 7200,
+        ]);
 
     $response->assertStatus(200);
     $response->assertJson([
@@ -44,12 +45,13 @@ test('watch progress automatically marks completed at 90 percent playback', func
     $vj = Vj::factory()->create();
     $movie = Movie::factory()->create(['vj_id' => $vj->id]);
 
-    $response = $this->actingAs($user)->postJson('/api/progress', [
-        'watchable_type' => 'movie',
-        'watchable_id' => $movie->id,
-        'progress_seconds' => 6500,
-        'duration_seconds' => 7200, // ~90.2%
-    ]);
+    $response = $this->actingAs($user)
+        ->postJson('/api/progress', [
+            'watchable_type' => 'movie',
+            'watchable_id' => $movie->id,
+            'progress_seconds' => 6500,
+            'duration_seconds' => 7200, // ~90.2%
+        ]);
 
     $response->assertStatus(200);
     $response->assertJson([
@@ -93,12 +95,13 @@ test('unauthenticated users cannot submit watch progress', function () {
     $vj = Vj::factory()->create();
     $movie = Movie::factory()->create(['vj_id' => $vj->id]);
 
-    $response = $this->postJson('/api/progress', [
-        'watchable_type' => 'movie',
-        'watchable_id' => $movie->id,
-        'progress_seconds' => 120,
-        'duration_seconds' => 6000,
-    ]);
+    $response = $this
+        ->postJson('/api/progress', [
+            'watchable_type' => 'movie',
+            'watchable_id' => $movie->id,
+            'progress_seconds' => 120,
+            'duration_seconds' => 6000,
+        ]);
 
     $response->assertStatus(401);
 });

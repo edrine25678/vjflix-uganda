@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Services\Newsletter;
 use Exception;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Validation\ValidationException;
 
 class NewsletterController extends Controller
 {
     /**
-     * @param  \App\Services\Newsletter  $newsletter
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     * @return Redirector|RedirectResponse
      */
     public function __invoke(Newsletter $newsletter)
     {

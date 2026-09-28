@@ -12,11 +12,11 @@ class VjFactory extends Factory
 
     public function definition()
     {
-        $stageName = 'VJ ' . $this->faker->firstName;
+        $stageName = 'VJ '.$this->faker->firstName;
 
         return [
             'name' => $this->faker->name,
-            'slug' => Str::slug($stageName . '-' . Str::random(4)),
+            'slug' => Str::slug($stageName.'-'.Str::random(4)),
             'stage_name' => $stageName,
             'biography' => $this->faker->paragraph,
             'specialization' => 'Action & Sci-Fi Translations',

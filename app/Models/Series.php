@@ -19,7 +19,7 @@ class Series extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'title',
@@ -141,10 +141,10 @@ class Series extends Model
                 return $this->poster;
             }
 
-            return asset('storage/' . $this->poster);
+            return asset('storage/'.$this->poster);
         }
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->title) . '&background=f59e0b&color=000&size=500';
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->title).'&background=f59e0b&color=000&size=500';
     }
 
     /**
@@ -157,7 +157,7 @@ class Series extends Model
                 return $this->backdrop;
             }
 
-            return asset('storage/' . $this->backdrop);
+            return asset('storage/'.$this->backdrop);
         }
 
         return $this->posterUrl();

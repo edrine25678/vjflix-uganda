@@ -2,7 +2,7 @@
     <div class="relative flex items-center">
         <x-bi-search class="absolute left-3 h-4 w-4 text-slate-400 pointer-events-none" />
         <input
-            wire:model.debounce.300ms="searchVelflix"
+            wire:model.live.debounce.300ms="searchVelflix"
             @focus="isOpen = true"
             @keydown.escape.window="isOpen = false"
             @keydown.shift.tab="isOpen = false"

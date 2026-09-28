@@ -54,7 +54,7 @@ class Movie extends Model
     {
         static::creating(function (Movie $movie) {
             if (empty($movie->slug)) {
-                $movie->slug = Str::slug($movie->title) . '-' . Str::random(5);
+                $movie->slug = Str::slug($movie->title).'-'.Str::random(5);
             }
             if (empty($movie->published_at) && $movie->status === 'published') {
                 $movie->published_at = now();
@@ -78,7 +78,8 @@ class Movie extends Model
             if (Str::startsWith($this->poster, ['http://', 'https://'])) {
                 return $this->poster;
             }
-            return asset('storage/' . $this->poster);
+
+            return asset('storage/'.$this->poster);
         }
 
         return 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80';
@@ -90,7 +91,8 @@ class Movie extends Model
             if (Str::startsWith($this->backdrop, ['http://', 'https://'])) {
                 return $this->backdrop;
             }
-            return asset('storage/' . $this->backdrop);
+
+            return asset('storage/'.$this->backdrop);
         }
 
         return $this->posterUrl();

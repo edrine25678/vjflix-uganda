@@ -16,7 +16,7 @@ class EpisodeFactory extends Factory
         return [
             'season_id' => Season::factory(),
             'episode_number' => $this->faker->numberBetween(1, 12),
-            'title' => 'Episode ' . $this->faker->words(3, true),
+            'title' => 'Episode '.$this->faker->words(3, true),
             'overview' => $this->faker->paragraph(2),
             'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
             'video_path' => null,

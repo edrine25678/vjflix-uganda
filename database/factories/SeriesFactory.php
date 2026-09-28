@@ -17,7 +17,7 @@ class SeriesFactory extends Factory
 
         return [
             'title' => $title,
-            'slug' => Str::slug($title) . '-' . $this->faker->unique()->numberBetween(100, 999),
+            'slug' => Str::slug($title).'-'.$this->faker->unique()->numberBetween(100, 999),
             'synopsis' => $this->faker->paragraph(2),
             'description' => $this->faker->paragraphs(3, true),
             'poster' => 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=600&q=80',

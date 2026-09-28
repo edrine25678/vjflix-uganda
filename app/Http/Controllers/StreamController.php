@@ -10,8 +10,6 @@ use App\Models\WatchProgress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class StreamController extends Controller
 {
@@ -25,6 +23,7 @@ class StreamController extends Controller
         // If local storage video file exists
         if ($movie->video_path && Storage::disk('public')->exists($movie->video_path)) {
             $path = Storage::disk('public')->path($movie->video_path);
+
             return $this->serveByteRangeStream($request, $path, 'video/mp4');
         }
 
@@ -48,6 +47,7 @@ class StreamController extends Controller
 
         if ($episode->video_path && Storage::disk('public')->exists($episode->video_path)) {
             $path = Storage::disk('public')->path($episode->video_path);
+
             return $this->serveByteRangeStream($request, $path, 'video/mp4');
         }
 

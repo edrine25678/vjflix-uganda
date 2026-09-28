@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use App\Models\Movie;
 use App\Models\Vj;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class SearchVelflix extends Component
@@ -11,7 +13,7 @@ class SearchVelflix extends Component
     public string $searchVelflix = '';
 
     /**
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     * @return View|Factory
      */
     public function render()
     {

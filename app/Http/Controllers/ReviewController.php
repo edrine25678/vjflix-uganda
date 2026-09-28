@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use App\Models\Review;
 use App\Models\Series;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller

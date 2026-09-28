@@ -1,18 +1,25 @@
 <?php
 
+use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EpisodeController as AdminEpisodeController;
 use App\Http\Controllers\Admin\MovieController as AdminMovieController;
+use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Admin\PlanController as AdminPlanController;
 use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
+use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\Admin\VjController as AdminVjController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\StreamController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\VelflixController;
 use App\Http\Controllers\VjController;
 use App\Http\Controllers\WatchlistController;
@@ -32,13 +39,13 @@ Route::get('/series/{slug}', [SeriesController::class, 'show'])->name('series.sh
 Route::get('/series/{slug}/season/{season}/episode/{episode}', [SeriesController::class, 'watch'])->name('series.watch');
 
 // Media Streaming Delivery (HTTP 206 Partial Content Byte-Range Serving)
-Route::get('/stream/movie/{slug}', [\App\Http\Controllers\StreamController::class, 'streamMovie'])->name('stream.movie');
-Route::get('/stream/series/{seriesSlug}/season/{season}/episode/{episode}', [\App\Http\Controllers\StreamController::class, 'streamEpisode'])->name('stream.episode');
+Route::get('/stream/movie/{slug}', [StreamController::class, 'streamMovie'])->name('stream.movie');
+Route::get('/stream/series/{seriesSlug}/season/{season}/episode/{episode}', [StreamController::class, 'streamEpisode'])->name('stream.episode');
 
 // Watch Progress & Resume API
 Route::middleware('auth')->group(function () {
-    Route::post('/api/progress', [\App\Http\Controllers\StreamController::class, 'updateProgress'])->name('progress.update');
-    Route::get('/api/progress/{type}/{id}', [\App\Http\Controllers\StreamController::class, 'getProgress'])->name('progress.get');
+    Route::post('/api/progress', [StreamController::class, 'updateProgress'])->name('progress.update');
+    Route::get('/api/progress/{type}/{id}', [StreamController::class, 'getProgress'])->name('progress.get');
 });
 
 // Authentication (Guest Only)
@@ -73,6 +80,31 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // Subscriptions
+    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::get('/subscriptions/plan/{plan}', [SubscriptionController::class, 'plan'])->name('subscriptions.plan');
+    Route::post('/subscriptions/{subscription}/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+    Route::get('/subscriptions/history', [SubscriptionController::class, 'history'])->name('subscriptions.history');
+
+    // Payments
+    Route::post('/payments/initiate', [PaymentController::class, 'initiate'])->name('payments.initiate');
+    Route::get('/payments/status', [PaymentController::class, 'status'])->name('payments.status');
+    Route::get('/payments/check/{reference}', [PaymentController::class, 'checkStatus'])->name('payments.check');
+    Route::get('/payments/history', [PaymentController::class, 'history'])->name('payments.history');
+    Route::get('/payments/receipt/{payment}', [PaymentController::class, 'receipt'])->name('payments.receipt');
+
+    // Recommendations API
+    Route::prefix('api/recommendations')->name('recommendations.')->group(function () {
+        Route::get('/personalized', [RecommendationController::class, 'personalized'])->name('personalized');
+        Route::get('/watch-history', [RecommendationController::class, 'basedOnWatchHistory'])->name('watch-history');
+        Route::get('/similar/{id}', [RecommendationController::class, 'similar'])->name('similar');
+        Route::get('/vj/{id}', [RecommendationController::class, 'moreFromVj'])->name('vj');
+        Route::get('/trending', [RecommendationController::class, 'trending'])->name('trending');
+        Route::get('/new', [RecommendationController::class, 'newReleases'])->name('new');
+        Route::get('/genres', [RecommendationController::class, 'basedOnGenres'])->name('genres');
+    });
 });
 
 // Admin CMS Console
@@ -84,4 +116,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin'])->group
     Route::post('seasons/{season}/episodes', [AdminEpisodeController::class, 'store'])->name('episodes.store');
     Route::put('episodes/{episode}', [AdminEpisodeController::class, 'update'])->name('episodes.update');
     Route::delete('episodes/{episode}', [AdminEpisodeController::class, 'destroy'])->name('episodes.destroy');
+
+    // Subscription Management
+    Route::resource('plans', AdminPlanController::class);
+    Route::get('subscriptions', [AdminSubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::get('subscriptions/{subscription}', [AdminSubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::put('subscriptions/{subscription}', [AdminSubscriptionController::class, 'update'])->name('subscriptions.update');
+    Route::delete('subscriptions/{subscription}', [AdminSubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
+
+    // Payment Management
+    Route::get('payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+    Route::get('payments/{payment}', [AdminPaymentController::class, 'show'])->name('payments.show');
+
+    // Analytics
+    Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+    Route::get('analytics/data', [AnalyticsController::class, 'data'])->name('analytics.data');
 });
+
+// Payment Callback Routes (Public)
+Route::post('/payments/callback/{provider}', [PaymentController::class, 'callback'])->name('payments.callback');

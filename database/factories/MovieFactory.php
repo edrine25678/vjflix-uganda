@@ -17,7 +17,7 @@ class MovieFactory extends Factory
 
         return [
             'title' => $title,
-            'slug' => Str::slug($title . '-' . Str::random(5)),
+            'slug' => Str::slug($title.'-'.Str::random(5)),
             'original_title' => $title,
             'description' => $this->faker->paragraph,
             'synopsis' => $this->faker->paragraphs(2, true),

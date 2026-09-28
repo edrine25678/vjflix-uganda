@@ -46,4 +46,18 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT'),
     ],
+
+    'mtn_momo' => [
+        'api_key' => env('MTN_MOMO_API_KEY'),
+        'api_secret' => env('MTN_MOMO_API_SECRET'),
+        'environment' => env('MTN_MOMO_ENVIRONMENT', 'sandbox'),
+        'callback_url' => env('MTN_MOMO_CALLBACK_URL'),
+    ],
+
+    'airtel_money' => [
+        'client_id' => env('AIRTEL_MONEY_CLIENT_ID'),
+        'client_secret' => env('AIRTEL_MONEY_CLIENT_SECRET'),
+        'environment' => env('AIRTEL_MONEY_ENVIRONMENT', 'sandbox'),
+        'callback_url' => env('AIRTEL_MONEY_CALLBACK_URL'),
+    ],
 ];

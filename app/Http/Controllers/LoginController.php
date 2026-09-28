@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -17,7 +19,7 @@ class LoginController extends Controller
     }
 
     /**
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     * @return Redirector|RedirectResponse
      */
     public function handleProviderCallback()
     {
@@ -37,7 +39,7 @@ class LoginController extends Controller
             $baseUsername = $username;
             $counter = 1;
             while (User::where('username', $username)->exists()) {
-                $username = $baseUsername . $counter++;
+                $username = $baseUsername.$counter++;
             }
 
             $user = User::create([

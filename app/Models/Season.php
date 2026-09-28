@@ -14,7 +14,7 @@ class Season extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'series_id',
@@ -61,9 +61,9 @@ class Season extends Model
                 return $this->poster;
             }
 
-            return asset('storage/' . $this->poster);
+            return asset('storage/'.$this->poster);
         }
 
-        return $this->series ? $this->series->posterUrl() : 'https://ui-avatars.com/api/?name=Season+' . $this->season_number;
+        return $this->series ? $this->series->posterUrl() : 'https://ui-avatars.com/api/?name=Season+'.$this->season_number;
     }
 }

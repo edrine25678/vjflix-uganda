@@ -23,7 +23,7 @@ class VjController extends Controller
 
         if ($search) {
             $query->where('stage_name', 'like', "%{$search}%")
-                  ->orWhere('name', 'like', "%{$search}%");
+                ->orWhere('name', 'like', "%{$search}%");
         }
 
         $vjs = $query->orderBy('stage_name')->paginate(15);
@@ -105,7 +105,7 @@ class VjController extends Controller
     public function update(Request $request, Vj $vj): RedirectResponse
     {
         $validated = $request->validate([
-            'stage_name' => ['required', 'string', 'max:255', 'unique:vjs,stage_name,' . $vj->id],
+            'stage_name' => ['required', 'string', 'max:255', 'unique:vjs,stage_name,'.$vj->id],
             'name' => ['nullable', 'string', 'max:255'],
             'biography' => ['nullable', 'string'],
             'specialization' => ['nullable', 'string', 'max:255'],

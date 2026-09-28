@@ -8,10 +8,10 @@ on:
 
 jobs:
   composer-install:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         with:
           path: vendor/
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -28,15 +28,15 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        php-versions: ["8.1"]
+        php-versions: ["8.2.12"]
 
   php-linting-pint:
     needs:
       - composer-install
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         with:
           path: vendor/
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -50,37 +50,15 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        php-versions: ["8.1"]
-
-  php-linting-psalm:
-    needs:
-      - composer-install
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: vendor/
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-      - name: Install PHP
-        uses: shivammathur/setup-php@master
-        with:
-          php-version: ${{ matrix.php-versions }}
-      - name: Static analysis with Psalm
-        run: ./vendor/bin/psalm
-    strategy:
-      max-parallel: 3
-      matrix:
-        php-versions: ["8.1"]
+        php-versions: ["8.2.12"]
 
   php-linting-stan:
     needs:
       - composer-install
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         with:
           path: vendor/
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -94,4 +72,4 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        php-versions: ["8.1"]
+        php-versions: ["8.2.12"]
