@@ -23,6 +23,15 @@
                 Browse Movies
             </a>
         </div>
+
+        @if(config('app.debug') && isset($exception))
+        <div class="mt-10 text-left max-w-4xl mx-auto bg-gray-900 rounded-xl p-6 text-sm overflow-auto">
+            <p class="text-red-400 font-bold text-base mb-2">{{ get_class($exception) }}</p>
+            <p class="text-yellow-300 mb-4">{{ $exception->getMessage() }}</p>
+            <p class="text-gray-400 text-xs mb-4">{{ $exception->getFile() }}:{{ $exception->getLine() }}</p>
+            <pre class="text-gray-400 text-xs whitespace-pre-wrap">{{ $exception->getTraceAsString() }}</pre>
+        </div>
+        @endif
     </div>
 </body>
 </html>
