@@ -20,7 +20,7 @@ class AnalyticsController extends Controller
      */
     public function index(Request $request)
     {
-        $period = $request->get('period', '30');
+        $period = $request->query('period', '30');
         $days = (int) $period;
 
         return view('admin.analytics.index', [
@@ -43,8 +43,8 @@ class AnalyticsController extends Controller
      */
     public function data(Request $request)
     {
-        $type = $request->get('type');
-        $period = $request->get('period', 30);
+        $type = $request->query('type');
+        $period = $request->query('period', 30);
         $days = (int) $period;
 
         return response()->json([

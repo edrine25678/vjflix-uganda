@@ -56,6 +56,31 @@
                     <x-bi-mic class="h-4 w-4 mr-3" />
                     Ugandan VJs
                 </a>
+
+                <a href="{{ route('admin.analytics.index') }}" class="flex items-center px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('admin.analytics.*') ? 'bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <x-bi-bar-chart class="h-4 w-4 mr-3" />
+                    Analytics
+                </a>
+            </nav>
+
+            <!-- Monetisation -->
+            <nav class="px-4 pb-4 space-y-1 text-sm font-semibold">
+                <p class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-widest text-slate-500 font-bold">Monetisation</p>
+
+                <a href="{{ route('admin.plans.index') }}" class="flex items-center px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('admin.plans.*') ? 'bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <x-bi-list-check class="h-4 w-4 mr-3" />
+                    Subscription Plans
+                </a>
+
+                <a href="{{ route('admin.subscriptions.index') }}" class="flex items-center px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('admin.subscriptions.*') ? 'bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <x-bi-calendar-check class="h-4 w-4 mr-3" />
+                    Subscriptions
+                </a>
+
+                <a href="{{ route('admin.payments.index') }}" class="flex items-center px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('admin.payments.*') ? 'bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <x-bi-cash-stack class="h-4 w-4 mr-3" />
+                    Mobile Money Payments
+                </a>
             </nav>
         </div>
 

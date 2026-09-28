@@ -23,21 +23,9 @@ class PlanController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:plans,slug',
-            'description' => 'nullable|string',
-            'price_ugx' => 'required|integer|min:0',
-            'interval_unit' => 'required|in:day,week,month,year',
-            'interval_count' => 'required|integer|min:1',
-            'duration_days' => 'required|integer|min:1',
-            'features' => 'nullable|array',
-            'badge' => 'nullable|string|max:50',
-            'is_active' => 'boolean',
-            'sort_order' => 'integer',
-        ]);
+        $data = $this->validateData($request);
 
-        Plan::create($request->all());
+        Plan::create($data);
 
         return redirect()->route('admin.plans.index')
             ->with('success', 'Plan created successfully');
@@ -50,21 +38,9 @@ class PlanController extends Controller
 
     public function update(Request $request, Plan $plan)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => ['nullable', 'string', 'max:255', Rule::unique('plans')->ignore($plan->id)],
-            'description' => 'nullable|string',
-            'price_ugx' => 'required|integer|min:0',
-            'interval_unit' => 'required|in:day,week,month,year',
-            'interval_count' => 'required|integer|min:1',
-            'duration_days' => 'required|integer|min:1',
-            'features' => 'nullable|array',
-            'badge' => 'nullable|string|max:50',
-            'is_active' => 'boolean',
-            'sort_order' => 'integer',
-        ]);
+        $data = $this->validateData($request, $plan);
 
-        $plan->update($request->all());
+        $plan->update($data);
 
         return redirect()->route('admin.plans.index')
             ->with('success', 'Plan updated successfully');
@@ -81,5 +57,43 @@ class PlanController extends Controller
 
         return redirect()->route('admin.plans.index')
             ->with('success', 'Plan deleted successfully');
+    }
+
+    /**
+     * Validate the plan form and normalise it for persistence.
+     *
+     * The repeatable "features[]" rows are trimmed and emptied rows dropped so
+     * the JSON column does not accumulate blank strings.
+     */
+    private function validateData(Request $request, ?Plan $plan = null): array
+    {
+        $slugRule = $plan
+            ? Rule::unique('plans')->ignore($plan->id)
+            : 'unique:plans,slug';
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => ['nullable', 'string', 'max:255', $slugRule],
+            'description' => 'nullable|string',
+            'price_ugx' => 'required|integer|min:0',
+            'interval_unit' => 'required|in:day,week,month,year',
+            'interval_count' => 'required|integer|min:1',
+            'duration_days' => 'required|integer|min:1',
+            'features' => 'nullable|array',
+            'features.*' => 'nullable|string|max:255',
+            'badge' => 'nullable|string|max:50',
+            'is_active' => 'boolean',
+            'sort_order' => 'integer',
+        ]);
+
+        if (array_key_exists('features', $data)) {
+            $data['features'] = collect($data['features'] ?? [])
+                ->map(fn ($feature) => trim((string) $feature))
+                ->filter()
+                ->values()
+                ->all();
+        }
+
+        return $data;
     }
 }
