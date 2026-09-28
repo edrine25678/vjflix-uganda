@@ -76,6 +76,13 @@ return [
             'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => 'prefer',
+            'options' => extension_loaded('pdo_pgsql') ? array_filter([
+                // The libpq shipped with XAMPP aborts the current transaction when a
+                // second real prepared statement runs inside it, which breaks any
+                // migration that issues more than one DDL statement. Emulated
+                // prepares avoid the server-side prepare path entirely.
+                PDO::ATTR_EMULATE_PREPARES => env('DB_EMULATE_PREPARES', false),
+            ], fn ($value) => $value !== null && $value !== false) : [],
         ],
 
         'sqlsrv' => [

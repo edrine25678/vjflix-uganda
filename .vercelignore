@@ -1,0 +1,28 @@
+# Dependencies — Vercel installs these during build
+/vendor
+/node_modules
+
+# Local dev artifacts
+/.env
+/.env.local
+/.phpunit.result.cache
+/storage/logs/*.log
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/bootstrap/cache/*.php
+
+# Dev tooling
+/tests
+/cypress
+/cypress.config.js
+/.github
+/phpstan.neon
+/phpstan-baseline.neon
+/phpunit.xml
+/.styleci.yml
+/.editorconfig
+/CONTRIBUTING.md
+
+# Secrets / local docs
+/neon.config.json
