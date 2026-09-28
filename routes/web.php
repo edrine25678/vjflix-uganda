@@ -82,11 +82,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     // Subscriptions
+    // Keep the literal paths above /subscriptions/{subscription}, otherwise the
+    // parameterised route matches first and route-model binding tries to cast
+    // "history" to a bigint id.
     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
-    Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
-    Route::get('/subscriptions/plan/{plan}', [SubscriptionController::class, 'plan'])->name('subscriptions.plan');
-    Route::post('/subscriptions/{subscription}/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
     Route::get('/subscriptions/history', [SubscriptionController::class, 'history'])->name('subscriptions.history');
+    Route::get('/subscriptions/plan/{plan}', [SubscriptionController::class, 'plan'])->name('subscriptions.plan');
+    Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::post('/subscriptions/{subscription}/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
 
     // Payments
     Route::post('/payments/initiate', [PaymentController::class, 'initiate'])->name('payments.initiate');

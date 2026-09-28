@@ -1,8 +1,8 @@
-@extends('layouts.app')
+<x-layout>
+    <x-slot:title>Subscription History</x-slot:title>
 
-@section('title', 'Subscription History')
+    <x-header />
 
-@section('content')
 <div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between mb-8">
@@ -64,4 +64,5 @@
         </div>
     </div>
 </div>
-@endsection
+</x-layout>
+

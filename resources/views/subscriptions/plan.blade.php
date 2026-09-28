@@ -1,8 +1,8 @@
-@extends('layouts.app')
+<x-layout>
+    <x-slot:title>{{ $plan->name }} Plan</x-slot:title>
 
-@section('title', $plan->name . ' Plan')
+    <x-header />
 
-@section('content')
 <div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
         <a href="{{ route('subscriptions.index') }}" class="text-purple-400 hover:text-purple-300 mb-6 inline-block">
@@ -100,4 +100,5 @@
         </div>
     </div>
 </div>
-@endsection
+</x-layout>
+

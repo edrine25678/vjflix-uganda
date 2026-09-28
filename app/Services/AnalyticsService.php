@@ -45,7 +45,7 @@ class AnalyticsService
      */
     public function getTotalWatchTime(): int
     {
-        return WatchProgress::sum('watch_time_minutes') ?? 0;
+        return WatchProgress::sum('progress_seconds') ?? 0;
     }
 
     /**
@@ -187,7 +187,7 @@ class AnalyticsService
     public function getDailyWatchTime(int $days = 30): array
     {
         return DB::table('watch_progress')
-            ->select(DB::raw('DATE(updated_at) as date'), DB::raw('SUM(watch_time_minutes) as total_minutes'))
+            ->select(DB::raw('DATE(updated_at) as date'), DB::raw('SUM(progress_seconds) as total_minutes'))
             ->where('updated_at', '>=', now()->subDays($days))
             ->groupBy('date')
             ->orderBy('date')
@@ -218,7 +218,7 @@ class AnalyticsService
         $movies = DB::table('watch_progress')
             ->join('movies', 'watch_progress.watchable_id', '=', 'movies.id')
             ->where('watch_progress.watchable_type', Movie::class)
-            ->select('movies.id', 'movies.title', 'movies.slug', DB::raw('SUM(watch_progress.watch_time_minutes) as total_minutes'))
+            ->select('movies.id', 'movies.title', 'movies.slug', DB::raw('SUM(watch_progress.progress_seconds) as total_minutes'))
             ->groupBy('movies.id', 'movies.title', 'movies.slug')
             ->orderByDesc('total_minutes')
             ->limit($limit)
@@ -228,8 +228,9 @@ class AnalyticsService
         $episodes = DB::table('watch_progress')
             ->join('episodes', 'watch_progress.watchable_id', '=', 'episodes.id')
             ->where('watch_progress.watchable_type', Episode::class)
-            ->join('series', 'episodes.series_id', '=', 'series.id')
-            ->select('series.id', 'series.title', 'series.slug', DB::raw('SUM(watch_progress.watch_time_minutes) as total_minutes'))
+            ->join('seasons', 'episodes.season_id', '=', 'seasons.id')
+            ->join('series', 'seasons.series_id', '=', 'series.id')
+            ->select('series.id', 'series.title', 'series.slug', DB::raw('SUM(watch_progress.progress_seconds) as total_minutes'))
             ->groupBy('series.id', 'series.title', 'series.slug')
             ->orderByDesc('total_minutes')
             ->limit($limit)

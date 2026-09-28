@@ -1,8 +1,8 @@
-@extends('layouts.app')
+<x-layout>
+    <x-slot:title>Payment Status</x-slot:title>
 
-@section('title', 'Payment Status')
+    <x-header />
 
-@section('content')
 <div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-2xl mx-auto">
         <div class="bg-gray-800 rounded-2xl p-8 text-center">
@@ -109,4 +109,5 @@ setInterval(checkPaymentStatus, 10000);
 @endif
 </script>
 @endpush
-@endsection
+</x-layout>
+
