@@ -1,13 +1,17 @@
-<a href="https://github.com/josuapsianturi/velflix"> <h1 align="center">Velflix</h1></a>
-<p align="center"><a href="https://github.com/josuapsianturi/velflix/blob/main/LICENSE"><img src="https://poser.pugx.org/cpriego/valet-linux/license.svg" alt="License"></a>
+<a href="https://github.com/edrine25678/vjflix-uganda"> <h1 align="center">VJFlix Uganda</h1></a>
+<p align="center"><a href="https://github.com/edrine25678/vjflix-uganda/blob/main/LICENSE"><img src="https://poser.pugx.org/cpriego/valet-linux/license.svg" alt="License"></a>
 </p>
 
 ## About
 
-Velflix is a Laravel [Netflix](https://netflix.com) clone project using TALL stack ([Tailwindcss](https://tailwindcss.com/), [Alpinejs](https://github.com/alpinejs/alpine/), [Laravel](https://laravel.com/), [Livewire](https://laravel-livewire.com/) ).
+VJFlix Uganda is a Laravel [Netflix](https://netflix.com) clone project using TALL stack ([Tailwindcss](https://tailwindcss.com/), [Alpinejs](https://github.com/alpinejs/alpine/), [Laravel](https://laravel.com/), [Livewire](https://laravel-livewire.com/) ).
 
 > **Note**
 > Work in Progress
+
+### Credits
+
+Originally forked from [velflix](https://github.com/josuapsianturi/velflix) by Josua Putra Sianturi, which is MIT licensed and still carries its copyright notice in [LICENSE](LICENSE). This fork is rebranded to VJFlix Uganda and adds subscriptions, mobile money payments, recommendations, and a CMS admin console.
 
 ## Table of Contents
 
@@ -21,17 +25,17 @@ Velflix is a Laravel [Netflix](https://netflix.com) clone project using TALL sta
 <a name="screenshots"></a>
 ## Screenshots
 
-![home page](https://raw.githubusercontent.com/josuapsianturi/velflix/main/public/img/home.png)
+![home page](https://raw.githubusercontent.com/edrine25678/vjflix-uganda/main/public/img/home.png)
 
-see full page [here](https://raw.githubusercontent.com/josuapsianturi/velflix/main/public/img/home-full-page.png)
+see full page [here](https://raw.githubusercontent.com/edrine25678/vjflix-uganda/main/public/img/home-full-page.png)
 
-![movies header](https://raw.githubusercontent.com/josuapsianturi/velflix/main/public/img/movies-header.png)
+![movies header](https://raw.githubusercontent.com/edrine25678/vjflix-uganda/main/public/img/movies-header.png)
 
-![movies](https://raw.githubusercontent.com/josuapsianturi/velflix/main/public/img/movies.png)
+![movies](https://raw.githubusercontent.com/edrine25678/vjflix-uganda/main/public/img/movies.png)
 
-see full page [here](https://raw.githubusercontent.com/josuapsianturi/velflix/main/public/img/movies-full-page.png)
+see full page [here](https://raw.githubusercontent.com/edrine25678/vjflix-uganda/main/public/img/movies-full-page.png)
 
-![Detail movies](https://raw.githubusercontent.com/josuapsianturi/velflix/main/public/img/details-movie.png)
+![Detail movies](https://raw.githubusercontent.com/edrine25678/vjflix-uganda/main/public/img/details-movie.png)
 
 <a name="features"></a>
 ## Features
@@ -92,12 +96,12 @@ Package | Version
 Here is how you can run the project locally:
 1. Clone this repo
     ```sh
-    git clone https://github.com/josuapsianturi/velflix.git
+    git clone https://github.com/edrine25678/vjflix-uganda.git
     ```
 
 1. Go into the project root directory
     ```sh
-    cd velflix
+    cd vjflix-uganda
     ```
 
 1. Copy .env.example file to .env file
@@ -115,7 +119,7 @@ Here is how you can run the project locally:
 1. Create account and get an API key themoviedb [ here](https://www.themoviedb.org/settings/api). Make sure to copy `API Read Access Token (v4 auth)`.
 
 1. Go to `.env` file 
-    - set database credentials (`DB_DATABASE=velflix`, `DB_USERNAME=root`, `DB_PASSWORD=`)
+    - set database credentials (`DB_DATABASE=vjflix_uganda`, `DB_USERNAME=root`, `DB_PASSWORD=`)
     - paste `TMDB_TOKEN=(your API key)` 
     > Make sure to follow your database username and password
 
@@ -149,7 +153,7 @@ Here is how you can run the project locally:
      > email: user@gmail.com , password: password 
 
 1. Run server 
-    > for valet users visit `velflix.test` in your favorite browser
+    > for valet users visit `vjflix.test` in your favorite browser
    
     ```sh
     php artisan serve
@@ -170,7 +174,7 @@ Here is how you can run the project locally:
     - continue
  - Go to Profile > Extras > API keys
  - Create a key and copy API key
- - open the velflix project, go to `.env` file and paste it into `MAILCHIMP_KEY=paste API key here`
+ - open the vjflix-uganda project, go to `.env` file and paste it into `MAILCHIMP_KEY=paste API key here`
  - Go to configuration"></a>
 ## Configuration
 
@@ -209,7 +213,7 @@ APP_URL=https://yourdomain.com
 DB_CONNECTION=pgsql
 DB_HOST=your_db_host
 DB_PORT=5432
-DB_DATABASE=velflix
+DB_DATABASE=vjflix_uganda
 DB_USERNAME=your_db_username
 DB_PASSWORD=your_db_password
 
@@ -295,24 +299,24 @@ AIRTEL_MONEY_CALLBACK_URL=
 
  > make sure you fill in the `server` correctly, check the link at the top of your admin Mailchimp, for me its `https://us5.admin.mailchimp.com/account/api/` so i give the value of server is `us5`. if you get us6, change the server value to be `us6`.
 
-- visit `localhost:8000/ping` or `velflix.test/ping` and copy value of id in the ` "lists" > 0 > "id"`
+- visit `localhost:8000/ping` or `vjflix.test/ping` and copy value of id in the ` "lists" > 0 > "id"`
 - open project, in .env file paste the id into `MAILCHIMP_LIST_SUBSCRIBERS=paste id here` and we ready to go
-- visit `localhost:8000` or `velflix.test` test email for subscribing , and refresh your admin mailchimp it should be Your audience has increased 1 contact. 
+- visit `localhost:8000` or `vjflix.test` test email for subscribing , and refresh your admin mailchimp it should be Your audience has increased 1 contact. 
 
 14. Setup Laravel Socialite login with Google account (optional)
  - Go to the [Google Developers Console](https://console.cloud.google.com/apis) get "GOOGLE_CLIENT_ID" and "GOOGLE_CLIENT_SECRET". paste it into `.env` file.
  if you need help, you can follow these steps:
  - Click Credentials menu, click "select a project" at the navbar > ALL > No organization > new project.
- - project name 'velflix', location should be no organization > Create.
+ - project name 'VJFlix Uganda', location should be no organization > Create.
  - Go to OAuth consent screen menu > Select External and Create
- - App Information > app name 'velflix' choose user support email, fill email in developer contact information, save and continue
- - Go to Credentials menu > click `+Create Credentials` at the top > select "OAuth Client ID" > select Application type "Web Application" > Name 'velflix'
+ - App Information > app name 'VJFlix Uganda' choose user support email, fill email in developer contact information, save and continue
+ - Go to Credentials menu > click `+Create Credentials` at the top > select "OAuth Client ID" > select Application type "Web Application" > Name 'VJFlix Uganda'
  - At the Authorized redirect URIs > +ADD URI > paste this into it `http://127.0.0.1:8000/login/google/callback` > Create.
 
  > NOTE: you can change the port to be `8080` or others, but make sure when you run `php artisan serve`, your project run in the same port.
 
  -  Copy `Your Client ID` and `Your Client Secret` 
- - Open velflix project, go to `.env` file and paste it in `GOOGLE_CLIENT_ID=paste_here` and `GOOGLE_CLIENT_SECRET=paste_here` and we ready to go
+ - Open vjflix-uganda project, go to `.env` file and paste it in `GOOGLE_CLIENT_ID=paste_here` and `GOOGLE_CLIENT_SECRET=paste_here` and we ready to go
     ```sh
     php artisan serve
     ```
@@ -366,4 +370,4 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 <a name="license"></a>
 ## License
-Velflix is an open-sourced software licensed under [the MIT license](https://github.com/josuapsianturi/velflix/blob/main/LICENSE)
+VJFlix Uganda is an open-sourced software licensed under [the MIT license](https://github.com/edrine25678/vjflix-uganda/blob/main/LICENSE)

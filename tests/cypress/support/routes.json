@@ -216,10 +216,10 @@
       "POST"
     ]
   },
-  "velflix.index": {
-    "name": "velflix.index",
+  "vjflix.index": {
+    "name": "vjflix.index",
     "domain": null,
-    "action": "App\\Http\\Controllers\\VelflixController@index",
+    "action": "App\\Http\\Controllers\\VjFlixController@index",
     "uri": "movies",
     "method": [
       "GET",
@@ -229,7 +229,7 @@
   "movies.show": {
     "name": "movies.show",
     "domain": null,
-    "action": "App\\Http\\Controllers\\VelflixController@show",
+    "action": "App\\Http\\Controllers\\VjFlixController@show",
     "uri": "movie/{watch}",
     "method": [
       "GET",

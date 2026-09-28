@@ -10,7 +10,7 @@
 
     <div class="flex overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth">
         @forelse ($movies as $movie)
-            <x-velflix-card :movie="$movie" />
+            <x-vjflix-card :movie="$movie" />
         @empty
             <div class="text-xs text-slate-500 italic py-4">No translations available in this section yet.</div>
         @endforelse

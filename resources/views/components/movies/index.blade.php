@@ -3,13 +3,13 @@
 <div class="container my-6 mx-auto space-y-8 px-4">
     <!-- Popular Movies -->
     <x-movies :movies='$popular'>
-        <x-slot:category> Popular on Velflix &rsaquo; </x-slot:category>
+        <x-slot:category> Popular on VJFlix &rsaquo; </x-slot:category>
     </x-movies>
     <!-- End Popular Movies -->
 
     <!-- Trending Movies -->
     <x-movies :movies='$trending'>
-        <x-slot:category> Trending on Velflix &rsaquo; </x-slot:category>
+        <x-slot:category> Trending on VJFlix &rsaquo; </x-slot:category>
     </x-movies>
     <!-- End Trending Movies -->
 

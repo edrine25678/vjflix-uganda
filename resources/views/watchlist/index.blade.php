@@ -61,7 +61,7 @@
                     Explore translated blockbusters and series voiced by top Ugandan VJs, then click <strong>Add to List</strong> to save them here for later.
                 </p>
                 <div class="flex flex-wrap items-center justify-center gap-3">
-                    <a href="{{ route('velflix.index') }}" class="px-5 py-2.5 rounded-xl bg-amber-500 text-neutral-950 font-semibold text-sm hover:bg-amber-400 transition">
+                    <a href="{{ route('vjflix.index') }}" class="px-5 py-2.5 rounded-xl bg-amber-500 text-neutral-950 font-semibold text-sm hover:bg-amber-400 transition">
                         Browse Movies
                     </a>
                     <a href="{{ route('series.index') }}" class="px-5 py-2.5 rounded-xl bg-neutral-800 text-white font-semibold text-sm hover:bg-neutral-700 transition">

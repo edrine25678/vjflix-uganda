@@ -20,8 +20,8 @@ use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\StreamController;
 use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\VelflixController;
 use App\Http\Controllers\VjController;
+use App\Http\Controllers\VjFlixController;
 use App\Http\Controllers\WatchlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,8 +65,8 @@ Route::middleware('guest')->group(function () {
 // Authenticated Viewer Routes
 Route::middleware('auth')->group(function () {
     Route::post('logout', [SessionsController::class, 'destroy'])->name('logout');
-    Route::get('/movies', [VelflixController::class, 'index'])->name('velflix.index');
-    Route::get('/movie/{watch}', [VelflixController::class, 'show'])->name('movies.show');
+    Route::get('/movies', [VjFlixController::class, 'index'])->name('vjflix.index');
+    Route::get('/movie/{watch}', [VjFlixController::class, 'show'])->name('movies.show');
 
     // Watchlist / My List
     Route::get('/my-list', [WatchlistController::class, 'index'])->name('watchlist.index');

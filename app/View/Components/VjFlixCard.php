@@ -5,13 +5,13 @@ namespace App\View\Components;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class velflixCard extends Component
+class VjFlixCard extends Component
 {
     /** @var mixed */
     public $movie;
 
     /** @var mixed */
-    public $velflix;
+    public $vjflix;
 
     /**
      * @param  mixed  $movie
@@ -20,7 +20,7 @@ class velflixCard extends Component
     public function __construct($movie = null)
     {
         $this->movie = $movie;
-        $this->velflix = $movie;
+        $this->vjflix = $movie;
     }
 
     /**
@@ -30,6 +30,6 @@ class velflixCard extends Component
      */
     public function render()
     {
-        return view('components.velflix-card');
+        return view('components.vjflix-card');
     }
 }

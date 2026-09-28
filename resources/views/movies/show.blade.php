@@ -130,7 +130,7 @@
 
                 <div class="flex overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth">
                     @foreach ($moreFromVj as $relMovie)
-                        <x-velflix-card :movie="$relMovie" />
+                        <x-vjflix-card :movie="$relMovie" />
                     @endforeach
                 </div>
             </section>
@@ -149,7 +149,7 @@
 
                 <div class="flex overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth">
                     @foreach ($similarMovies as $simMovie)
-                        <x-velflix-card :movie="$simMovie" />
+                        <x-vjflix-card :movie="$simMovie" />
                     @endforeach
                 </div>
             </section>

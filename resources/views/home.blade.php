@@ -145,7 +145,7 @@
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
                     @foreach($genres as $genre)
-                        <a href="{{ route('velflix.index', ['genre' => $genre->slug]) }}"
+                        <a href="{{ route('vjflix.index', ['genre' => $genre->slug]) }}"
                            class="bg-gray-800 hover:bg-gray-700 rounded-lg p-4 text-center transition group">
                             <div class="text-white font-semibold text-sm">{{ $genre->name }}</div>
                             <div class="text-gray-400 text-xs mt-1">{{ $genre->movies_count }} Movies</div>

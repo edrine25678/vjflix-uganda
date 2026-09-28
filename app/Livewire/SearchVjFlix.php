@@ -8,9 +8,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class SearchVelflix extends Component
+class SearchVjFlix extends Component
 {
-    public string $searchVelflix = '';
+    public string $searchVjFlix = '';
 
     /**
      * @return View|Factory
@@ -20,7 +20,7 @@ class SearchVelflix extends Component
         $localMovies = collect();
         $localVjs = collect();
 
-        $query = trim($this->searchVelflix);
+        $query = trim($this->searchVjFlix);
 
         // Fixed logic: comparison now correctly outside strlen
         if (strlen($query) >= 2) {
@@ -39,7 +39,7 @@ class SearchVelflix extends Component
                 ->get();
         }
 
-        return view('livewire.search-velflix', [
+        return view('livewire.search-vjflix', [
             'localMovies' => $localMovies,
             'localVjs' => $localVjs,
             'searchQuery' => $query,

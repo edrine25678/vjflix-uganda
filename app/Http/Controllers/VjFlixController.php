@@ -8,7 +8,7 @@ use App\Models\Vj;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 
-class VelflixController extends Controller
+class VjFlixController extends Controller
 {
     public function index(): View|Factory
     {

@@ -25,10 +25,10 @@
             <div>
                 <h4 class="font-bold text-slate-200 text-xs uppercase tracking-wider mb-3">Explore</h4>
                 <ul class="space-y-2 text-slate-400">
-                    <li><a href="{{ route('velflix.index') }}" class="hover:text-amber-400 transition-colors">Movies Catalog</a></li>
+                    <li><a href="{{ route('vjflix.index') }}" class="hover:text-amber-400 transition-colors">Movies Catalog</a></li>
                     <li><a href="/vjs" class="hover:text-amber-400 transition-colors">Ugandan VJs</a></li>
                     <li><a href="/series" class="hover:text-amber-400 transition-colors">Translated Series</a></li>
-                    <li><a href="{{ route('velflix.index') }}" class="hover:text-amber-400 transition-colors">Trending in Kampala</a></li>
+                    <li><a href="{{ route('vjflix.index') }}" class="hover:text-amber-400 transition-colors">Trending in Kampala</a></li>
                 </ul>
             </div>
 

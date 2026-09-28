@@ -2,7 +2,7 @@
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <!-- Brand Logo -->
         <div class="flex items-center space-x-6">
-            <a href="{{ auth()->check() ? route('velflix.index') : '/' }}" class="flex items-center space-x-2 group">
+            <a href="{{ auth()->check() ? route('vjflix.index') : '/' }}" class="flex items-center space-x-2 group">
                 <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 text-black font-extrabold text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform font-display">
                     VJ
                 </span>
@@ -15,7 +15,7 @@
 
             <!-- Desktop Nav Links -->
             <nav class="hidden md:flex items-center space-x-1 text-sm font-medium text-slate-300">
-                <a href="{{ route('velflix.index') }}" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors {{ request()->routeIs('velflix.index') ? 'text-amber-400 bg-slate-800/80 font-semibold' : '' }}">
+                <a href="{{ route('vjflix.index') }}" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors {{ request()->routeIs('vjflix.index') ? 'text-amber-400 bg-slate-800/80 font-semibold' : '' }}">
                     Movies
                 </a>
                 <a href="/series" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors {{ request()->is('series*') ? 'text-amber-400 bg-slate-800/80 font-semibold' : '' }}">
@@ -35,7 +35,7 @@
         <!-- Right Side: Search & User Menu -->
         <div class="flex items-center space-x-3 sm:space-x-4">
             <div class="hidden sm:block">
-                <livewire:search-velflix />
+                <livewire:search-vjflix />
             </div>
 
             @auth

@@ -75,7 +75,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
                 @foreach ($movies as $movie)
                     <div class="w-full !mr-0">
-                        <x-velflix-card :movie="$movie" />
+                        <x-vjflix-card :movie="$movie" />
                     </div>
                 @endforeach
             </div>

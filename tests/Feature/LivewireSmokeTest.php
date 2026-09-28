@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Livewire\AdminController;
-use App\Livewire\SearchVelflix;
+use App\Livewire\SearchVjFlix;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -15,9 +15,9 @@ class LivewireSmokeTest extends TestCase
 
     public function test_search_component_resolves_and_renders(): void
     {
-        Livewire::test(SearchVelflix::class)
+        Livewire::test(SearchVjFlix::class)
             ->assertOk()
-            ->set('searchVelflix', 'zzzznomatch')
+            ->set('searchVjFlix', 'zzzznomatch')
             ->assertOk();
     }
 
