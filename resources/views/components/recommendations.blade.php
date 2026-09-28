@@ -6,7 +6,7 @@
 
     if ($user) {
         $endpoint = match($type) {
-            'personalized' => route('recommendations.personized', ['limit' => $limit]),
+            'personalized' => route('recommendations.personalized', ['limit' => $limit]),
             'watch-history' => route('recommendations.watch-history', ['limit' => $limit]),
             'trending' => route('recommendations.trending', ['limit' => $limit]),
             'new' => route('recommendations.new', ['limit' => $limit]),

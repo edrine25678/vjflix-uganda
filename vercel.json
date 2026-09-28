@@ -1,7 +1,7 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && php artisan optimize",
   "installCommand": "npm install",
   "outputDirectory": "public",
   "functions": {
