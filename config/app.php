@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => env('TIMEZONE', 'Africa/Kampala'),
+    'timezone' => env('APP_TIMEZONE', env('TIMEZONE', 'Africa/Kampala')),
 
     /*
     |--------------------------------------------------------------------------
