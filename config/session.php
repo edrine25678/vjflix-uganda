@@ -31,7 +31,11 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    // The serverless runtime can supply this variable as an empty string, and
+    // StartSession multiplies it by 60, which throws a TypeError on a non-numeric
+    // value. Fall back to the default when it is blank so the session does not
+    // end up expiring immediately.
+    'lifetime' => (int) (env('SESSION_LIFETIME') ?: 120),
 
     'expire_on_close' => false,
 
