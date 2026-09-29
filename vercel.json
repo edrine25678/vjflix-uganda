@@ -11,6 +11,9 @@
   },
   "routes": [
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
       "dest": "/api/index.php"
     }
@@ -18,9 +21,8 @@
   "env": {
     "APP_NAME": "VJFlix Uganda",
     "APP_ENV": "production",
-    "APP_KEY": "base64:ISNIzGH7bOWdd2VcWmvps+PjcAaeXstgrsoyYP9vzkg=",
     "APP_DEBUG": "false",
-    "APP_URL": "https://vjflix-uganda-k5mdgd26v-edrine25678.vercel.app",
+    "APP_URL": "https://vjflix-uganda.vercel.app",
     "LOG_CHANNEL": "stderr",
     "LOG_LEVEL": "error",
 
@@ -47,12 +49,8 @@
     "LARAVEL_STORAGE_PATH": "/tmp/storage",
 
     "DB_CONNECTION": "pgsql",
-    "DB_HOST": "ep-weathered-sky-b4vke2mw-pooler.c-6.us-east-2.aws.neon.tech",
     "DB_PORT": "5432",
     "DB_DATABASE": "neondb",
-    "DB_USERNAME": "neondb_owner",
-    "DB_PASSWORD": "npg_xE1dIwqtc6oV",
-    "DB_SSLMODE": "require",
-    "DB_EMULATE_PREPARES": "true"
+    "DB_SSLMODE": "require"
   }
 }
