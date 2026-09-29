@@ -35,7 +35,7 @@
         <!-- Right Side: Search & User Menu -->
         <div class="flex items-center space-x-3 sm:space-x-4">
             <div class="hidden sm:block">
-                <livewire:search-vjflix />
+                <livewire:search-vj-flix />
             </div>
 
             @auth
