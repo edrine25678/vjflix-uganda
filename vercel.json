@@ -1,9 +1,9 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && npm run vercel:assets",
   "installCommand": "npm install",
-  "outputDirectory": "public",
+  "outputDirectory": "public/static-deploy",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.2"
@@ -11,15 +11,7 @@
   },
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/api/index.php"
-    },
-    {
-      "source": "/index.php",
-      "destination": "/api/index.php"
-    },
-    {
-      "source": "/((?!build/|favicon|robots\\.txt|assets/|images/|uploads/).*)",
+      "source": "/(.*)",
       "destination": "/api/index.php"
     }
   ],
