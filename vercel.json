@@ -11,7 +11,15 @@
   },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/",
+      "destination": "/api/index.php"
+    },
+    {
+      "source": "/index.php",
+      "destination": "/api/index.php"
+    },
+    {
+      "source": "/((?!build/|favicon|robots\\.txt|assets/|images/|uploads/).*)",
       "destination": "/api/index.php"
     }
   ],
