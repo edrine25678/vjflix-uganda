@@ -67,7 +67,11 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', env('TIMEZONE', 'Africa/Kampala')),
+    // env() only falls back to its default when the variable is absent, so a
+    // variable the runtime sets to an empty string would resolve to '' here and
+    // make date_default_timezone_set() raise "Timezone ID '' is invalid". The ?: chain
+    // treats a blank value the same as a missing one.
+    'timezone' => env('APP_TIMEZONE') ?: env('TIMEZONE') ?: 'Africa/Kampala',
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +84,7 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE') ?: 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +97,7 @@ return [
     |
     */
 
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE') ?: 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -106,7 +110,7 @@ return [
     |
     */
 
-    'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
+    'faker_locale' => env('APP_FAKER_LOCALE') ?: 'en_US',
 
     /*
     |--------------------------------------------------------------------------
