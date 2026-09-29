@@ -11,7 +11,8 @@ use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionContro
 use App\Http\Controllers\Admin\VjController as AdminVjController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NewsletterController;
-use App\Http\Controllers\PaymentController;
+// Unused while the public payment routes are disabled. See the route block below.
+// use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\RegisterController;
@@ -19,7 +20,8 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\StreamController;
-use App\Http\Controllers\SubscriptionController;
+// Unused while the public subscription routes are disabled. See the route block below.
+// use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\VjController;
 use App\Http\Controllers\VjFlixController;
 use App\Http\Controllers\WatchlistController;
@@ -82,21 +84,28 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     // Subscriptions
+    // Disabled: VJFlix Uganda is a free, open-access app, so there is nothing to
+    // subscribe to. The controllers, models and tables are kept in place so this
+    // can be re-enabled later; uncomment to restore the paywall.
+    //
     // Keep the literal paths above /subscriptions/{subscription}, otherwise the
     // parameterised route matches first and route-model binding tries to cast
     // "history" to a bigint id.
-    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
-    Route::get('/subscriptions/history', [SubscriptionController::class, 'history'])->name('subscriptions.history');
-    Route::get('/subscriptions/plan/{plan}', [SubscriptionController::class, 'plan'])->name('subscriptions.plan');
-    Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
-    Route::post('/subscriptions/{subscription}/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+    //
+    // Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+    // Route::get('/subscriptions/history', [SubscriptionController::class, 'history'])->name('subscriptions.history');
+    // Route::get('/subscriptions/plan/{plan}', [SubscriptionController::class, 'plan'])->name('subscriptions.plan');
+    // Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
+    // Route::post('/subscriptions/{subscription}/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
 
     // Payments
-    Route::post('/payments/initiate', [PaymentController::class, 'initiate'])->name('payments.initiate');
-    Route::get('/payments/status', [PaymentController::class, 'status'])->name('payments.status');
-    Route::get('/payments/check/{reference}', [PaymentController::class, 'checkStatus'])->name('payments.check');
-    Route::get('/payments/history', [PaymentController::class, 'history'])->name('payments.history');
-    Route::get('/payments/receipt/{payment}', [PaymentController::class, 'receipt'])->name('payments.receipt');
+    // Disabled alongside subscriptions, see the note above.
+    //
+    // Route::post('/payments/initiate', [PaymentController::class, 'initiate'])->name('payments.initiate');
+    // Route::get('/payments/status', [PaymentController::class, 'status'])->name('payments.status');
+    // Route::get('/payments/check/{reference}', [PaymentController::class, 'checkStatus'])->name('payments.check');
+    // Route::get('/payments/history', [PaymentController::class, 'history'])->name('payments.history');
+    // Route::get('/payments/receipt/{payment}', [PaymentController::class, 'receipt'])->name('payments.receipt');
 
     // Recommendations API
     Route::prefix('api/recommendations')->name('recommendations.')->group(function () {
@@ -137,4 +146,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin'])->group
 });
 
 // Payment Callback Routes (Public)
-Route::post('/payments/callback/{provider}', [PaymentController::class, 'callback'])->name('payments.callback');
+// Disabled: this is an unauthenticated endpoint that a payment provider posts to.
+// It stays off so no provider can create payments for a site that is now free.
+// Uncomment together with the payment routes above to re-enable.
+//
+// Route::post('/payments/callback/{provider}', [PaymentController::class, 'callback'])->name('payments.callback');

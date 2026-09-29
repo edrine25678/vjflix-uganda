@@ -15,9 +15,8 @@
                     "Your Movies. Your VJs. Your Language." — Uganda's premier streaming platform dedicated to celebrating Video Jockey translations and local cinema culture.
                 </p>
                 <div class="pt-2 flex items-center space-x-2 text-[11px] text-slate-500">
-                    <span>Supported Payments:</span>
-                    <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 font-bold border border-yellow-500/20">MTN MoMo</span>
-                    <span class="px-2 py-0.5 rounded bg-red-500/10 text-red-400 font-bold border border-red-500/20">Airtel Money</span>
+                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">100% Free</span>
+                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20">No Sign-up Cost</span>
                 </div>
             </div>
 
@@ -48,7 +47,7 @@
                 <h4 class="font-bold text-slate-200 text-xs uppercase tracking-wider mb-3">Platform</h4>
                 <ul class="space-y-2 text-slate-400">
                     <li><a href="/dashboard" class="hover:text-amber-400 transition-colors">My Library</a></li>
-                    <li><a href="#" class="hover:text-amber-400 transition-colors">Subscription Plans</a></li>
+                    <li><a href="{{ route('vjflix.index') }}" class="hover:text-amber-400 transition-colors">Browse Movies</a></li>
                     <li><a href="#" class="hover:text-amber-400 transition-colors">Terms of Service</a></li>
                     <li><a href="#" class="hover:text-amber-400 transition-colors">Privacy Policy</a></li>
                 </ul>

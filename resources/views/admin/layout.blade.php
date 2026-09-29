@@ -64,8 +64,12 @@
             </nav>
 
             <!-- Monetisation -->
+            <!-- Retired: the site is free, so these screens are read-only history.
+                 The admin routes stay registered and the tables still hold their
+                 data; the public-facing paywall routes are commented out in
+                 routes/web.php. -->
             <nav class="px-4 pb-4 space-y-1 text-sm font-semibold">
-                <p class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-widest text-slate-500 font-bold">Monetisation</p>
+                <p class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-widest text-slate-500 font-bold">Monetisation (retired)</p>
 
                 <a href="{{ route('admin.plans.index') }}" class="flex items-center px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('admin.plans.*') ? 'bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <x-bi-list-check class="h-4 w-4 mr-3" />
