@@ -38,11 +38,10 @@
     "QUEUE_CONNECTION": "sync",
     "FILESYSTEM_DISK": "local",
 
-    "APP_CONFIG_CACHE": "/tmp/config.php",
     "APP_EVENTS_CACHE": "/tmp/events.php",
-    "APP_PACKAGES_CACHE": "/tmp/packages.php",
     "APP_ROUTES_CACHE": "/tmp/routes.php",
-    "APP_SERVICES_CACHE": "/tmp/services.php",
+    "APP_SERVICES_CACHE": "/tmp/bootstrap/cache/services.php",
+    "APP_PACKAGES_CACHE": "/tmp/bootstrap/cache/packages.php",
     "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
     "LARAVEL_STORAGE_PATH": "/tmp/storage",
 
