@@ -105,6 +105,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Horror', 'slug' => 'horror', 'description' => 'Spooky thrills and supernatural mysteries'],
             ['name' => 'Animation', 'slug' => 'animation', 'description' => 'Animated family adventures and anime'],
             ['name' => 'Drama', 'slug' => 'drama', 'description' => 'Emotional and deep narrative stories'],
+            ['name' => 'Crime', 'slug' => 'crime', 'description' => 'Heists, syndicates, mob dramas and detective stories'],
         ];
 
         $genreModels = [];
@@ -377,6 +378,8 @@ class DatabaseSeeder extends Seeder
             foreach ($genreSlugs as $gSlug) {
                 if (isset($genreModels[$gSlug])) {
                     $genreIds[] = $genreModels[$gSlug]->id;
+                } else {
+                    throw new \RuntimeException("Unknown genre slug '{$gSlug}' on movie '{$mData['slug']}'. Add it to \$genresData.");
                 }
             }
             $movie->genres()->sync($genreIds);
@@ -569,6 +572,8 @@ class DatabaseSeeder extends Seeder
             foreach ($genreSlugs as $gSlug) {
                 if (isset($genreModels[$gSlug])) {
                     $genreIds[] = $genreModels[$gSlug]->id;
+                } else {
+                    throw new \RuntimeException("Unknown genre slug '{$gSlug}' on series '{$sData['slug']}'. Add it to \$genresData.");
                 }
             }
             $series->genres()->sync($genreIds);

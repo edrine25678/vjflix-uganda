@@ -102,6 +102,8 @@ class PlanSeeder extends Seeder
             );
         }
 
-        $this->command->info('Subscription plans seeded successfully.');
+        // $command is only set when this seeder runs on its own via db:seed. When it
+        // is invoked through DatabaseSeeder::call() it stays null, so guard the call.
+        $this->command?->info('Subscription plans seeded successfully.');
     }
 }
