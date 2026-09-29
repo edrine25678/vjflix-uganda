@@ -31,15 +31,15 @@ class SessionsController extends Controller
 
         // attempt to authenticate and log in the user
         // based on the provided credentials
-        if (auth()->attempt($attributes)) {
+        if (auth()->attempt($attributes, request()->boolean('remember'))) {
             session()->regenerate();
 
-            return redirect('/movies')->with('success', 'Welcome ');
+            return redirect('/movies')->with('success', 'Welcome back to VJFlix Uganda.');
         }
 
         // auth filed
         throw ValidationException::withMessages([
-            'email' => 'Your provieded credentials could not be verified.',
+            'email' => 'The provided credentials could not be verified.',
         ]);
     }
 
