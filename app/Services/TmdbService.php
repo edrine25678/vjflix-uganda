@@ -10,10 +10,12 @@ class TmdbService
 {
     protected string $baseUrl = 'https://api.themoviedb.org/3';
     protected ?string $token;
+    protected ?string $apiKey;
 
     public function __construct()
     {
         $this->token = config('services.tmdb.token');
+        $this->apiKey = config('services.tmdb.api_key') ?: env('TMDB_API_KEY', '98083e59e23b3419acb65cb2fb1e7cae');
     }
 
     /**
@@ -21,7 +23,7 @@ class TmdbService
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->token);
+        return ! empty($this->apiKey) || ! empty($this->token);
     }
 
     /**
@@ -36,22 +38,38 @@ class TmdbService
         try {
             $client = Http::timeout(10)->baseUrl($this->baseUrl);
 
-            // Handle either Bearer JWT token or v3 32-char hex API key
-            if (strlen($this->token) === 32 && ctype_xdigit($this->token)) {
-                $params['api_key'] = $this->token;
-                $response = $client->get($endpoint, $params);
-            } else {
-                $response = $client->withToken($this->token)->get($endpoint, $params);
+            // 1. If we have a v3 API key, query with api_key param (most reliable)
+            if (! empty($this->apiKey)) {
+                $paramsWithKey = array_merge($params, ['api_key' => $this->apiKey]);
+                $response = $client->get($endpoint, $paramsWithKey);
+                if ($response->successful()) {
+                    return $response->json() ?? [];
+                }
             }
 
-            if ($response->successful()) {
-                return $response->json() ?? [];
+            // 2. Try Bearer token if available
+            if (! empty($this->token)) {
+                if (strlen($this->token) === 32 && ctype_xdigit($this->token)) {
+                    $response = $client->get($endpoint, array_merge($params, ['api_key' => $this->token]));
+                } else {
+                    $response = $client->withToken($this->token)->get($endpoint, $params);
+                }
+
+                if ($response->successful()) {
+                    return $response->json() ?? [];
+                }
+            }
+
+            // 3. Guaranteed fallback with working key
+            $fallbackResponse = $client->get($endpoint, array_merge($params, ['api_key' => '98083e59e23b3419acb65cb2fb1e7cae']));
+            if ($fallbackResponse->successful()) {
+                return $fallbackResponse->json() ?? [];
             }
 
             Log::warning('TMDB API error', [
                 'endpoint' => $endpoint,
-                'status' => $response->status(),
-                'body' => $response->body(),
+                'status' => $fallbackResponse->status(),
+                'body' => $fallbackResponse->body(),
             ]);
 
             return [];

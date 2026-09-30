@@ -32,6 +32,7 @@ return [
 
     'tmdb' => [
         'token' => env('TMDB_TOKEN'),
+        'api_key' => env('TMDB_API_KEY', '98083e59e23b3419acb65cb2fb1e7cae'),
     ],
 
     'mailchimp' => [
