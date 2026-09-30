@@ -16,6 +16,9 @@
             </a>
         </div>
 
+        <!-- TMDB Quick Fetcher -->
+        @include('admin.partials.tmdb-fetcher', ['type' => 'movie'])
+
         <form method="POST" action="{{ route('admin.movies.update', $movie->id) }}" enctype="multipart/form-data" class="rounded-2xl bg-slate-900 border border-slate-800 p-6 sm:p-8 space-y-6 shadow-xl">
             @csrf
             @method('PUT')
@@ -29,6 +32,18 @@
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Release Year</label>
                     <input type="number" name="release_year" value="{{ old('release_year', $movie->release_year) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                </div>
+            </div>
+
+            <!-- Original Title & Trailer URL -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Original English/Foreign Title</label>
+                    <input type="text" name="original_title" value="{{ old('original_title', $movie->original_title) }}" placeholder="e.g. John Wick: Chapter 4" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Trailer URL (YouTube/MP4)</label>
+                    <input type="url" name="trailer_url" value="{{ old('trailer_url', $movie->trailer_url) }}" placeholder="https://www.youtube.com/watch?v=..." class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\PlanController as AdminPlanController;
 use App\Http\Controllers\Admin\SeriesController as AdminSeriesController;
 use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
+use App\Http\Controllers\Admin\TmdbController as AdminTmdbController;
 use App\Http\Controllers\Admin\VjController as AdminVjController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NewsletterController;
@@ -130,6 +131,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin'])->group
     Route::post('seasons/{season}/episodes', [AdminEpisodeController::class, 'store'])->name('episodes.store');
     Route::put('episodes/{episode}', [AdminEpisodeController::class, 'update'])->name('episodes.update');
     Route::delete('episodes/{episode}', [AdminEpisodeController::class, 'destroy'])->name('episodes.destroy');
+
+    // TMDB Movie & Series Resources & Importer
+    Route::get('tmdb', [AdminTmdbController::class, 'index'])->name('tmdb.index');
+    Route::get('tmdb/search', [AdminTmdbController::class, 'search'])->name('tmdb.search');
+    Route::get('tmdb/details/{type}/{id}', [AdminTmdbController::class, 'details'])->name('tmdb.details');
+    Route::post('tmdb/import', [AdminTmdbController::class, 'import'])->name('tmdb.import');
 
     // Subscription Management
     Route::resource('plans', AdminPlanController::class);

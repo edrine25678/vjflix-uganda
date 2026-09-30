@@ -24,6 +24,11 @@
                     @endif
                 </form>
 
+                <a href="{{ route('admin.tmdb.index') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-bold border border-slate-700 hover:border-amber-500/40 transition-all">
+                    <x-bi-cloud-arrow-down class="h-3.5 w-3.5" />
+                    TMDB Importer
+                </a>
+
                 <a href="{{ route('admin.movies.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-extrabold shadow-md shadow-amber-500/20 transition-all">
                     <x-bi-plus-lg class="h-3.5 w-3.5 stroke-[2]" />
                     Add Movie

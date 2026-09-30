@@ -40,14 +40,27 @@ class SeriesController extends Controller
     /**
      * Show the form for creating a new series.
      */
-    public function create(): View|Factory
+    public function create(Request $request): View|Factory
     {
         $vjs = Vj::active()->orderBy('stage_name')->get();
         $genres = Genre::where('is_active', true)->orderBy('name')->get();
 
+        $tmdbPrefill = null;
+        if ($tmdbId = $request->query('tmdb_id')) {
+            try {
+                $tmdbService = app(\App\Services\TmdbService::class);
+                if ($raw = $tmdbService->getSeriesDetails($tmdbId)) {
+                    $tmdbPrefill = $tmdbService->formatSeriesForForm($raw);
+                }
+            } catch (\Throwable $e) {
+                // Ignore TMDB error
+            }
+        }
+
         return view('admin.series.create', [
             'vjs' => $vjs,
             'genres' => $genres,
+            'tmdbPrefill' => $tmdbPrefill,
         ]);
     }
 

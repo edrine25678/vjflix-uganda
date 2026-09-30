@@ -13,6 +13,9 @@
             </div>
         </div>
 
+        <!-- TMDB Quick Fetcher -->
+        @include('admin.partials.tmdb-fetcher', ['type' => 'movie'])
+
         <form method="POST" action="{{ route('admin.movies.store') }}" enctype="multipart/form-data" class="rounded-2xl bg-slate-900 border border-slate-800 p-6 sm:p-8 space-y-6 shadow-xl">
             @csrf
 
@@ -20,11 +23,23 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div class="sm:col-span-2">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Movie Title *</label>
-                    <input type="text" name="title" value="{{ old('title') }}" required placeholder="e.g. John Wick 4 (Luganda)" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                    <input type="text" name="title" value="{{ old('title', $tmdbPrefill['translated_title_suggestion'] ?? ($tmdbPrefill['title'] ?? '')) }}" required placeholder="e.g. John Wick 4 (Luganda)" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Release Year</label>
-                    <input type="number" name="release_year" value="{{ old('release_year', date('Y')) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                    <input type="number" name="release_year" value="{{ old('release_year', $tmdbPrefill['release_year'] ?? date('Y')) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                </div>
+            </div>
+
+            <!-- Original Title & Trailer URL -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Original English/Foreign Title</label>
+                    <input type="text" name="original_title" value="{{ old('original_title', $tmdbPrefill['original_title'] ?? '') }}" placeholder="e.g. John Wick: Chapter 4" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Trailer URL (YouTube/MP4)</label>
+                    <input type="url" name="trailer_url" value="{{ old('trailer_url', $tmdbPrefill['trailer_url'] ?? '') }}" placeholder="https://www.youtube.com/watch?v=..." class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
@@ -43,19 +58,19 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Duration (minutes)</label>
-                    <input type="number" name="duration" value="{{ old('duration', 120) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                    <input type="number" name="duration" value="{{ old('duration', $tmdbPrefill['duration'] ?? 120) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
             <!-- Synopsis & Description -->
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Short Synopsis</label>
-                <textarea name="synopsis" rows="2" placeholder="Brief summary of the movie..." class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('synopsis') }}</textarea>
+                <textarea name="synopsis" rows="2" placeholder="Brief summary of the movie..." class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('synopsis', $tmdbPrefill['synopsis'] ?? '') }}</textarea>
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Full Description</label>
-                <textarea name="description" rows="4" placeholder="Detailed plot and VJ translation notes..." class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('description') }}</textarea>
+                <textarea name="description" rows="4" placeholder="Detailed plot and VJ translation notes..." class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('description', $tmdbPrefill['description'] ?? '') }}</textarea>
             </div>
 
             <!-- Video Stream URL -->
@@ -70,14 +85,14 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Poster Image File</label>
                     <input type="file" name="poster_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400 hover:file:bg-slate-700">
                     <p class="text-[10px] text-slate-500 mt-1">Or provide image URL below:</p>
-                    <input type="url" name="poster_url" value="{{ old('poster_url') }}" placeholder="https://..." class="mt-1 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    <input type="url" name="poster_url" value="{{ old('poster_url', $tmdbPrefill['poster_url'] ?? '') }}" placeholder="https://..." class="mt-1 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Backdrop Banner File</label>
                     <input type="file" name="backdrop_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400 hover:file:bg-slate-700">
                     <p class="text-[10px] text-slate-500 mt-1">Or provide banner URL below:</p>
-                    <input type="url" name="backdrop_url" value="{{ old('backdrop_url') }}" placeholder="https://..." class="mt-1 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    <input type="url" name="backdrop_url" value="{{ old('backdrop_url', $tmdbPrefill['backdrop_url'] ?? '') }}" placeholder="https://..." class="mt-1 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
             </div>
 
@@ -87,7 +102,7 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     @foreach ($genres as $genre)
                         <label class="flex items-center space-x-2 rounded-lg bg-slate-950 border border-slate-800 p-2.5 cursor-pointer hover:border-slate-700">
-                            <input type="checkbox" name="genres[]" value="{{ $genre->id }}" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-amber-500" {{ in_array($genre->id, old('genres', [])) ? 'checked' : '' }}>
+                            <input type="checkbox" name="genres[]" value="{{ $genre->id }}" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-amber-500" {{ in_array($genre->id, old('genres', $tmdbPrefill['genre_ids'] ?? [])) ? 'checked' : '' }}>
                             <span class="text-xs text-slate-300">{{ $genre->name }}</span>
                         </label>
                     @endforeach

@@ -91,6 +91,12 @@
                     TV Series & Episodes
                 </a>
 
+                <a href="{{ route('admin.tmdb.index') }}" class="flex items-center px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('admin.tmdb.*') ? 'bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <x-bi-cloud-arrow-down class="h-4 w-4 mr-3 {{ request()->routeIs('admin.tmdb.*') ? 'text-black' : 'text-amber-400' }}" />
+                    <span>TMDB Importer</span>
+                    <span class="ml-auto text-[9px] px-1.5 py-0.5 rounded font-extrabold {{ request()->routeIs('admin.tmdb.*') ? 'bg-black text-amber-400' : 'bg-amber-500/20 text-amber-400' }}">API</span>
+                </a>
+
                 <a href="{{ route('admin.vjs.index') }}" class="flex items-center px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('admin.vjs.*') ? 'bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <x-bi-mic class="h-4 w-4 mr-3" />
                     Ugandan VJs

@@ -16,6 +16,9 @@
             </a>
         </div>
 
+        <!-- TMDB Quick Fetcher -->
+        @include('admin.partials.tmdb-fetcher', ['type' => 'tv'])
+
         <!-- 1. Series General Metadata Form -->
         <form method="POST" action="{{ route('admin.series.update', $series->id) }}" enctype="multipart/form-data" class="rounded-2xl bg-slate-900 border border-slate-800 p-6 sm:p-8 space-y-6 shadow-xl">
             @csrf

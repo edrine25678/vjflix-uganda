@@ -39,14 +39,27 @@ class MovieController extends Controller
     /**
      * Show the form for creating a new movie.
      */
-    public function create(): View|Factory
+    public function create(Request $request): View|Factory
     {
         $vjs = Vj::active()->orderBy('stage_name')->get();
         $genres = Genre::where('is_active', true)->orderBy('name')->get();
 
+        $tmdbPrefill = null;
+        if ($tmdbId = $request->query('tmdb_id')) {
+            try {
+                $tmdbService = app(\App\Services\TmdbService::class);
+                if ($raw = $tmdbService->getMovieDetails($tmdbId)) {
+                    $tmdbPrefill = $tmdbService->formatMovieForForm($raw);
+                }
+            } catch (\Throwable $e) {
+                // Ignore TMDB error and show regular blank form
+            }
+        }
+
         return view('admin.movies.create', [
             'vjs' => $vjs,
             'genres' => $genres,
+            'tmdbPrefill' => $tmdbPrefill,
         ]);
     }
 
@@ -57,12 +70,14 @@ class MovieController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
+            'original_title' => ['nullable', 'string', 'max:255'],
             'synopsis' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'vj_id' => ['nullable', 'exists:vjs,id'],
             'release_year' => ['nullable', 'integer', 'min:1950', 'max:2030'],
             'duration' => ['nullable', 'integer'],
             'video_url' => ['nullable', 'url'],
+            'trailer_url' => ['nullable', 'url'],
             'poster_url' => ['nullable', 'url'],
             'poster_file' => ['nullable', 'image', 'mimes:jpeg,png,webp,jpg', 'max:4096'],
             'backdrop_url' => ['nullable', 'url'],
@@ -95,12 +110,14 @@ class MovieController extends Controller
         $movie = Movie::create([
             'title' => $validated['title'],
             'slug' => $uniqueSlug,
+            'original_title' => $validated['original_title'] ?? null,
             'synopsis' => $validated['synopsis'] ?? null,
             'description' => $validated['description'] ?? null,
             'vj_id' => $validated['vj_id'] ?? null,
             'release_year' => $validated['release_year'] ?? date('Y'),
             'duration' => $validated['duration'] ?? 110,
             'video_url' => $validated['video_url'] ?? null,
+            'trailer_url' => $validated['trailer_url'] ?? null,
             'poster' => $poster,
             'backdrop' => $backdrop,
             'status' => $validated['status'],
@@ -138,12 +155,14 @@ class MovieController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
+            'original_title' => ['nullable', 'string', 'max:255'],
             'synopsis' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'vj_id' => ['nullable', 'exists:vjs,id'],
             'release_year' => ['nullable', 'integer', 'min:1950', 'max:2030'],
             'duration' => ['nullable', 'integer'],
             'video_url' => ['nullable', 'url'],
+            'trailer_url' => ['nullable', 'url'],
             'poster_url' => ['nullable', 'url'],
             'poster_file' => ['nullable', 'image', 'mimes:jpeg,png,webp,jpg', 'max:4096'],
             'backdrop_url' => ['nullable', 'url'],
@@ -167,12 +186,14 @@ class MovieController extends Controller
 
         $movie->update([
             'title' => $validated['title'],
+            'original_title' => $validated['original_title'] ?? $movie->original_title,
             'synopsis' => $validated['synopsis'] ?? null,
             'description' => $validated['description'] ?? null,
             'vj_id' => $validated['vj_id'] ?? null,
             'release_year' => $validated['release_year'] ?? $movie->release_year,
             'duration' => $validated['duration'] ?? $movie->duration,
             'video_url' => $validated['video_url'] ?? $movie->video_url,
+            'trailer_url' => $validated['trailer_url'] ?? $movie->trailer_url,
             'poster' => $poster,
             'backdrop' => $backdrop,
             'status' => $validated['status'],
