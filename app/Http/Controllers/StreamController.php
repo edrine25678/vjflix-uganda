@@ -18,7 +18,12 @@ class StreamController extends Controller
      */
     public function streamMovie(Request $request, string $slug)
     {
-        $movie = Movie::where('slug', $slug)->orWhere('id', $slug)->firstOrFail();
+        $movie = Movie::where(function ($query) use ($slug) {
+            $query->where('slug', $slug);
+            if (is_numeric($slug)) {
+                $query->orWhere('id', (int) $slug);
+            }
+        })->firstOrFail();
 
         // If local storage video file exists
         if ($movie->video_path && Storage::disk('public')->exists($movie->video_path)) {

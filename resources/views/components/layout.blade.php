@@ -21,6 +21,13 @@
         [x-cloak] { display: none !important; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; }
         .font-display { font-family: 'Bebas Neue', sans-serif; }
+        input:not([class*="text-white"]):not([class*="bg-slate"]):not([class*="bg-black"]):not([type="hidden"]),
+        textarea:not([class*="text-white"]):not([class*="bg-slate"]):not([class*="bg-black"]) {
+            color: #000000 !important;
+        }
+        input.bg-white, input.bg-gray-100, input.bg-slate-100 {
+            color: #000000 !important;
+        }
     </style>
 </head>
 <body class="min-h-full flex flex-col antialiased selection:bg-amber-500 selection:text-black">

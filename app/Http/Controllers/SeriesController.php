@@ -77,8 +77,12 @@ class SeriesController extends Controller
             'seasons' => fn ($q) => $q->orderBy('season_number'),
             'seasons.episodes' => fn ($q) => $q->orderBy('episode_number')->with('vj'),
         ])
-            ->where('slug', $slug)
-            ->orWhere('id', $slug)
+            ->where(function ($query) use ($slug) {
+                $query->where('slug', $slug);
+                if (is_numeric($slug)) {
+                    $query->orWhere('id', (int) $slug);
+                }
+            })
             ->first();
 
         if (! $series) {

@@ -35,6 +35,10 @@ Route::post('newsletter', NewsletterController::class)->name('newsletter.subscri
 Route::get('/vjs', [VjController::class, 'index'])->name('vjs.index');
 Route::get('/vjs/{slug}', [VjController::class, 'show'])->name('vjs.show');
 
+// Movie Catalog & Streaming Watch Page (Public Access)
+Route::get('/movies', [VjFlixController::class, 'index'])->name('vjflix.index');
+Route::get('/movie/{watch}', [VjFlixController::class, 'show'])->name('movies.show');
+
 // TV Series Catalog & Episodes Streaming
 Route::get('/series', [SeriesController::class, 'index'])->name('series.index');
 Route::get('/series/{slug}', [SeriesController::class, 'show'])->name('series.show');
@@ -67,8 +71,6 @@ Route::middleware('guest')->group(function () {
 // Authenticated Viewer Routes
 Route::middleware('auth')->group(function () {
     Route::post('logout', [SessionsController::class, 'destroy'])->name('logout');
-    Route::get('/movies', [VjFlixController::class, 'index'])->name('vjflix.index');
-    Route::get('/movie/{watch}', [VjFlixController::class, 'show'])->name('movies.show');
 
     // Watchlist / My List
     Route::get('/my-list', [WatchlistController::class, 'index'])->name('watchlist.index');

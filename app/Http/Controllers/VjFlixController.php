@@ -90,8 +90,12 @@ class VjFlixController extends Controller
     public function show($id): View|Factory
     {
         $movie = Movie::with(['vj', 'genres'])
-            ->where('slug', $id)
-            ->orWhere('id', $id)
+            ->where(function ($query) use ($id) {
+                $query->where('slug', $id);
+                if (is_numeric($id)) {
+                    $query->orWhere('id', (int) $id);
+                }
+            })
             ->first();
 
         if (! $movie) {
