@@ -200,7 +200,7 @@
                                 New Episode for Season {{ $season->season_number }}
                             </h4>
 
-                            <form method="POST" action="{{ route('admin.episodes.store', $season->id) }}" class="space-y-4">
+                            <form method="POST" action="{{ route('admin.episodes.store', $season->id) }}" enctype="multipart/form-data" class="space-y-4">
                                 @csrf
 
                                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -218,9 +218,25 @@
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Video Stream URL</label>
-                                    <input type="url" name="video_url" placeholder="https://domain.com/streams/episode.mp4 or m3u8" class="w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                                <!-- Episode Video Source: Upload from Device or Paste URL -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-3 rounded-xl bg-slate-950 border border-slate-800">
+                                    <div class="space-y-1">
+                                        <label class="block text-[11px] font-bold uppercase text-amber-400">Option 1: Upload Video from Device</label>
+                                        <p class="text-[10px] text-slate-400">MP4, WebM, MKV file from computer</p>
+                                        <input type="file"
+                                               name="video_file"
+                                               accept="video/mp4,video/webm,video/quicktime,video/x-matroska,.mp4,.webm,.mov,.mkv"
+                                               class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer">
+                                    </div>
+
+                                    <div class="space-y-1">
+                                        <label class="block text-[11px] font-bold uppercase text-blue-400">Option 2: Video Stream URL</label>
+                                        <p class="text-[10px] text-slate-400">Or paste external .mp4 / .m3u8 URL</p>
+                                        <input type="url"
+                                               name="video_url"
+                                               placeholder="https://domain.com/streams/episode.mp4 or m3u8"
+                                               class="w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                                    </div>
                                 </div>
 
                                 <div>

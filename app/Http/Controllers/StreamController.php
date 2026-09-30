@@ -28,8 +28,9 @@ class StreamController extends Controller
         // If local storage video file exists
         if ($movie->video_path && Storage::disk('public')->exists($movie->video_path)) {
             $path = Storage::disk('public')->path($movie->video_path);
+            $mime = (file_exists($path) ? mime_content_type($path) : null) ?: 'video/mp4';
 
-            return $this->serveByteRangeStream($request, $path, 'video/mp4');
+            return $this->serveByteRangeStream($request, $path, $mime);
         }
 
         // If remote URL is provided
@@ -52,8 +53,9 @@ class StreamController extends Controller
 
         if ($episode->video_path && Storage::disk('public')->exists($episode->video_path)) {
             $path = Storage::disk('public')->path($episode->video_path);
+            $mime = (file_exists($path) ? mime_content_type($path) : null) ?: 'video/mp4';
 
-            return $this->serveByteRangeStream($request, $path, 'video/mp4');
+            return $this->serveByteRangeStream($request, $path, $mime);
         }
 
         if (! empty($episode->video_url)) {

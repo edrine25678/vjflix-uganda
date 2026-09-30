@@ -77,10 +77,72 @@
                 <textarea name="description" rows="4" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('description', $movie->description) }}</textarea>
             </div>
 
-            <!-- Video Stream URL -->
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Video Stream URL</label>
-                <input type="url" name="video_url" value="{{ old('video_url', $movie->video_url) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
+            <!-- Video Media Source: Upload from Device or Paste URL -->
+            <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400">
+                            Movie Video Source *
+                        </label>
+                        <p class="text-[11px] text-slate-400 mt-0.5">
+                            Upload a video file from your computer or paste an external streaming link.
+                        </p>
+                    </div>
+                    @if ($movie->video_path)
+                        <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                            ✓ Local File Uploaded
+                        </span>
+                    @elseif ($movie->video_url)
+                        <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                            ✓ Remote URL Active
+                        </span>
+                    @endif
+                </div>
+
+                @if ($movie->video_path)
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-2">
+                            <x-bi-file-earmark-play-fill class="h-4 w-4 text-emerald-400" />
+                            <span class="text-slate-300 font-mono text-[11px]">{{ $movie->video_path }}</span>
+                        </div>
+                        <a href="{{ route('stream.movie', $movie->slug) }}" target="_blank" class="text-amber-400 hover:underline font-bold text-[11px]">
+                            Preview Stream &rarr;
+                        </a>
+                    </div>
+                @endif
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                    <!-- Option 1: Upload from Local Device -->
+                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/20 text-amber-400 text-xs">
+                                <x-bi-upload class="h-3.5 w-3.5" />
+                            </span>
+                            <span class="text-xs font-bold text-white">Upload / Replace Video File</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400">Select an MP4, WebM, or MKV file from your local storage.</p>
+                        <input type="file"
+                               name="video_file"
+                               accept="video/mp4,video/webm,video/quicktime,video/x-matroska,.mp4,.webm,.mov,.mkv"
+                               class="w-full text-xs text-slate-400 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer">
+                    </div>
+
+                    <!-- Option 2: Paste Stream URL -->
+                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400 text-xs">
+                                <x-bi-link-45deg class="h-3.5 w-3.5" />
+                            </span>
+                            <span class="text-xs font-bold text-white">Cloud / CDN Stream URL</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400">Paste direct .mp4, Cloudflare R2, BunnyCDN, or .m3u8 link.</p>
+                        <input type="url"
+                               name="video_url"
+                               value="{{ old('video_url', $movie->video_url) }}"
+                               placeholder="https://.../movie.mp4 or HLS m3u8"
+                               class="w-full rounded-xl bg-white border border-slate-300 p-2.5 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+                </div>
             </div>
 
             <!-- Poster Artwork & Backdrop -->

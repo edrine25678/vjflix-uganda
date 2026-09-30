@@ -132,3 +132,52 @@ test('admin can add episode to season', function () {
         'is_free' => true,
     ]);
 });
+
+test('admin can upload a local video file for a movie', function () {
+    \Illuminate\Support\Facades\Storage::fake('public');
+    $admin = User::factory()->create(['role' => 'super_admin']);
+    $vj = Vj::factory()->create(['stage_name' => 'VJ Junior']);
+
+    $videoFile = \Illuminate\Http\UploadedFile::fake()->create('action_movie.mp4', 5000, 'video/mp4');
+
+    $response = $this->actingAs($admin)
+        ->post('/admin/movies', [
+            'title' => 'Extraction 2 (Luganda)',
+            'release_year' => 2023,
+            'vj_id' => $vj->id,
+            'duration' => 122,
+            'status' => 'published',
+            'video_file' => $videoFile,
+        ]);
+
+    $response->assertRedirect('/admin/movies');
+
+    $movie = Movie::where('title', 'Extraction 2 (Luganda)')->firstOrFail();
+    expect($movie->video_path)->not->toBeNull();
+    \Illuminate\Support\Facades\Storage::disk('public')->assertExists($movie->video_path);
+});
+
+test('admin can upload a local video file for an episode', function () {
+    \Illuminate\Support\Facades\Storage::fake('public');
+    $admin = User::factory()->create(['role' => 'super_admin']);
+    $series = Series::factory()->create(['title' => 'Shogun (Luganda)']);
+    $season = Season::factory()->create(['series_id' => $series->id, 'season_number' => 1]);
+
+    $videoFile = \Illuminate\Http\UploadedFile::fake()->create('shogun_e1.mp4', 3000, 'video/mp4');
+
+    $response = $this->actingAs($admin)
+        ->post("/admin/seasons/{$season->id}/episodes", [
+            'episode_number' => 1,
+            'title' => 'Anjin (Luganda)',
+            'duration' => 58,
+            'video_file' => $videoFile,
+            'is_free' => true,
+        ]);
+
+    $response->assertSessionHas('success');
+
+    $episode = \App\Models\Episode::where('title', 'Anjin (Luganda)')->firstOrFail();
+    expect($episode->video_path)->not->toBeNull();
+    \Illuminate\Support\Facades\Storage::disk('public')->assertExists($episode->video_path);
+});
+

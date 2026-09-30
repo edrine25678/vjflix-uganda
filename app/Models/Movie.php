@@ -98,6 +98,19 @@ class Movie extends Model
         return $this->posterUrl();
     }
 
+    public function streamUrl(): string
+    {
+        if (! empty($this->video_path)) {
+            return asset('storage/'.$this->video_path);
+        }
+
+        if (! empty($this->video_url)) {
+            return $this->video_url;
+        }
+
+        return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+    }
+
     public function durationFormatted(): string
     {
         if (! $this->duration) {

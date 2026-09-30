@@ -77,6 +77,7 @@ class MovieController extends Controller
             'release_year' => ['nullable', 'integer', 'min:1950', 'max:2030'],
             'duration' => ['nullable', 'integer'],
             'video_url' => ['nullable', 'url'],
+            'video_file' => ['nullable', 'file', 'mimetypes:video/mp4,video/quicktime,video/webm,video/x-matroska,video/ogg', 'max:1048576'],
             'trailer_url' => ['nullable', 'url'],
             'poster_url' => ['nullable', 'url'],
             'poster_file' => ['nullable', 'image', 'mimes:jpeg,png,webp,jpg', 'max:4096'],
@@ -88,6 +89,11 @@ class MovieController extends Controller
             'genres' => ['nullable', 'array'],
             'genres.*' => ['exists:genres,id'],
         ]);
+
+        $videoPath = null;
+        if ($request->hasFile('video_file')) {
+            $videoPath = $request->file('video_file')->store('uploads/videos', 'public');
+        }
 
         $poster = $validated['poster_url'] ?? null;
         if ($request->hasFile('poster_file')) {
@@ -117,6 +123,7 @@ class MovieController extends Controller
             'release_year' => $validated['release_year'] ?? date('Y'),
             'duration' => $validated['duration'] ?? 110,
             'video_url' => $validated['video_url'] ?? null,
+            'video_path' => $videoPath,
             'trailer_url' => $validated['trailer_url'] ?? null,
             'poster' => $poster,
             'backdrop' => $backdrop,
@@ -162,6 +169,7 @@ class MovieController extends Controller
             'release_year' => ['nullable', 'integer', 'min:1950', 'max:2030'],
             'duration' => ['nullable', 'integer'],
             'video_url' => ['nullable', 'url'],
+            'video_file' => ['nullable', 'file', 'mimetypes:video/mp4,video/quicktime,video/webm,video/x-matroska,video/ogg', 'max:1048576'],
             'trailer_url' => ['nullable', 'url'],
             'poster_url' => ['nullable', 'url'],
             'poster_file' => ['nullable', 'image', 'mimes:jpeg,png,webp,jpg', 'max:4096'],
@@ -173,6 +181,11 @@ class MovieController extends Controller
             'genres' => ['nullable', 'array'],
             'genres.*' => ['exists:genres,id'],
         ]);
+
+        $videoPath = $movie->video_path;
+        if ($request->hasFile('video_file')) {
+            $videoPath = $request->file('video_file')->store('uploads/videos', 'public');
+        }
 
         $poster = $validated['poster_url'] ?? $movie->poster;
         if ($request->hasFile('poster_file')) {
@@ -193,6 +206,7 @@ class MovieController extends Controller
             'release_year' => $validated['release_year'] ?? $movie->release_year,
             'duration' => $validated['duration'] ?? $movie->duration,
             'video_url' => $validated['video_url'] ?? $movie->video_url,
+            'video_path' => $videoPath,
             'trailer_url' => $validated['trailer_url'] ?? $movie->trailer_url,
             'poster' => $poster,
             'backdrop' => $backdrop,
