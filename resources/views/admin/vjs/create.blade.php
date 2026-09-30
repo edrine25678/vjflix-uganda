@@ -18,11 +18,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Stage Name *</label>
-                    <input type="text" name="stage_name" value="{{ old('stage_name') }}" required placeholder="e.g. VJ Junior" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="text" name="stage_name" value="{{ old('stage_name') }}" required placeholder="e.g. VJ Junior" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Real Name</label>
-                    <input type="text" name="name" value="{{ old('name') }}" placeholder="e.g. Marysmarts Matovu" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="text" name="name" value="{{ old('name') }}" placeholder="e.g. Marysmarts Matovu" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
@@ -30,18 +30,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Specialization</label>
-                    <input type="text" name="specialization" value="{{ old('specialization', 'Action, Sci-Fi & Tactical Blockbusters') }}" placeholder="e.g. Martial Arts & Crime" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="text" name="specialization" value="{{ old('specialization', 'Action, Sci-Fi & Tactical Blockbusters') }}" placeholder="e.g. Martial Arts & Crime" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Rating (1 to 5)</label>
-                    <input type="number" step="0.01" min="1" max="5" name="rating" value="{{ old('rating', '4.85') }}" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="number" step="0.01" min="1" max="5" name="rating" value="{{ old('rating', '4.85') }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
             <!-- Biography -->
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Biography</label>
-                <textarea name="biography" rows="4" placeholder="Background, career milestones, signature catchphrases..." class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">{{ old('biography') }}</textarea>
+                <textarea name="biography" rows="4" placeholder="Background, career milestones, signature catchphrases..." class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('biography') }}</textarea>
             </div>
 
             <!-- Photos -->
@@ -50,14 +50,14 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Profile Photo File</label>
                     <input type="file" name="avatar_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400">
                     <p class="text-[10px] text-slate-500 mt-1">Or provide photo URL below:</p>
-                    <input type="url" name="avatar_url" value="{{ old('avatar_url') }}" placeholder="https://..." class="mt-1 w-full rounded-lg bg-slate-900 border border-slate-700 p-2 text-xs text-white">
+                    <input type="url" name="avatar_url" value="{{ old('avatar_url') }}" placeholder="https://..." class="mt-1 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Cover Banner File</label>
                     <input type="file" name="cover_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400">
                     <p class="text-[10px] text-slate-500 mt-1">Or provide banner URL below:</p>
-                    <input type="url" name="cover_url" value="{{ old('cover_url') }}" placeholder="https://..." class="mt-1 w-full rounded-lg bg-slate-900 border border-slate-700 p-2 text-xs text-white">
+                    <input type="url" name="cover_url" value="{{ old('cover_url') }}" placeholder="https://..." class="mt-1 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
             </div>
 

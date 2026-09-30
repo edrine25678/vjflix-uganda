@@ -24,11 +24,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div class="sm:col-span-2">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Movie Title *</label>
-                    <input type="text" name="title" value="{{ old('title', $movie->title) }}" required class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="text" name="title" value="{{ old('title', $movie->title) }}" required class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Release Year</label>
-                    <input type="number" name="release_year" value="{{ old('release_year', $movie->release_year) }}" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="number" name="release_year" value="{{ old('release_year', $movie->release_year) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
@@ -36,7 +36,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Ugandan Video Jockey (VJ)</label>
-                    <select name="vj_id" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <select name="vj_id" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                         <option value="">-- Select VJ --</option>
                         @foreach ($vjs as $vj)
                             <option value="{{ $vj->id }}" {{ old('vj_id', $movie->vj_id) == $vj->id ? 'selected' : '' }}>
@@ -47,25 +47,25 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Duration (minutes)</label>
-                    <input type="number" name="duration" value="{{ old('duration', $movie->duration) }}" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="number" name="duration" value="{{ old('duration', $movie->duration) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
             <!-- Synopsis & Description -->
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Short Synopsis</label>
-                <textarea name="synopsis" rows="2" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">{{ old('synopsis', $movie->synopsis) }}</textarea>
+                <textarea name="synopsis" rows="2" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('synopsis', $movie->synopsis) }}</textarea>
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Full Description</label>
-                <textarea name="description" rows="4" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">{{ old('description', $movie->description) }}</textarea>
+                <textarea name="description" rows="4" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('description', $movie->description) }}</textarea>
             </div>
 
             <!-- Video Stream URL -->
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Video Stream URL</label>
-                <input type="url" name="video_url" value="{{ old('video_url', $movie->video_url) }}" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                <input type="url" name="video_url" value="{{ old('video_url', $movie->video_url) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
             </div>
 
             <!-- Poster Artwork & Backdrop -->
@@ -76,7 +76,7 @@
                         <img src="{{ $movie->posterUrl() }}" alt="Current Poster" class="h-20 w-14 object-cover rounded mb-2 border border-slate-700">
                     @endif
                     <input type="file" name="poster_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400">
-                    <input type="url" name="poster_url" value="{{ old('poster_url', $movie->poster) }}" placeholder="Or paste image URL" class="mt-2 w-full rounded-lg bg-slate-900 border border-slate-700 p-2 text-xs text-white">
+                    <input type="url" name="poster_url" value="{{ old('poster_url', $movie->poster) }}" placeholder="Or paste image URL" class="mt-2 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
 
                 <div>
@@ -85,7 +85,7 @@
                         <img src="{{ $movie->backdropUrl() }}" alt="Current Backdrop" class="h-20 w-32 object-cover rounded mb-2 border border-slate-700">
                     @endif
                     <input type="file" name="backdrop_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400">
-                    <input type="url" name="backdrop_url" value="{{ old('backdrop_url', $movie->backdrop) }}" placeholder="Or paste banner URL" class="mt-2 w-full rounded-lg bg-slate-900 border border-slate-700 p-2 text-xs text-white">
+                    <input type="url" name="backdrop_url" value="{{ old('backdrop_url', $movie->backdrop) }}" placeholder="Or paste banner URL" class="mt-2 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
             </div>
 
@@ -107,7 +107,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4 border-t border-slate-800">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Publication Status</label>
-                    <select name="status" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <select name="status" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                         <option value="published" {{ old('status', $movie->status) === 'published' ? 'selected' : '' }}>Published</option>
                         <option value="draft" {{ old('status', $movie->status) === 'draft' ? 'selected' : '' }}>Draft</option>
                         <option value="archived" {{ old('status', $movie->status) === 'archived' ? 'selected' : '' }}>Archived</option>

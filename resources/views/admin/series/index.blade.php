@@ -17,9 +17,9 @@
                         name="search" 
                         value="{{ request('search') }}" 
                         placeholder="Search series or VJs..." 
-                        class="w-48 sm:w-64 rounded-xl bg-slate-900 border border-slate-700 py-1.5 pl-3 pr-8 text-xs text-white placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        class="w-48 sm:w-64 rounded-xl bg-white border border-slate-300 py-1.5 pl-3 pr-8 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                     @if (request('search'))
-                        <a href="{{ route('admin.series.index') }}" class="absolute right-2.5 top-2 text-slate-400 hover:text-white text-xs">✕</a>
+                        <a href="{{ route('admin.series.index') }}" class="absolute right-2.5 top-2 text-slate-500 hover:text-black text-xs font-bold">✕</a>
                     @endif
                 </form>
 

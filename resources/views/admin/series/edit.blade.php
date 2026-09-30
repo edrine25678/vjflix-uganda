@@ -30,18 +30,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div class="sm:col-span-2">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Series Title *</label>
-                    <input type="text" name="title" value="{{ old('title', $series->title) }}" required class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="text" name="title" value="{{ old('title', $series->title) }}" required class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">First Air Year</label>
-                    <input type="number" name="first_air_year" value="{{ old('first_air_year', $series->first_air_year) }}" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="number" name="first_air_year" value="{{ old('first_air_year', $series->first_air_year) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
             <!-- VJ Selection -->
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Ugandan Video Jockey (VJ)</label>
-                <select name="vj_id" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                <select name="vj_id" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                     <option value="">-- Select Translating VJ --</option>
                     @foreach ($vjs as $vj)
                         <option value="{{ $vj->id }}" {{ old('vj_id', $series->vj_id) == $vj->id ? 'selected' : '' }}>
@@ -54,12 +54,12 @@
             <!-- Synopsis & Description -->
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Short Synopsis</label>
-                <textarea name="synopsis" rows="2" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">{{ old('synopsis', $series->synopsis) }}</textarea>
+                <textarea name="synopsis" rows="2" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('synopsis', $series->synopsis) }}</textarea>
             </div>
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Full Description</label>
-                <textarea name="description" rows="3" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">{{ old('description', $series->description) }}</textarea>
+                <textarea name="description" rows="3" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('description', $series->description) }}</textarea>
             </div>
 
             <!-- Poster Artwork & Backdrop -->
@@ -70,7 +70,7 @@
                         <img src="{{ $series->posterUrl() }}" alt="Poster" class="h-20 w-14 object-cover rounded mb-2 border border-slate-700">
                     @endif
                     <input type="file" name="poster_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400">
-                    <input type="url" name="poster_url" value="{{ old('poster_url', $series->poster) }}" placeholder="Or paste poster URL" class="mt-2 w-full rounded-lg bg-slate-900 border border-slate-700 p-2 text-xs text-white">
+                    <input type="url" name="poster_url" value="{{ old('poster_url', $series->poster) }}" placeholder="Or paste poster URL" class="mt-2 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
 
                 <div>
@@ -79,7 +79,7 @@
                         <img src="{{ $series->backdropUrl() }}" alt="Backdrop" class="h-20 w-32 object-cover rounded mb-2 border border-slate-700">
                     @endif
                     <input type="file" name="backdrop_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400">
-                    <input type="url" name="backdrop_url" value="{{ old('backdrop_url', $series->backdrop) }}" placeholder="Or paste backdrop URL" class="mt-2 w-full rounded-lg bg-slate-900 border border-slate-700 p-2 text-xs text-white">
+                    <input type="url" name="backdrop_url" value="{{ old('backdrop_url', $series->backdrop) }}" placeholder="Or paste backdrop URL" class="mt-2 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
             </div>
 
@@ -101,7 +101,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4 border-t border-slate-800">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Publication Status</label>
-                    <select name="status" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <select name="status" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                         <option value="published" {{ old('status', $series->status) === 'published' ? 'selected' : '' }}>Published</option>
                         <option value="draft" {{ old('status', $series->status) === 'draft' ? 'selected' : '' }}>Draft</option>
                         <option value="archived" {{ old('status', $series->status) === 'archived' ? 'selected' : '' }}>Archived</option>
@@ -203,26 +203,26 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                                     <div>
                                         <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Episode # *</label>
-                                        <input type="number" name="episode_number" value="{{ ($season->episodes->max('episode_number') ?? 0) + 1 }}" required class="w-full rounded-lg bg-slate-950 border border-slate-700 p-2 text-xs text-white">
+                                        <input type="number" name="episode_number" value="{{ ($season->episodes->max('episode_number') ?? 0) + 1 }}" required class="w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                                     </div>
                                     <div class="sm:col-span-2">
                                         <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Episode Title *</label>
-                                        <input type="text" name="title" required placeholder="e.g. Ekitundu 4: Okulumba" class="w-full rounded-lg bg-slate-950 border border-slate-700 p-2 text-xs text-white">
+                                        <input type="text" name="title" required placeholder="e.g. Ekitundu 4: Okulumba" class="w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Duration (min)</label>
-                                        <input type="number" name="duration" value="45" class="w-full rounded-lg bg-slate-950 border border-slate-700 p-2 text-xs text-white">
+                                        <input type="number" name="duration" value="45" class="w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                                     </div>
                                 </div>
 
                                 <div>
                                     <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Video Stream URL</label>
-                                    <input type="url" name="video_url" placeholder="https://domain.com/streams/episode.mp4 or m3u8" class="w-full rounded-lg bg-slate-950 border border-slate-700 p-2 text-xs text-white">
+                                    <input type="url" name="video_url" placeholder="https://domain.com/streams/episode.mp4 or m3u8" class="w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                                 </div>
 
                                 <div>
                                     <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Overview</label>
-                                    <textarea name="overview" rows="2" placeholder="Summary of this translated episode..." class="w-full rounded-lg bg-slate-950 border border-slate-700 p-2 text-xs text-white"></textarea>
+                                    <textarea name="overview" rows="2" placeholder="Summary of this translated episode..." class="w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none"></textarea>
                                 </div>
 
                                 <div class="flex items-center justify-between pt-2">

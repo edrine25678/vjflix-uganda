@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Input text box styling ensuring high visibility and black text font */
+input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([class*="bg-slate"]):not([class*="bg-black"]):not([class*="text-white"]),
+textarea:not([class*="bg-slate"]):not([class*="bg-black"]):not([class*="text-white"]) {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+}
+
+input.bg-white,
+textarea.bg-white,
+select.bg-white {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+}
+

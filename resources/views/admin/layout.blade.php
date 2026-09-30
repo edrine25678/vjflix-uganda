@@ -16,6 +16,45 @@
         [x-cloak] { display: none !important; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .font-display { font-family: 'Bebas Neue', sans-serif; }
+
+        /* Ensure all text boxes in admin panel have white background and sharp black text font */
+        input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+        select,
+        textarea {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+            caret-color: #000000 !important;
+            font-weight: 600 !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="submit"]):not([type="button"]):not([type="reset"]):focus,
+        select:focus,
+        textarea:focus {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+            border-color: #f59e0b !important;
+            outline: none !important;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.4) !important;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #64748b !important;
+            -webkit-text-fill-color: #64748b !important;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        textarea:-webkit-autofill,
+        select:-webkit-autofill {
+            -webkit-text-fill-color: #000000 !important;
+            -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
     </style>
 </head>
 <body class="h-full flex overflow-hidden bg-slate-950 text-slate-100 antialiased">

@@ -40,7 +40,7 @@
                         <div>
                             <label for="status" class="block text-xs font-bold text-slate-300 mb-1.5">Status <span class="text-red-400">*</span></label>
                             <select name="status" id="status" required
-                                    class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
+                                    class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                                 @foreach (['active', 'pending', 'expired', 'cancelled'] as $status)
                                     <option value="{{ $status }}" @selected(old('status', $subscription->status) === $status)>{{ ucfirst($status) }}</option>
                                 @endforeach
@@ -51,7 +51,7 @@
                         <div>
                             <label for="expires_at" class="block text-xs font-bold text-slate-300 mb-1.5">Expires at</label>
                             <input type="date" name="expires_at" id="expires_at" value="{{ old('expires_at', $subscription->expires_at?->format('Y-m-d')) }}"
-                                   class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
+                                   class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                             <p class="mt-1 text-[10px] text-slate-500">Extend this to grant a comp or correct a provider callback.</p>
                         </div>
                     </div>

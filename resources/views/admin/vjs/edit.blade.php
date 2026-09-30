@@ -24,11 +24,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Stage Name *</label>
-                    <input type="text" name="stage_name" value="{{ old('stage_name', $vj->stage_name) }}" required class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="text" name="stage_name" value="{{ old('stage_name', $vj->stage_name) }}" required class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Real Name</label>
-                    <input type="text" name="name" value="{{ old('name', $vj->name) }}" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="text" name="name" value="{{ old('name', $vj->name) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
@@ -36,18 +36,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Specialization</label>
-                    <input type="text" name="specialization" value="{{ old('specialization', $vj->specialization) }}" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="text" name="specialization" value="{{ old('specialization', $vj->specialization) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Rating (1 to 5)</label>
-                    <input type="number" step="0.01" min="1" max="5" name="rating" value="{{ old('rating', $vj->rating) }}" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">
+                    <input type="number" step="0.01" min="1" max="5" name="rating" value="{{ old('rating', $vj->rating) }}" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
             <!-- Biography -->
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Biography</label>
-                <textarea name="biography" rows="4" class="w-full rounded-xl bg-slate-950 border border-slate-700 p-3 text-sm text-white focus:border-amber-500 focus:outline-none">{{ old('biography', $vj->biography) }}</textarea>
+                <textarea name="biography" rows="4" class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('biography', $vj->biography) }}</textarea>
             </div>
 
             <!-- Photos -->
@@ -58,7 +58,7 @@
                         <img src="{{ $vj->avatarUrl() }}" alt="Avatar" class="h-16 w-16 rounded-full object-cover mb-2 border border-slate-700">
                     @endif
                     <input type="file" name="avatar_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400">
-                    <input type="url" name="avatar_url" value="{{ old('avatar_url', $vj->profile_photo) }}" placeholder="Or paste photo URL" class="mt-2 w-full rounded-lg bg-slate-900 border border-slate-700 p-2 text-xs text-white">
+                    <input type="url" name="avatar_url" value="{{ old('avatar_url', $vj->profile_photo) }}" placeholder="Or paste photo URL" class="mt-2 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
 
                 <div>
@@ -67,7 +67,7 @@
                         <img src="{{ $vj->coverUrl() }}" alt="Cover" class="h-16 w-28 rounded object-cover mb-2 border border-slate-700">
                     @endif
                     <input type="file" name="cover_file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400">
-                    <input type="url" name="cover_url" value="{{ old('cover_url', $vj->cover_photo) }}" placeholder="Or paste banner URL" class="mt-2 w-full rounded-lg bg-slate-900 border border-slate-700 p-2 text-xs text-white">
+                    <input type="url" name="cover_url" value="{{ old('cover_url', $vj->cover_photo) }}" placeholder="Or paste banner URL" class="mt-2 w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                 </div>
             </div>
 

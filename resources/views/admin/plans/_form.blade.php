@@ -13,13 +13,13 @@
                     <div>
                         <label for="name" class="block text-xs font-bold text-slate-300 mb-1.5">Name <span class="text-red-400">*</span></label>
                         <input type="text" name="name" id="name" required maxlength="255" value="{{ old('name', $editing ? $plan->name : '') }}" placeholder="e.g. Monthly Premium"
-                               class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                               class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                     </div>
 
                     <div>
                         <label for="slug" class="block text-xs font-bold text-slate-300 mb-1.5">Slug</label>
                         <input type="text" name="slug" id="slug" maxlength="255" value="{{ old('slug', $editing ? $plan->slug : '') }}" placeholder="Auto-generated from name"
-                               class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                               class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                         <p class="mt-1 text-[10px] text-slate-500">Leave blank to derive it from the name.</p>
                     </div>
                 </div>
@@ -27,13 +27,13 @@
                 <div>
                     <label for="description" class="block text-xs font-bold text-slate-300 mb-1.5">Description</label>
                     <textarea name="description" id="description" rows="3" placeholder="Short marketing blurb shown on the plans page"
-                              class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">{{ old('description', $editing ? $plan->description : '') }}</textarea>
+                              class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">{{ old('description', $editing ? $plan->description : '') }}</textarea>
                 </div>
 
                 <div>
                     <label for="badge" class="block text-xs font-bold text-slate-300 mb-1.5">Badge</label>
                     <input type="text" name="badge" id="badge" maxlength="50" value="{{ old('badge', $editing ? $plan->badge : '') }}" placeholder="e.g. Most Popular"
-                           class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                           class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                 </div>
             </div>
 
@@ -44,19 +44,19 @@
                     <div>
                         <label for="price_ugx" class="block text-xs font-bold text-slate-300 mb-1.5">Price (UGX) <span class="text-red-400">*</span></label>
                         <input type="number" name="price_ugx" id="price_ugx" required min="0" step="500" value="{{ old('price_ugx', $editing ? $plan->price_ugx : '') }}" placeholder="15000"
-                               class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                               class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                     </div>
 
                     <div>
                         <label for="interval_count" class="block text-xs font-bold text-slate-300 mb-1.5">Every N <span class="text-red-400">*</span></label>
                         <input type="number" name="interval_count" id="interval_count" required min="1" value="{{ old('interval_count', $editing ? $plan->interval_count : 1) }}"
-                               class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                               class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                     </div>
 
                     <div>
                         <label for="interval_unit" class="block text-xs font-bold text-slate-300 mb-1.5">Unit <span class="text-red-400">*</span></label>
                         <select name="interval_unit" id="interval_unit" required
-                                class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
+                                class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                             @foreach (['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $value => $label)
                                 <option value="{{ $value }}" @selected(old('interval_unit', $editing ? $plan->interval_unit : 'month') === $value)>{{ $label }}</option>
                             @endforeach
@@ -67,7 +67,7 @@
                 <div>
                     <label for="duration_days" class="block text-xs font-bold text-slate-300 mb-1.5">Access window (days) <span class="text-red-400">*</span></label>
                     <input type="number" name="duration_days" id="duration_days" required min="1" value="{{ old('duration_days', $editing ? $plan->duration_days : 30) }}"
-                           class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none sm:max-w-xs">
+                           class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 sm:max-w-xs">
                     <p class="mt-1 text-[10px] text-slate-500">How long a single payment unlocks access. This is what <span class="font-mono">subscriptions.expires_at</span> is set from, so it does not have to match the billing cycle.</p>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                     <template x-for="(feature, i) in features" :key="i">
                         <div class="flex items-center gap-2">
                             <input type="text" name="features[]" x-model="features[i]" placeholder="e.g. Ad-free streaming"
-                                   class="flex-1 rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                                   class="flex-1 rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                             <button type="button" @click="features.splice(i, 1)" title="Remove row"
                                     class="flex-shrink-0 p-2 rounded-lg bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors">
                                 <x-bi-x-lg class="h-3.5 w-3.5" />
@@ -112,7 +112,7 @@
                 <div>
                     <label for="sort_order" class="block text-xs font-bold text-slate-300 mb-1.5">Sort order</label>
                     <input type="number" name="sort_order" id="sort_order" value="{{ old('sort_order', $editing ? $plan->sort_order : 0) }}"
-                           class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
+                           class="w-full rounded-xl bg-white border border-slate-300 px-3 py-2 text-xs text-black font-semibold focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
                     <p class="mt-1 text-[10px] text-slate-500">Lower numbers show first. Plans are listed in ascending order.</p>
                 </div>
 
