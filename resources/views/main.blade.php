@@ -4,15 +4,56 @@
     <x-header />
 
     <!-- Hero Movie Showcase Banner -->
-    <!-- Dynamic Auto-Rotating Hero Banner (Every 3 Seconds) -->
+    <!-- Dynamic Auto-Rotating Hero Banner (Every 3 Seconds, Left-to-Right Slide Transition) -->
     @php
-        $heroList = isset($heroMovies) && $heroMovies->isNotEmpty() ? $heroMovies : (isset($heroMovie) && $heroMovie ? collect([$heroMovie]) : collect());
+        $heroItems = collect();
+        if (isset($heroSlides) && $heroSlides->isNotEmpty()) {
+            foreach ($heroSlides as $s) {
+                $heroItems->push([
+                    'title' => $s->title,
+                    'backdrop' => $s->backdropUrl(),
+                    'vj' => $s->resolved_vj,
+                    'year' => $s->resolved_year,
+                    'rating' => $s->resolved_rating,
+                    'badge' => $s->badge_text ?: 'HD Luganda',
+                    'synopsis' => $s->resolved_synopsis,
+                    'watch_url' => $s->resolved_watch_url,
+                    'download_url' => $s->resolved_download_url,
+                ]);
+            }
+        } elseif (isset($heroMovies) && $heroMovies->isNotEmpty()) {
+            foreach ($heroMovies->take(6) as $m) {
+                $heroItems->push([
+                    'title' => $m->title,
+                    'backdrop' => $m->backdropUrl(),
+                    'vj' => $m->vj ? $m->vj->stage_name : 'Luganda',
+                    'year' => (string) $m->release_year,
+                    'rating' => number_format($m->average_rating, 1),
+                    'badge' => 'HD Luganda',
+                    'synopsis' => $m->synopsis ?: $m->description,
+                    'watch_url' => route('movies.show', $m->slug),
+                    'download_url' => route('movies.download', $m->slug),
+                ]);
+            }
+        } elseif (isset($heroMovie) && $heroMovie) {
+            $heroItems->push([
+                'title' => $heroMovie->title,
+                'backdrop' => $heroMovie->backdropUrl(),
+                'vj' => $heroMovie->vj ? $heroMovie->vj->stage_name : 'Luganda',
+                'year' => (string) $heroMovie->release_year,
+                'rating' => number_format($heroMovie->average_rating, 1),
+                'badge' => 'HD Luganda',
+                'synopsis' => $heroMovie->synopsis ?: $heroMovie->description,
+                'watch_url' => route('movies.show', $heroMovie->slug),
+                'download_url' => route('movies.download', $heroMovie->slug),
+            ]);
+        }
     @endphp
 
-    @if ($heroList->isNotEmpty())
+    @if ($heroItems->isNotEmpty())
         <div x-data="{
                 active: 0,
-                total: {{ $heroList->count() }},
+                total: {{ $heroItems->count() }},
                 timer: null,
                 startAutoPlay() {
                     this.timer = setInterval(() => {
@@ -33,88 +74,87 @@
             @mouseleave="startAutoPlay()"
             class="relative min-h-[500px] sm:min-h-[560px] md:min-h-[620px] w-full overflow-hidden bg-slate-950 flex items-center">
             
-            @foreach ($heroList as $hIdx => $hMovie)
-                <!-- Backdrop Slide -->
+            @foreach ($heroItems as $hIdx => $item)
+                <!-- Slide Item (Left-to-Right Transition) -->
                 <div x-show="active === {{ $hIdx }}"
-                     x-transition:enter="transition ease-out duration-700"
-                     x-transition:enter-start="opacity-0 scale-105"
-                     x-transition:enter-end="opacity-100 scale-100"
-                     x-transition:leave="transition ease-in duration-500"
-                     x-transition:leave-start="opacity-100 scale-100"
-                     x-transition:leave-end="opacity-0 scale-95"
-                     class="absolute inset-0">
-                    <img src="{{ $hMovie->backdropUrl() }}" alt="{{ $hMovie->title }}" class="h-full w-full object-cover object-center opacity-40">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
-                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
-                </div>
+                     x-transition:enter="transition-all duration-700 ease-out transform"
+                     x-transition:enter-start="-translate-x-full opacity-0"
+                     x-transition:enter-end="translate-x-0 opacity-100"
+                     x-transition:leave="transition-all duration-700 ease-in transform"
+                     x-transition:leave-start="translate-x-0 opacity-100"
+                     x-transition:leave-end="translate-x-full opacity-0"
+                     class="absolute inset-0 flex items-center">
+                    
+                    <!-- Backdrop Image -->
+                    <div class="absolute inset-0">
+                        <img src="{{ $item['backdrop'] }}" alt="{{ $item['title'] }}" class="h-full w-full object-cover object-center opacity-40">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                    </div>
 
-                <!-- Slide Content -->
-                <div x-show="active === {{ $hIdx }}"
-                     x-transition:enter="transition ease-out duration-500 delay-100"
-                     x-transition:enter-start="opacity-0 translate-y-4"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-transition:leave="transition ease-in duration-300"
-                     x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="opacity-0 -translate-y-4"
-                     class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 w-full z-10">
-                    <div class="max-w-2xl">
-                        <!-- VJ Attribution Badge -->
-                        <div class="flex flex-wrap items-center gap-2 mb-3">
-                            @if ($hMovie->vj)
-                                <a href="/vjs/{{ $hMovie->vj->slug }}" class="inline-flex items-center gap-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-black px-3.5 py-1 text-xs font-extrabold uppercase tracking-wide shadow-lg shadow-amber-500/20 transition-all hover:scale-105">
-                                    <x-bi-mic-fill class="h-3 w-3" />
-                                    Translated by {{ $hMovie->vj->stage_name }}
+                    <!-- Slide Content Text -->
+                    <div class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 w-full z-10">
+                        <div class="max-w-2xl">
+                            <!-- VJ Attribution & Metadata Badge -->
+                            <div class="flex flex-wrap items-center gap-2 mb-3">
+                                @if (!empty($item['vj']))
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-500 text-black px-3.5 py-1 text-xs font-extrabold uppercase tracking-wide shadow-lg shadow-amber-500/20">
+                                        <x-bi-mic-fill class="h-3 w-3" />
+                                        Translated by {{ $item['vj'] }}
+                                    </span>
+                                @endif
+                                <span class="rounded bg-slate-900/80 backdrop-blur border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-300">
+                                    {{ $item['year'] }}
+                                </span>
+                                <span class="rounded bg-slate-900/80 backdrop-blur border border-slate-700 px-2 py-0.5 text-xs font-bold text-amber-400">
+                                    ★ {{ $item['rating'] }}
+                                </span>
+                                <span class="rounded bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 text-xs font-bold text-amber-400">
+                                    {{ $item['badge'] }}
+                                </span>
+                            </div>
+
+                            <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-none font-display">
+                                {{ $item['title'] }}
+                            </h1>
+
+                            <p class="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-300 line-clamp-2 sm:line-clamp-3 leading-relaxed">
+                                {{ $item['synopsis'] }}
+                            </p>
+
+                            <!-- CTAs including Download -->
+                            <div class="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+                                <a href="{{ $item['watch_url'] }}" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-5 sm:px-6 py-3 sm:py-3.5 text-xs sm:text-sm font-extrabold text-black shadow-xl shadow-amber-500/20 hover:from-amber-400 hover:to-yellow-400 transition-all hover:scale-105">
+                                    <x-bi-play-fill class="h-5 w-5 sm:h-6 sm:w-6 mr-1" />
+                                    WATCH NOW
                                 </a>
-                            @endif
-                            <span class="rounded bg-slate-900/80 backdrop-blur border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-300">
-                                {{ $hMovie->release_year }}
-                            </span>
-                            <span class="rounded bg-slate-900/80 backdrop-blur border border-slate-700 px-2 py-0.5 text-xs font-bold text-amber-400">
-                                ★ {{ number_format($hMovie->average_rating, 1) }}
-                            </span>
-                            <span class="rounded bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 text-xs font-bold text-amber-400">
-                                HD Luganda
-                            </span>
-                        </div>
 
-                        <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-none font-display">
-                            {{ $hMovie->title }}
-                        </h1>
+                                @if (!empty($item['download_url']))
+                                    <a href="{{ $item['download_url'] }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900/90 hover:bg-amber-500 hover:text-black border border-slate-700 hover:border-amber-500 px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm font-bold text-slate-200 backdrop-blur transition-all shadow-lg group">
+                                        <x-bi-download class="h-4 w-4 mr-1.5 text-amber-400 group-hover:text-black transition-colors" />
+                                        Download
+                                    </a>
+                                @endif
 
-                        <p class="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-300 line-clamp-2 sm:line-clamp-3 leading-relaxed">
-                            {{ $hMovie->synopsis ?: $hMovie->description }}
-                        </p>
-
-                        <!-- CTAs including Download -->
-                        <div class="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
-                            <a href="{{ route('movies.show', $hMovie->slug) }}" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-5 sm:px-6 py-3 sm:py-3.5 text-xs sm:text-sm font-extrabold text-black shadow-xl shadow-amber-500/20 hover:from-amber-400 hover:to-yellow-400 transition-all hover:scale-105">
-                                <x-bi-play-fill class="h-5 w-5 sm:h-6 sm:w-6 mr-1" />
-                                WATCH NOW
-                            </a>
-
-                            <a href="{{ route('movies.download', $hMovie->slug) }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900/90 hover:bg-amber-500 hover:text-black border border-slate-700 hover:border-amber-500 px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm font-bold text-slate-200 backdrop-blur transition-all shadow-lg group">
-                                <x-bi-download class="h-4 w-4 mr-1.5 text-amber-400 group-hover:text-black transition-colors" />
-                                Download
-                            </a>
-
-                            <a href="{{ route('movies.show', $hMovie->slug) }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700 px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm font-bold text-slate-300 backdrop-blur transition-all">
-                                <x-bi-info-circle class="h-4 w-4 mr-1.5 text-amber-400" />
-                                Details
-                            </a>
+                                <a href="{{ $item['watch_url'] }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700 px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm font-bold text-slate-300 backdrop-blur transition-all">
+                                    <x-bi-info-circle class="h-4 w-4 mr-1.5 text-amber-400" />
+                                    Details
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             @endforeach
 
             <!-- Auto-rotating Indicators / Slide Dots -->
-            @if ($heroList->count() > 1)
+            @if ($heroItems->count() > 1)
                 <div class="absolute bottom-4 sm:bottom-6 right-4 sm:right-8 lg:right-12 z-20 flex items-center space-x-2">
-                    @foreach ($heroList as $dotIdx => $dotMovie)
+                    @foreach ($heroItems as $dotIdx => $dotItem)
                         <button @click="selectSlide({{ $dotIdx }})" 
                                 type="button"
                                 class="h-1.5 sm:h-2 rounded-full transition-all duration-300"
                                 :class="active === {{ $dotIdx }} ? 'w-6 sm:w-8 bg-amber-500 shadow-md shadow-amber-500/50' : 'w-2 bg-white/30 hover:bg-white/70'"
-                                title="Slide {{ $dotIdx + 1 }}: {{ $dotMovie->title }}"></button>
+                                title="Slide {{ $dotIdx + 1 }}: {{ $dotItem['title'] }}"></button>
                     @endforeach
                 </div>
             @endif

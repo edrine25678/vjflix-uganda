@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Genre;
+use App\Models\HeroSlide;
 use App\Models\Movie;
 use App\Models\Vj;
 use Illuminate\Contracts\View\Factory;
@@ -12,18 +13,24 @@ class VjFlixController extends Controller
 {
     public function index(): View|Factory
     {
-        // 1. Featured hero banner movies (for 3-second dynamic auto-slider)
+        // 1. Featured hero banner slides (admin configured up to 6 posters, or fallback to top 6 movies)
+        $heroSlides = HeroSlide::where('is_active', true)
+            ->with(['movie.vj', 'movie.genres', 'series.vj'])
+            ->orderBy('sort_order')
+            ->limit(6)
+            ->get();
+
         $heroMovies = Movie::with(['vj', 'genres'])
             ->featured()
             ->latest('published_at')
-            ->limit(5)
+            ->limit(6)
             ->get();
 
         if ($heroMovies->isEmpty()) {
             $heroMovies = Movie::with(['vj', 'genres'])
                 ->published()
                 ->latest('published_at')
-                ->limit(5)
+                ->limit(6)
                 ->get();
         }
 
@@ -80,6 +87,7 @@ class VjFlixController extends Controller
         $continueWatching = auth()->check() ? auth()->user()->continueWatching(8) : collect();
 
         return view('main', [
+            'heroSlides' => $heroSlides,
             'heroMovie' => $heroMovie,
             'heroMovies' => $heroMovies,
             'trending' => $trending,

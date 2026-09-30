@@ -181,3 +181,86 @@ test('admin can upload a local video file for an episode', function () {
     \Illuminate\Support\Facades\Storage::disk('public')->assertExists($episode->video_path);
 });
 
+test('admin can access hero carousel poster manager', function () {
+    $admin = User::factory()->create(['role' => 'super_admin']);
+
+    $response = $this->actingAs($admin)->get('/admin/hero');
+
+    $response->assertStatus(200);
+    $response->assertSee('Hero Carousel Posters');
+    $response->assertSee('Posters Configured');
+    $response->assertSee('left to right', false);
+});
+
+test('admin can create a hero poster slide', function () {
+    $admin = User::factory()->create(['role' => 'super_admin']);
+
+    $response = $this->actingAs($admin)->post('/admin/hero', [
+        'title' => 'Mission Impossible: Dead Reckoning (Luganda)',
+        'vj_name' => 'VJ Junior',
+        'release_year' => '2023',
+        'rating' => '4.9',
+        'badge_text' => 'Action Blockbuster',
+        'synopsis' => 'Ethan Hunt faces off against an all-powerful AI known as The Entity.',
+        'backdrop_url' => 'https://example.com/mi7.jpg',
+        'watch_url' => 'https://vjflix.com/movies/mission-impossible',
+        'download_url' => 'https://vjflix.com/movies/mission-impossible/download',
+        'sort_order' => 1,
+        'is_active' => 1,
+    ]);
+
+    $response->assertRedirect('/admin/hero');
+    $this->assertDatabaseHas('hero_slides', [
+        'title' => 'Mission Impossible: Dead Reckoning (Luganda)',
+        'vj_name' => 'VJ Junior',
+        'badge_text' => 'Action Blockbuster',
+    ]);
+});
+
+test('admin cannot exceed 6 hero posters limit', function () {
+    $admin = User::factory()->create(['role' => 'super_admin']);
+
+    // Create 6 existing slides
+    for ($i = 1; $i <= 6; $i++) {
+        \App\Models\HeroSlide::create([
+            'title' => "Poster {$i}",
+            'sort_order' => $i,
+            'is_active' => true,
+        ]);
+    }
+
+    // Try to add a 7th slide
+    $response = $this->actingAs($admin)->post('/admin/hero', [
+        'title' => 'Seventh Poster Beyond Limit',
+        'sort_order' => 7,
+    ]);
+
+    $response->assertSessionHasErrors('hero');
+    $this->assertDatabaseMissing('hero_slides', [
+        'title' => 'Seventh Poster Beyond Limit',
+    ]);
+});
+
+test('admin can quick-add movie to hero carousel and delete it', function () {
+    $admin = User::factory()->create(['role' => 'super_admin']);
+    $vj = Vj::factory()->create(['stage_name' => 'VJ Jingo']);
+    $movie = Movie::factory()->create([
+        'title' => 'Spider-Man Across The Spider-Verse (Luganda)',
+        'vj_id' => $vj->id,
+        'status' => 'published',
+    ]);
+
+    $response = $this->actingAs($admin)->post("/admin/hero/quick-add/{$movie->id}");
+
+    $response->assertRedirect('/admin/hero');
+    $slide = \App\Models\HeroSlide::where('movie_id', $movie->id)->firstOrFail();
+    expect($slide->title)->toBe('Spider-Man Across The Spider-Verse (Luganda)');
+    expect($slide->vj_name)->toBe('VJ Jingo');
+
+    // Admin can delete the slide
+    $deleteResponse = $this->actingAs($admin)->delete("/admin/hero/{$slide->id}");
+    $deleteResponse->assertRedirect('/admin/hero');
+    $this->assertDatabaseMissing('hero_slides', ['id' => $slide->id]);
+});
+
+

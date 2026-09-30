@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EpisodeController as AdminEpisodeController;
+use App\Http\Controllers\Admin\HeroSlideController as AdminHeroSlideController;
 use App\Http\Controllers\Admin\MovieController as AdminMovieController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\PlanController as AdminPlanController;
@@ -133,6 +134,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin'])->group
     Route::post('seasons/{season}/episodes', [AdminEpisodeController::class, 'store'])->name('episodes.store');
     Route::put('episodes/{episode}', [AdminEpisodeController::class, 'update'])->name('episodes.update');
     Route::delete('episodes/{episode}', [AdminEpisodeController::class, 'destroy'])->name('episodes.destroy');
+
+    // Hero Banner Carousel & Posters (Up to 6 posters)
+    Route::get('hero', [AdminHeroSlideController::class, 'index'])->name('hero.index');
+    Route::post('hero', [AdminHeroSlideController::class, 'store'])->name('hero.store');
+    Route::put('hero/{heroSlide}', [AdminHeroSlideController::class, 'update'])->name('hero.update');
+    Route::delete('hero/{heroSlide}', [AdminHeroSlideController::class, 'destroy'])->name('hero.destroy');
+    Route::post('hero/quick-add/{movie}', [AdminHeroSlideController::class, 'quickAddMovie'])->name('hero.quick-add');
 
     // TMDB Movie & Series Resources & Importer
     Route::get('tmdb', [AdminTmdbController::class, 'index'])->name('tmdb.index');

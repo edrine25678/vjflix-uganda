@@ -4,28 +4,64 @@
     <x-header />
 
 <div class="min-h-screen bg-black">
-    <!-- Dynamic Auto-Rotating Hero Section (3 Seconds) -->
+    <!-- Dynamic Auto-Rotating Hero Section (3 Seconds, Left-to-Right Transition, Admin Customizable) -->
     @php
-        $featuredMovies = \App\Models\Movie::where('status', 'published')
-            ->where('featured', true)
-            ->with(['vj', 'genres'])
-            ->orderBy('views', 'desc')
-            ->limit(5)
+        $heroItems = collect();
+        $adminSlides = \App\Models\HeroSlide::where('is_active', true)
+            ->orderBy('sort_order', 'asc')
+            ->limit(6)
             ->get();
 
-        if ($featuredMovies->isEmpty()) {
-            $featuredMovies = \App\Models\Movie::where('status', 'published')
+        if ($adminSlides->isNotEmpty()) {
+            foreach ($adminSlides as $s) {
+                $heroItems->push([
+                    'title' => $s->title,
+                    'backdrop' => $s->backdropUrl(),
+                    'vj' => $s->resolved_vj,
+                    'year' => $s->resolved_year,
+                    'rating' => $s->resolved_rating,
+                    'badge' => $s->badge_text ?: 'HD Luganda',
+                    'synopsis' => $s->resolved_synopsis,
+                    'watch_url' => $s->resolved_watch_url,
+                    'download_url' => $s->resolved_download_url,
+                ]);
+            }
+        } else {
+            $fallbackMovies = \App\Models\Movie::where('status', 'published')
+                ->where('featured', true)
                 ->with(['vj', 'genres'])
                 ->orderBy('views', 'desc')
-                ->limit(5)
+                ->limit(6)
                 ->get();
+
+            if ($fallbackMovies->isEmpty()) {
+                $fallbackMovies = \App\Models\Movie::where('status', 'published')
+                    ->with(['vj', 'genres'])
+                    ->orderBy('views', 'desc')
+                    ->limit(6)
+                    ->get();
+            }
+
+            foreach ($fallbackMovies as $m) {
+                $heroItems->push([
+                    'title' => $m->title,
+                    'backdrop' => $m->backdropUrl(),
+                    'vj' => $m->vj ? $m->vj->stage_name : 'Luganda',
+                    'year' => (string) $m->release_year,
+                    'rating' => number_format($m->average_rating, 1),
+                    'badge' => 'HD Luganda',
+                    'synopsis' => $m->synopsis ?: $m->description,
+                    'watch_url' => route('movies.show', $m->slug),
+                    'download_url' => route('movies.download', $m->slug),
+                ]);
+            }
         }
     @endphp
 
-    @if($featuredMovies->isNotEmpty())
+    @if($heroItems->isNotEmpty())
         <div x-data="{
                 active: 0,
-                total: {{ $featuredMovies->count() }},
+                total: {{ $heroItems->count() }},
                 timer: null,
                 startAutoPlay() {
                     this.timer = setInterval(() => {
@@ -46,84 +82,86 @@
             @mouseleave="startAutoPlay()"
             class="relative h-[70vh] min-h-[500px] bg-gradient-to-b from-transparent to-black overflow-hidden flex items-center">
             
-            @foreach($featuredMovies as $fIdx => $fMovie)
-                <!-- Backdrop Slide -->
-                <div x-show="active === {{ $fIdx }}"
-                     x-transition:enter="transition ease-out duration-700"
-                     x-transition:enter-start="opacity-0 scale-105"
-                     x-transition:enter-end="opacity-100 scale-100"
-                     x-transition:leave="transition ease-in duration-500"
-                     x-transition:leave-start="opacity-100 scale-100"
-                     x-transition:leave-end="opacity-0 scale-95"
-                     class="absolute inset-0">
-                    <img src="{{ $fMovie->backdrop ?? $fMovie->poster }}" 
-                         alt="{{ $fMovie->title }}" 
-                         class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    <div class="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
-                </div>
+            @foreach($heroItems as $hIdx => $hItem)
+                <!-- Slide Container (Left to Right transition) -->
+                <div x-show="active === {{ $hIdx }}"
+                     x-transition:enter="transition-all duration-700 ease-out transform"
+                     x-transition:enter-start="-translate-x-full opacity-0"
+                     x-transition:enter-end="translate-x-0 opacity-100"
+                     x-transition:leave="transition-all duration-700 ease-in transform"
+                     x-transition:leave-start="translate-x-0 opacity-100"
+                     x-transition:leave-end="translate-x-full opacity-0"
+                     class="absolute inset-0 flex items-center">
 
-                <!-- Slide Content -->
-                <div x-show="active === {{ $fIdx }}"
-                     x-transition:enter="transition ease-out duration-500 delay-100"
-                     x-transition:enter-start="opacity-0 translate-y-4"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-transition:leave="transition ease-in duration-300"
-                     x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="opacity-0 -translate-y-4"
-                     class="relative z-10 h-full flex items-center px-4 sm:px-8 md:px-16 w-full">
-                    <div class="max-w-2xl">
-                        <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-4">
-                            <span class="rounded bg-slate-900/90 border border-slate-700 px-2 py-0.5 text-xs text-gray-300 font-bold">{{ $fMovie->release_year }}</span>
-                            @if($fMovie->vj)
-                                <span class="rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 px-3 py-0.5 text-xs font-bold">
-                                    Voiced by {{ $fMovie->vj->stage_name }}
+                    <!-- Backdrop Slide -->
+                    <div class="absolute inset-0">
+                        <img src="{{ $hItem['backdrop'] }}" 
+                             alt="{{ $hItem['title'] }}" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
+                    </div>
+
+                    <!-- Slide Content -->
+                    <div class="relative z-10 h-full flex items-center px-4 sm:px-8 md:px-16 w-full">
+                        <div class="max-w-2xl">
+                            <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-4">
+                                <span class="rounded bg-slate-900/90 border border-slate-700 px-2 py-0.5 text-xs text-gray-300 font-bold">{{ $hItem['year'] }}</span>
+                                @if(!empty($hItem['vj']))
+                                    <span class="rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 px-3 py-0.5 text-xs font-bold">
+                                        Voiced by {{ $hItem['vj'] }}
+                                    </span>
+                                @endif
+                                @if(!empty($hItem['rating']))
+                                    <span class="flex items-center gap-1 text-yellow-400 text-xs font-bold bg-black/60 px-2 py-0.5 rounded border border-yellow-500/30">
+                                        ★ {{ $hItem['rating'] }}
+                                    </span>
+                                @endif
+                                <span class="rounded bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 text-xs font-bold text-amber-400">
+                                    {{ $hItem['badge'] }}
                                 </span>
-                            @endif
-                            @if($fMovie->average_rating)
-                                <span class="flex items-center gap-1 text-yellow-400 text-xs font-bold bg-black/60 px-2 py-0.5 rounded border border-yellow-500/30">
-                                    ★ {{ number_format($fMovie->average_rating, 1) }}
-                                </span>
-                            @endif
-                        </div>
+                            </div>
 
-                        <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-2 sm:mb-4 tracking-tight leading-none font-display">
-                            {{ $fMovie->title }}
-                        </h1>
+                            <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-2 sm:mb-4 tracking-tight leading-none font-display">
+                                {{ $hItem['title'] }}
+                            </h1>
 
-                        <p class="text-gray-300 text-xs sm:text-base mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-3 leading-relaxed">
-                            {{ $fMovie->synopsis ?? $fMovie->description }}
-                        </p>
+                            <p class="text-gray-300 text-xs sm:text-base mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-3 leading-relaxed">
+                                {{ $hItem['synopsis'] }}
+                            </p>
 
-                        <div class="flex flex-wrap gap-2.5 sm:gap-4">
-                            <a href="{{ route('movies.show', $fMovie->slug) }}" 
-                               class="bg-amber-500 text-black px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-extrabold hover:bg-amber-400 transition flex items-center gap-2 text-xs sm:text-sm shadow-xl shadow-amber-500/20 hover:scale-105">
-                                <x-bi-play-fill class="w-5 h-5" />
-                                Play Now
-                            </a>
-                            <a href="{{ route('movies.download', $fMovie->slug) }}" 
-                               class="bg-slate-900/90 border border-slate-700 hover:border-amber-500 hover:bg-amber-500 hover:text-black text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold transition flex items-center gap-2 text-xs sm:text-sm shadow-lg group">
-                                <x-bi-download class="w-4 h-4 text-amber-400 group-hover:text-black transition-colors" />
-                                Download
-                            </a>
-                            <a href="{{ route('movies.show', $fMovie->slug) }}" 
-                               class="bg-slate-800/80 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-slate-700 transition text-xs sm:text-sm border border-slate-700">
-                                More Info
-                            </a>
+                            <div class="flex flex-wrap gap-2.5 sm:gap-4">
+                                <a href="{{ $hItem['watch_url'] }}" 
+                                   class="bg-amber-500 text-black px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-extrabold hover:bg-amber-400 transition flex items-center gap-2 text-xs sm:text-sm shadow-xl shadow-amber-500/20 hover:scale-105">
+                                    <x-bi-play-fill class="w-5 h-5" />
+                                    Play Now
+                                </a>
+                                @if(!empty($hItem['download_url']))
+                                    <a href="{{ $hItem['download_url'] }}" 
+                                       class="bg-slate-900/90 border border-slate-700 hover:border-amber-500 hover:bg-amber-500 hover:text-black text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold transition flex items-center gap-2 text-xs sm:text-sm shadow-lg group">
+                                        <x-bi-download class="w-4 h-4 text-amber-400 group-hover:text-black transition-colors" />
+                                        Download
+                                    </a>
+                                @endif
+                                <a href="{{ $hItem['watch_url'] }}" 
+                                   class="bg-slate-800/80 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-slate-700 transition text-xs sm:text-sm border border-slate-700">
+                                    More Info
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             @endforeach
 
             <!-- Auto-slider Indicators / Dots -->
-            @if($featuredMovies->count() > 1)
+            @if($heroItems->count() > 1)
                 <div class="absolute bottom-6 right-4 sm:right-8 md:right-16 z-30 flex items-center space-x-2">
-                    @foreach($featuredMovies as $dotIdx => $dotMovie)
+                    @foreach($heroItems as $dotIdx => $dotItem)
                         <button @click="selectSlide({{ $dotIdx }})" 
                                 type="button"
                                 class="h-1.5 sm:h-2 rounded-full transition-all duration-300" 
                                 :class="active === {{ $dotIdx }} ? 'w-6 sm:w-8 bg-amber-500 shadow-md shadow-amber-500/50' : 'w-2 bg-white/40 hover:bg-white/80'"
-                                title="Slide {{ $dotIdx + 1 }}: {{ $dotMovie->title }}"></button>
+                                title="Slide {{ $dotIdx + 1 }}: {{ $dotItem['title'] }}"></button>
                     @endforeach
                 </div>
             @endif

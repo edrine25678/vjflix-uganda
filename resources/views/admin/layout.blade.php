@@ -108,6 +108,12 @@
                     Ugandan VJs
                 </a>
 
+                <a href="{{ route('admin.hero.index') }}" class="flex items-center px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('admin.hero.*') ? 'bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <x-bi-images class="h-4 w-4 mr-3" />
+                    <span>Hero Carousel</span>
+                    <span class="ml-auto text-[9px] px-1.5 py-0.5 rounded font-extrabold {{ request()->routeIs('admin.hero.*') ? 'bg-black text-amber-400' : 'bg-slate-800 text-amber-400 border border-slate-700' }}">6 Max</span>
+                </a>
+
                 <a href="{{ route('admin.analytics.index') }}" class="flex items-center px-3 py-2.5 rounded-xl transition-all {{ request()->routeIs('admin.analytics.*') ? 'bg-amber-500 text-black font-extrabold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <x-bi-bar-chart class="h-4 w-4 mr-3" />
                     Analytics
