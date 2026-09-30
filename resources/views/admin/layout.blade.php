@@ -6,6 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title ?? 'Admin CMS' }} — VJFlix Uganda</title>
 
+    <!-- Favicon & Brand Icons -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    <meta name="theme-color" content="#0b0f19">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,10 +72,8 @@
         <div>
             <!-- Admin Logo -->
             <div class="h-16 flex items-center px-6 border-b border-slate-800">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2">
-                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500 text-black font-extrabold text-base font-display">
-                        VJ
-                    </span>
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2.5">
+                    <img src="{{ asset('favicon-32x32.png') }}" alt="VJFlix" class="h-8 w-8 rounded-lg shadow object-cover">
                     <span class="text-lg font-extrabold text-white tracking-wider font-display">
                         CMS <span class="text-xs px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-sans font-bold">Admin</span>
                     </span>

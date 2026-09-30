@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title ?? 'VJFlix Uganda — Your Movies. Your VJs. Your Language.' }}</title>
-    <meta name="description" content="Watch movies and series translated by Uganda's top Video Jockeys (VJs) like VJ Junior, VJ Jingo, VJ Emmy, VJ Ice P, and more.">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Favicon & Brand Icons -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    <meta name="theme-color" content="#0b0f19">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -2,10 +2,8 @@
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <!-- Brand Logo -->
         <div class="flex items-center space-x-6">
-            <a href="{{ auth()->check() ? route('vjflix.index') : '/' }}" class="flex items-center space-x-2 group">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 text-black font-extrabold text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform font-display">
-                    VJ
-                </span>
+            <a href="{{ auth()->check() ? route('vjflix.index') : '/' }}" class="flex items-center space-x-2.5 group">
+                <img src="{{ asset('favicon-32x32.png') }}" alt="VJFlix" class="h-9 w-9 rounded-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform object-cover">
                 <div class="flex flex-col">
                     <span class="text-xl font-extrabold tracking-wider text-white flex items-center gap-1 font-display">
                         FLIX <span class="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">Uganda</span>
