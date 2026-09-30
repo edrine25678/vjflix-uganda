@@ -60,7 +60,7 @@
     @endif
 
     <!-- Content Sections -->
-    <div class="px-8 md:px-16 py-8 -mt-20 relative z-20">
+    <div class="px-3 sm:px-8 md:px-16 py-8 -mt-20 relative z-20">
         @if(auth()->check())
             <x-recommendations type="personalized" title="Recommended For You" :limit="10" />
         @endif
@@ -100,17 +100,17 @@
                         Featured VJs
                     </h2>
                 </div>
-                <div class="flex overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth gap-4">
+                <div class="flex overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth gap-2 sm:gap-4">
                     @foreach($featuredVjs as $vj)
-                        <a href="{{ route('vjs.show', $vj->slug) }}" class="flex-shrink-0 w-48 group cursor-pointer">
+                        <a href="{{ route('vjs.show', $vj->slug) }}" class="flex-shrink-0 w-24 sm:w-48 group cursor-pointer">
                             <div class="relative rounded-lg overflow-hidden bg-gray-800 aspect-[3/4]">
                                 <img src="{{ $vj->cover_photo ?? asset('img/default-cover.jpg') }}" 
                                      alt="{{ $vj->stage_name }}" 
                                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                                <div class="absolute bottom-0 left-0 right-0 p-4">
-                                    <div class="text-white font-semibold">{{ $vj->stage_name }}</div>
-                                    <div class="text-gray-300 text-sm">{{ $vj->movies_count }} Movies</div>
+                                <div class="absolute bottom-0 left-0 right-0 p-2 sm:p-4">
+                                    <div class="text-white font-semibold text-xs sm:text-base truncate">{{ $vj->stage_name }}</div>
+                                    <div class="text-gray-300 text-[10px] sm:text-sm">{{ $vj->movies_count }} Movies</div>
                                 </div>
                                 @if($vj->is_verified)
                                     <div class="absolute top-3 right-3 bg-blue-500 rounded-full p-1">
@@ -143,12 +143,12 @@
                         Browse by Genre
                     </h2>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+                <div class="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-4">
                     @foreach($genres as $genre)
                         <a href="{{ route('vjflix.index', ['genre' => $genre->slug]) }}"
-                           class="bg-gray-800 hover:bg-gray-700 rounded-lg p-4 text-center transition group">
-                            <div class="text-white font-semibold text-sm">{{ $genre->name }}</div>
-                            <div class="text-gray-400 text-xs mt-1">{{ $genre->movies_count }} Movies</div>
+                           class="bg-gray-800 hover:bg-gray-700 rounded-lg p-2 sm:p-4 text-center transition group">
+                            <div class="text-white font-semibold text-xs sm:text-sm truncate">{{ $genre->name }}</div>
+                            <div class="text-gray-400 text-[10px] sm:text-xs mt-0.5 sm:mt-1">{{ $genre->movies_count }} Movies</div>
                         </a>
                     @endforeach
                 </div>

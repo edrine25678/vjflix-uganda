@@ -11,7 +11,7 @@
     $duration = $isModel ? $movie->durationFormatted() : '2h';
 @endphp
 
-<div class="group relative flex flex-col overflow-hidden rounded-xl bg-slate-900 border border-slate-800/80 hover:border-amber-500/50 transition-all duration-300 shadow-lg hover:shadow-amber-500/10 hover:-translate-y-1 w-52 sm:w-60 flex-shrink-0 mr-4">
+<div {{ $attributes->merge(['class' => 'group relative flex flex-col overflow-hidden rounded-lg sm:rounded-xl bg-slate-900 border border-slate-800/80 hover:border-amber-500/50 transition-all duration-300 shadow-md sm:shadow-lg hover:shadow-amber-500/10 hover:-translate-y-1 w-[21vw] min-w-[72px] max-w-[90px] sm:min-w-0 sm:max-w-none sm:w-44 md:w-52 lg:w-60 flex-shrink-0 mr-1.5 sm:mr-4']) }}>
     <!-- Poster Artwork Container -->
     <a href="{{ route('movies.show', $id) }}" class="relative block aspect-[2/3] w-full overflow-hidden bg-slate-800">
         <img
@@ -24,41 +24,41 @@
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
 
         <!-- Top Badges -->
-        <div class="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 items-center">
-            <span class="rounded bg-amber-500 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-black shadow-md">
+        <div class="absolute top-1 left-1 sm:top-2.5 sm:left-2.5 flex flex-wrap gap-1 items-center">
+            <span class="rounded bg-amber-500 px-1 py-0.2 sm:px-2 sm:py-0.5 text-[8px] sm:text-[10px] font-extrabold uppercase tracking-wide text-black shadow-md truncate max-w-[55px] sm:max-w-none">
                 {{ $vjName }}
             </span>
-            <span class="rounded bg-slate-950/80 backdrop-blur px-1.5 py-0.5 text-[9px] font-bold text-slate-300 border border-slate-700">
+            <span class="hidden sm:inline rounded bg-slate-950/80 backdrop-blur px-1.5 py-0.5 text-[9px] font-bold text-slate-300 border border-slate-700">
                 HD
             </span>
         </div>
 
         <!-- Rating Pill -->
-        <div class="absolute bottom-2.5 left-2.5 flex items-center space-x-1 rounded-md bg-slate-950/90 backdrop-blur px-2 py-1 text-[11px] font-bold text-amber-400 border border-slate-800">
-            <x-bi-star-fill class="h-3 w-3 text-amber-400" />
+        <div class="absolute bottom-1 left-1 sm:bottom-2.5 sm:left-2.5 flex items-center space-x-0.5 sm:space-x-1 rounded bg-slate-950/90 backdrop-blur px-1 py-0.2 sm:px-2 sm:py-1 text-[8px] sm:text-[11px] font-bold text-amber-400 border border-slate-800">
+            <x-bi-star-fill class="h-2 w-2 sm:h-3 sm:w-3 text-amber-400" />
             <span>{{ $rating }}</span>
         </div>
     </a>
 
     <!-- Metadata Body -->
-    <div class="p-3 flex flex-col flex-grow justify-between">
+    <div class="p-1.5 sm:p-3 flex flex-col flex-grow justify-between">
         <div>
             <a href="{{ route('movies.show', $id) }}" class="block">
-                <h3 class="font-bold text-sm text-slate-100 group-hover:text-amber-400 transition-colors line-clamp-1" title="{{ $title }}">
+                <h3 class="font-bold text-[10px] sm:text-xs md:text-sm text-slate-100 group-hover:text-amber-400 transition-colors line-clamp-1" title="{{ $title }}">
                     {{ $title }}
                 </h3>
             </a>
-            <div class="mt-1 flex items-center space-x-2 text-[11px] text-slate-400">
+            <div class="mt-0.5 sm:mt-1 flex items-center gap-1 text-[8px] sm:text-[11px] text-slate-400">
                 <span>{{ $year }}</span>
-                <span>•</span>
-                <span>{{ $duration }}</span>
-                <span>•</span>
-                <span class="text-amber-400 font-medium">Luganda</span>
+                <span class="hidden sm:inline">•</span>
+                <span class="hidden sm:inline">{{ $duration }}</span>
+                <span class="hidden sm:inline">•</span>
+                <span class="text-amber-400 font-medium hidden sm:inline">Luganda</span>
             </div>
         </div>
 
-        <!-- Quick Action Play Button -->
-        <div class="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between">
+        <!-- Quick Action Play Button (visible on tablet/desktop) -->
+        <div class="mt-2 pt-1.5 sm:mt-3 sm:pt-2 border-t border-slate-800/80 hidden sm:flex items-center justify-between">
             <a href="{{ route('movies.show', $id) }}" class="inline-flex items-center text-xs font-semibold text-slate-300 group-hover:text-white transition-colors">
                 <x-bi-play-fill class="h-4 w-4 mr-1 text-amber-400" />
                 <span>Watch</span>

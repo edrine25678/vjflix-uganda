@@ -70,8 +70,8 @@
                 </div>
             </div>
         @else
-            {{-- Items Grid --}}
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+            {{-- Items Grid: 4 columns on mobile --}}
+            <div class="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 lg:gap-6">
                 @foreach($watchlists as $item)
                     @php
                         $media = $item->watchable;
@@ -80,7 +80,7 @@
                     @endphp
                     <div 
                         x-show="tab === 'all' || (tab === 'movies' && {{ $isMovie ? 'true' : 'false' }}) || (tab === 'series' && {{ ! $isMovie ? 'true' : 'false' }})"
-                        class="group relative bg-neutral-900 border border-neutral-800/80 rounded-2xl overflow-hidden hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/10 transition-all duration-300 flex flex-col justify-between"
+                        class="group relative bg-neutral-900 border border-neutral-800/80 rounded-lg sm:rounded-2xl overflow-hidden hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/10 transition-all duration-300 flex flex-col justify-between"
                     >
                         {{-- Poster Image --}}
                         <div class="aspect-[2/3] w-full overflow-hidden bg-neutral-950 relative">
@@ -93,23 +93,23 @@
                             
                             {{-- VJ Badge --}}
                             @if($media->vj)
-                                <div class="absolute top-2 left-2 px-2.5 py-1 rounded-md bg-neutral-950/80 backdrop-blur-md text-[11px] font-bold text-amber-400 border border-amber-500/30">
+                                <div class="absolute top-1 left-1 sm:top-2 sm:left-2 px-1 py-0.2 sm:px-2.5 sm:py-1 rounded bg-neutral-950/80 backdrop-blur-md text-[8px] sm:text-[11px] font-bold text-amber-400 border border-amber-500/30 truncate max-w-[50px] sm:max-w-none">
                                     {{ $media->vj->stage_name }}
                                 </div>
                             @endif
 
                             {{-- Media Type Badge --}}
-                            <div class="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider {{ $isMovie ? 'bg-blue-600/80 text-blue-100' : 'bg-purple-600/80 text-purple-100' }}">
+                            <div class="hidden sm:block absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider {{ $isMovie ? 'bg-blue-600/80 text-blue-100' : 'bg-purple-600/80 text-purple-100' }}">
                                 {{ $isMovie ? 'Movie' : 'Series' }}
                             </div>
 
                             {{-- Remove Overlay Button --}}
-                            <form action="{{ route('watchlist.toggle') }}" method="POST" class="absolute bottom-2 right-2">
+                            <form action="{{ route('watchlist.toggle') }}" method="POST" class="absolute bottom-1 right-1 sm:bottom-2 sm:right-2">
                                 @csrf
                                 <input type="hidden" name="watchable_type" value="{{ $isMovie ? 'movie' : 'series' }}">
                                 <input type="hidden" name="watchable_id" value="{{ $media->id }}">
-                                <button type="submit" class="p-2 rounded-lg bg-neutral-950/80 backdrop-blur text-neutral-400 hover:text-red-400 hover:bg-neutral-900 border border-neutral-700/80 transition" title="Remove from list">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button type="submit" class="p-1 sm:p-2 rounded-lg bg-neutral-950/80 backdrop-blur text-neutral-400 hover:text-red-400 hover:bg-neutral-900 border border-neutral-700/80 transition" title="Remove from list">
+                                    <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
                                 </button>
@@ -117,12 +117,14 @@
                         </div>
 
                         {{-- Metadata --}}
-                        <div class="p-3.5 flex flex-col justify-between flex-1">
+                        <div class="p-1.5 sm:p-3.5 flex flex-col justify-between flex-1">
                             <div>
-                                <h3 class="font-bold text-sm text-white line-clamp-1 group-hover:text-amber-400 transition">
-                                    {{ $media->title }}
-                                </h3>
-                                <div class="flex items-center gap-2 mt-1 text-xs text-neutral-400">
+                                <a href="{{ $isMovie ? route('movies.show', $media->slug ?? $media->id) : route('series.show', $media->slug) }}" class="block">
+                                    <h3 class="font-bold text-[10px] sm:text-sm text-white line-clamp-1 group-hover:text-amber-400 transition">
+                                        {{ $media->title }}
+                                    </h3>
+                                </a>
+                                <div class="hidden sm:flex items-center gap-2 mt-1 text-xs text-neutral-400">
                                     <span>{{ $media->release_year ?? $media->first_air_year ?? 'N/A' }}</span>
                                     <span>•</span>
                                     <x-rating-stars :rating="$media->average_rating ?? 5.0" size="sm" :showScore="true" />
@@ -131,7 +133,7 @@
 
                             <a 
                                 href="{{ $isMovie ? route('movies.show', $media->slug ?? $media->id) : route('series.show', $media->slug) }}" 
-                                class="mt-3 block text-center py-2 rounded-xl text-xs font-semibold bg-neutral-800 hover:bg-amber-500 hover:text-neutral-950 text-neutral-200 transition duration-150"
+                                class="mt-1.5 sm:mt-3 hidden sm:block text-center py-2 rounded-xl text-xs font-semibold bg-neutral-800 hover:bg-amber-500 hover:text-neutral-950 text-neutral-200 transition duration-150"
                             >
                                 Watch Now
                             </a>

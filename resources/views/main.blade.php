@@ -59,7 +59,7 @@
         </div>
     @endif
 
-    <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+    <main class="mx-auto max-w-7xl px-2.5 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 sm:space-y-10">
         <!-- Popular VJs Showcase Section -->
         @if ($popularVjs->isNotEmpty())
             <section class="my-6">
@@ -121,7 +121,7 @@
                         @endphp
 
                         @if ($target)
-                            <div class="group relative flex flex-col overflow-hidden rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 transition-all duration-300 w-52 sm:w-60 flex-shrink-0 shadow-lg">
+                            <div class="group relative flex flex-col overflow-hidden rounded-lg sm:rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 transition-all duration-300 w-44 sm:w-60 flex-shrink-0 shadow-lg mr-2 sm:mr-4">
                                 <a href="{{ $url }}" class="relative block aspect-video w-full overflow-hidden bg-slate-800">
                                     <img src="{{ $poster }}" alt="{{ $title }}" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300">
                                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
