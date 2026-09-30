@@ -66,6 +66,57 @@ class StreamController extends Controller
     }
 
     /**
+     * Download a Movie file.
+     */
+    public function downloadMovie(Request $request, string $slug)
+    {
+        $movie = Movie::where(function ($query) use ($slug) {
+            $query->where('slug', $slug);
+            if (is_numeric($slug)) {
+                $query->orWhere('id', (int) $slug);
+            }
+        })->firstOrFail();
+
+        $movie->increment('views');
+
+        $cleanTitle = \Illuminate\Support\Str::slug($movie->title) . '-Luganda-VJFlix.mp4';
+
+        if ($movie->video_path && Storage::disk('public')->exists($movie->video_path)) {
+            return Storage::disk('public')->download($movie->video_path, $cleanTitle);
+        }
+
+        if (! empty($movie->video_url)) {
+            return redirect()->away($movie->video_url);
+        }
+
+        return redirect()->away('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+    }
+
+    /**
+     * Download a TV Series Episode file.
+     */
+    public function downloadEpisode(Request $request, string $seriesSlug, int $seasonNumber, int $episodeNumber)
+    {
+        $series = Series::where('slug', $seriesSlug)->firstOrFail();
+        $season = Season::where('series_id', $series->id)->where('season_number', $seasonNumber)->firstOrFail();
+        $episode = Episode::where('season_id', $season->id)->where('episode_number', $episodeNumber)->firstOrFail();
+
+        $episode->increment('views');
+
+        $cleanTitle = \Illuminate\Support\Str::slug($series->title . '-S' . $seasonNumber . 'E' . $episodeNumber) . '-Luganda-VJFlix.mp4';
+
+        if ($episode->video_path && Storage::disk('public')->exists($episode->video_path)) {
+            return Storage::disk('public')->download($episode->video_path, $cleanTitle);
+        }
+
+        if (! empty($episode->video_url)) {
+            return redirect()->away($episode->video_url);
+        }
+
+        return redirect()->away('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+    }
+
+    /**
      * Save watch progress (called periodically via AJAX during video playback).
      */
     public function updateProgress(Request $request): JsonResponse

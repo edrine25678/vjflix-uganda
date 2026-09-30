@@ -37,12 +37,13 @@
         }
     </style>
 </head>
-<body class="min-h-full flex flex-col antialiased selection:bg-amber-500 selection:text-black">
+<body class="min-h-full flex flex-col antialiased selection:bg-amber-500 selection:text-black pb-16 md:pb-0">
 
     <div class="flex-grow">
         {{ $slot }}
     </div>
 
+    <x-bottom-nav />
     <x-flash />
 
     @livewireScripts

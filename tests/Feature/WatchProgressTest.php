@@ -165,3 +165,37 @@ test('series episode stream endpoint redirects to media url', function () {
 
     $response->assertRedirect('https://example.com/episodes/s01e01.mp4');
 });
+
+test('movie download endpoint redirects or downloads movie file', function () {
+    $vj = Vj::factory()->create();
+    $movie = Movie::factory()->create([
+        'slug' => 'test-download-movie',
+        'vj_id' => $vj->id,
+        'video_url' => 'https://example.com/videos/download.mp4',
+    ]);
+
+    $response = $this->get('/download/movie/test-download-movie');
+
+    $response->assertRedirect('https://example.com/videos/download.mp4');
+});
+
+test('series episode download endpoint redirects or downloads episode file', function () {
+    $vj = Vj::factory()->create();
+    $series = Series::factory()->create([
+        'slug' => 'test-download-series',
+        'vj_id' => $vj->id,
+    ]);
+    $season = Season::factory()->create([
+        'series_id' => $series->id,
+        'season_number' => 1,
+    ]);
+    $episode = Episode::factory()->create([
+        'season_id' => $season->id,
+        'episode_number' => 1,
+        'video_url' => 'https://example.com/episodes/s01e01-download.mp4',
+    ]);
+
+    $response = $this->get('/download/series/test-download-series/season/1/episode/1');
+
+    $response->assertRedirect('https://example.com/episodes/s01e01-download.mp4');
+});

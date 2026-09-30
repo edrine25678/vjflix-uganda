@@ -1,5 +1,6 @@
 @props([
     'src',
+    'downloadUrl' => null,
     'poster' => null,
     'title' => 'Video',
     'vj' => null,
@@ -219,6 +220,13 @@
                         Next <x-bi-skip-forward-fill class="h-3.5 w-3.5 ml-0.5" />
                     </a>
                 </template>
+
+                <!-- Download Media -->
+                @if ($downloadUrl)
+                    <a href="{{ $downloadUrl }}" class="text-slate-300 hover:text-amber-400 transition-colors focus:outline-none" title="Download Media">
+                        <x-bi-download class="h-4 w-4" />
+                    </a>
+                @endif
 
                 <!-- Fullscreen Toggle -->
                 <button @click="toggleFullscreen()" type="button" class="text-slate-300 hover:text-amber-400 transition-colors focus:outline-none" title="Fullscreen (F)">

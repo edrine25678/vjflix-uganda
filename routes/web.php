@@ -45,9 +45,11 @@ Route::get('/series', [SeriesController::class, 'index'])->name('series.index');
 Route::get('/series/{slug}', [SeriesController::class, 'show'])->name('series.show');
 Route::get('/series/{slug}/season/{season}/episode/{episode}', [SeriesController::class, 'watch'])->name('series.watch');
 
-// Media Streaming Delivery (HTTP 206 Partial Content Byte-Range Serving)
+// Media Streaming & Direct Download Delivery (HTTP 206 Partial Content Byte-Range Serving & Downloads)
 Route::get('/stream/movie/{slug}', [StreamController::class, 'streamMovie'])->name('stream.movie');
 Route::get('/stream/series/{seriesSlug}/season/{season}/episode/{episode}', [StreamController::class, 'streamEpisode'])->name('stream.episode');
+Route::get('/download/movie/{slug}', [StreamController::class, 'downloadMovie'])->name('movies.download');
+Route::get('/download/series/{seriesSlug}/season/{season}/episode/{episode}', [StreamController::class, 'downloadEpisode'])->name('series.download');
 
 // Watch Progress & Resume API
 Route::middleware('auth')->group(function () {

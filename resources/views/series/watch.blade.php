@@ -16,6 +16,7 @@
         <!-- Video Player Viewport Container -->
         <x-video-player 
             :src="route('stream.episode', [$series->slug, $season->season_number, $episode->episode_number])" 
+            :downloadUrl="route('series.download', [$series->slug, $season->season_number, $episode->episode_number])"
             :poster="$episode->thumbnailUrl()" 
             :title="$series->title . ' · S' . $season->season_number . ':E' . $episode->episode_number . ' - ' . $episode->title" 
             :vj="$episode->vj ? $episode->vj->stage_name : ($series->vj ? $series->vj->stage_name : null)" 
@@ -46,8 +47,13 @@
                 <p class="text-xs text-slate-400 mt-1">From <span class="text-slate-200 font-semibold">{{ $series->title }}</span></p>
             </div>
 
-            <!-- Next / Prev Binge Buttons -->
+            <!-- Next / Prev Binge Buttons & Download -->
             <div class="flex items-center gap-3">
+                <a href="{{ route('series.download', [$series->slug, $season->season_number, $episode->episode_number]) }}" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-slate-200 hover:text-black hover:bg-amber-500 hover:border-amber-500 transition-colors shadow-md group" title="Download Episode">
+                    <x-bi-download class="h-4 w-4 text-amber-400 group-hover:text-black transition-colors" />
+                    <span class="hidden sm:inline">Download</span>
+                </a>
+
                 @if ($prevEpisode)
                     <a href="{{ route('series.watch', [$series->slug, $season->season_number, $prevEpisode->episode_number]) }}" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-slate-200 hover:bg-slate-800 transition-colors">
                         <x-bi-skip-backward-fill class="h-4 w-4 text-amber-400" />

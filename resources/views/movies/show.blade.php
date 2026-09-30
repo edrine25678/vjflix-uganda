@@ -92,6 +92,11 @@
                             </a>
                         @endif
 
+                        <a href="{{ route('movies.download', $movie->slug) }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900/90 hover:bg-amber-500 hover:text-black border border-slate-700 hover:border-amber-500 px-5 py-3.5 text-sm font-bold text-slate-200 transition-all shadow-lg group">
+                            <x-bi-download class="h-4 w-4 mr-2 text-amber-400 group-hover:text-black transition-colors" />
+                            Download Movie
+                        </a>
+
                         <x-watchlist-button type="movie" :id="$movie->id" size="lg" />
                     </div>
                 </div>
@@ -103,6 +108,7 @@
     <div id="player" class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
         <x-video-player 
             :src="route('stream.movie', $movie->slug)" 
+            :downloadUrl="route('movies.download', $movie->slug)"
             :poster="$movie->backdropUrl()" 
             :title="$movie->title" 
             :vj="$movie->vj ? $movie->vj->stage_name : null" 

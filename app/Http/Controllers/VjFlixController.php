@@ -12,11 +12,22 @@ class VjFlixController extends Controller
 {
     public function index(): View|Factory
     {
-        // 1. Featured hero banner movie
-        $heroMovie = Movie::with(['vj', 'genres'])
+        // 1. Featured hero banner movies (for 3-second dynamic auto-slider)
+        $heroMovies = Movie::with(['vj', 'genres'])
             ->featured()
             ->latest('published_at')
-            ->first() ?? Movie::with(['vj', 'genres'])->latest('published_at')->first();
+            ->limit(5)
+            ->get();
+
+        if ($heroMovies->isEmpty()) {
+            $heroMovies = Movie::with(['vj', 'genres'])
+                ->published()
+                ->latest('published_at')
+                ->limit(5)
+                ->get();
+        }
+
+        $heroMovie = $heroMovies->first();
 
         // 2. Trending in Uganda (most viewed/trending)
         $trending = Movie::with(['vj', 'genres'])
@@ -70,6 +81,7 @@ class VjFlixController extends Controller
 
         return view('main', [
             'heroMovie' => $heroMovie,
+            'heroMovies' => $heroMovies,
             'trending' => $trending,
             'latestTranslations' => $latestTranslations,
             'popularVjs' => $popularVjs,
