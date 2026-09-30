@@ -1,9 +1,9 @@
 <header class="fixed top-0 z-50 w-full bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80 text-white">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <!-- Brand Logo -->
-        <div class="flex items-center space-x-6">
-            <a href="{{ auth()->check() ? route('vjflix.index') : '/' }}" class="flex items-center space-x-2.5 group">
-                <img src="{{ asset('img/vjflix-icon.png') }}" alt="VJFlix" class="h-9 w-9 rounded-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform object-cover">
+    <div class="w-full flex items-center justify-between px-3 sm:px-6 lg:px-8 py-2.5">
+        <!-- Brand Logo (Pinned to Left Corner) -->
+        <div class="flex items-center space-x-5">
+            <a href="{{ auth()->check() ? route('vjflix.index') : '/' }}" class="flex items-center space-x-2 group">
+                <img src="{{ asset('img/vjflix-icon.png') }}" alt="VJFlix" class="h-10 w-10 rounded-xl shadow-lg shadow-amber-500/25 group-hover:scale-105 transition-transform object-cover flex-shrink-0">
                 <div class="flex flex-col">
                     <span class="text-xl font-extrabold tracking-wider text-white flex items-center gap-1 font-display">
                         FLIX <span class="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">Uganda</span>
