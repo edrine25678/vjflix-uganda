@@ -73,7 +73,7 @@
             <!-- Admin Logo -->
             <div class="h-16 flex items-center px-6 border-b border-slate-800">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2.5">
-                    <img src="{{ asset('favicon-32x32.png') }}" alt="VJFlix" class="h-8 w-8 rounded-lg shadow object-cover">
+                    <img src="{{ asset('img/vjflix-icon.png') }}" alt="VJFlix" class="h-8 w-8 rounded-lg shadow object-cover">
                     <span class="text-lg font-extrabold text-white tracking-wider font-display">
                         CMS <span class="text-xs px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-sans font-bold">Admin</span>
                     </span>
