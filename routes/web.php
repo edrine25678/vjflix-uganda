@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EpisodeController as AdminEpisodeController;
 use App\Http\Controllers\Admin\HeroSlideController as AdminHeroSlideController;
+use App\Http\Controllers\Admin\MediaUploadController;
 use App\Http\Controllers\Admin\MovieController as AdminMovieController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\PlanController as AdminPlanController;
@@ -147,6 +148,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin'])->group
     Route::get('tmdb/search', [AdminTmdbController::class, 'search'])->name('tmdb.search');
     Route::get('tmdb/details/{type}/{id}', [AdminTmdbController::class, 'details'])->name('tmdb.details');
     Route::post('tmdb/import', [AdminTmdbController::class, 'import'])->name('tmdb.import');
+
+    // Cloudflare R2 Presigned Direct Upload API (Bypasses server memory & limits for 2GB+ videos)
+    Route::post('media/generate-upload-url', [MediaUploadController::class, 'generateUploadUrl'])->name('media.generate-upload-url');
 
     // Subscription Management
     Route::resource('plans', AdminPlanController::class);

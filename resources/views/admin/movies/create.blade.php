@@ -64,6 +64,93 @@
                 })
                 .catch(err => console.error(err))
                 .finally(() => { this.loadingTmdb = false; });
+        },
+
+        uploading: false,
+        uploadProgress: 0,
+        uploadSpeed: '',
+        uploadFileName: '',
+        uploadFileSize: '',
+        uploadError: '',
+        uploadSuccess: false,
+
+        uploadVideoToR2(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            this.uploading = true;
+            this.uploadProgress = 0;
+            this.uploadError = '';
+            this.uploadSuccess = false;
+            this.uploadFileName = file.name;
+            this.uploadFileSize = (file.size / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+            if (file.size < 1024 * 1024 * 1024) {
+                this.uploadFileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+            }
+
+            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const startTime = Date.now();
+
+            fetch('{{ route('admin.media.generate-upload-url') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token || '',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    filename: file.name,
+                    content_type: file.type || 'video/mp4',
+                    folder: 'movies'
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.upload_url) {
+                    throw new Error(data.message || 'Failed to generate secure upload URL.');
+                }
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('PUT', data.upload_url, true);
+                if (file.type) {
+                    xhr.setRequestHeader('Content-Type', file.type);
+                }
+
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        this.uploadProgress = percent;
+                        const elapsedSec = (Date.now() - startTime) / 1000;
+                        if (elapsedSec > 0.5) {
+                            const bytesPerSec = e.loaded / elapsedSec;
+                            this.uploadSpeed = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
+                        }
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 200 || xhr.status === 204) {
+                        this.uploading = false;
+                        this.uploadSuccess = true;
+                        this.uploadProgress = 100;
+                        this.videoUrl = data.public_url;
+                    } else {
+                        this.uploading = false;
+                        this.uploadError = 'Upload to Cloudflare R2 returned status ' + xhr.status + '. Ensure your R2 bucket CORS allows PUT requests.';
+                    }
+                };
+
+                xhr.onerror = () => {
+                    this.uploading = false;
+                    this.uploadError = 'Connection failed. Ensure Cloudflare R2 bucket CORS policy allows PUT from this origin.';
+                };
+
+                xhr.send(file);
+            })
+            .catch(err => {
+                this.uploading = false;
+                this.uploadError = err.message || 'Failed to request upload signature.';
+            });
         }
     }">
         <div class="flex items-center justify-between">
@@ -257,51 +344,113 @@
                           class="w-full rounded-xl bg-white border border-slate-300 p-3 text-sm text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"></textarea>
             </div>
 
-            <!-- Video Media Source: Upload from Device or Paste URL -->
+            <!-- Video Media Source: Cloudflare R2 Direct Upload (2GB - 2.5GB) or Cloud Stream URL -->
             <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400">
-                            Movie Video Source *
+                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+                            <x-bi-cloud-arrow-up class="h-4 w-4 text-amber-400" />
+                            Movie Video Source (Cloudflare R2 / 2GB - 2.5GB Supported) *
                         </label>
                         <p class="text-[11px] text-slate-400 mt-0.5">
-                            Upload a video directly from your device (MP4, WebM, MKV) or paste a video streaming URL.
+                            Upload large movie files directly to Cloudflare R2 (bypasses server timeouts) or paste a video streaming URL.
                         </p>
                     </div>
-                    <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
-                        Player Source
+                    <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                        Zero Egress
                     </span>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-                    <!-- Option 1: Upload from Local Device -->
-                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors space-y-2">
-                        <div class="flex items-center gap-2">
-                            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/20 text-amber-400 text-xs">
-                                <x-bi-upload class="h-3.5 w-3.5" />
+                <div class="space-y-4 pt-1">
+                    <!-- Option 1: Direct Cloudflare R2 Upload Widget -->
+                    <div class="p-4 rounded-xl bg-slate-900 border border-amber-500/40 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500 text-black font-extrabold text-xs">
+                                    <x-bi-upload class="h-4 w-4" />
+                                </span>
+                                <div>
+                                    <span class="text-xs font-bold text-white">Direct Upload to Cloudflare R2</span>
+                                    <p class="text-[10px] text-slate-400">Streams 2GB - 2.5GB files straight from your browser into your R2 bucket.</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-bold text-amber-400 px-2 py-0.5 rounded bg-slate-950 border border-slate-800">
+                                Recommended
                             </span>
-                            <span class="text-xs font-bold text-white">Option 1: Upload from Computer</span>
                         </div>
-                        <p class="text-[10px] text-slate-400">Select an MP4, WebM, or MKV file from your local storage.</p>
-                        <input type="file"
-                               name="video_file"
-                               accept="video/mp4,video/webm,video/quicktime,video/x-matroska,.mp4,.webm,.mov,.mkv"
-                               class="w-full text-xs text-slate-400 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer">
+
+                        <!-- File Input (Disabled while uploading) -->
+                        <div x-show="!uploading && !uploadSuccess">
+                            <label class="block cursor-pointer">
+                                <input type="file"
+                                       @change="uploadVideoToR2($event)"
+                                       accept="video/mp4,video/webm,video/quicktime,video/x-matroska,.mp4,.webm,.mov,.mkv"
+                                       class="w-full text-xs text-slate-400 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer">
+                            </label>
+                            <p class="text-[10px] text-slate-500 mt-1">Select an MP4, WebM, or MKV movie file (e.g. 2.0GB - 2.5GB).</p>
+                        </div>
+
+                        <!-- Live Upload Progress Bar -->
+                        <div x-show="uploading" x-cloak class="space-y-2 p-3 rounded-xl bg-slate-950 border border-amber-500/50">
+                            <div class="flex items-center justify-between text-xs font-semibold">
+                                <div class="flex items-center gap-2 text-white truncate max-w-xs sm:max-w-md">
+                                    <svg class="animate-spin h-3.5 w-3.5 text-amber-400 flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span class="truncate" x-text="uploadFileName"></span>
+                                    <span class="text-[10px] text-slate-400" x-text="'(' + uploadFileSize + ')'"></span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[11px] text-slate-400 font-mono" x-text="uploadSpeed"></span>
+                                    <span class="text-amber-400 font-bold text-xs" x-text="uploadProgress + '%'"></span>
+                                </div>
+                            </div>
+                            <div class="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-200"
+                                     :style="'width: ' + uploadProgress + '%'"></div>
+                            </div>
+                            <p class="text-[10px] text-slate-400">Streaming directly to Cloudflare R2 bucket... Please keep this page open.</p>
+                        </div>
+
+                        <!-- Upload Success Alert -->
+                        <div x-show="uploadSuccess" x-cloak class="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-xs flex items-center justify-between">
+                            <div class="flex items-center gap-2 text-emerald-300 font-semibold">
+                                <x-bi-check-circle-fill class="h-4 w-4 text-emerald-400 flex-shrink-0" />
+                                <span>Uploaded to Cloudflare R2! Streaming link populated below.</span>
+                            </div>
+                            <button type="button" @click="uploadSuccess = false; uploading = false;" class="text-[10px] text-emerald-400 hover:underline font-bold">
+                                Upload a different file
+                            </button>
+                        </div>
+
+                        <!-- Upload Error Alert -->
+                        <div x-show="uploadError" x-cloak class="p-3 rounded-xl bg-red-500/20 border border-red-500/50 text-xs text-red-300 space-y-1">
+                            <div class="flex items-center gap-2 font-bold text-red-400">
+                                <x-bi-exclamation-triangle-fill class="h-4 w-4" />
+                                <span>Upload Failed</span>
+                            </div>
+                            <p class="text-[11px]" x-text="uploadError"></p>
+                        </div>
                     </div>
 
-                    <!-- Option 2: Paste Stream URL -->
-                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors space-y-2">
-                        <div class="flex items-center gap-2">
-                            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400 text-xs">
-                                <x-bi-link-45deg class="h-3.5 w-3.5" />
+                    <!-- Option 2: Cloud / CDN Stream URL (Auto-filled by R2 or manual paste) -->
+                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400 text-xs">
+                                    <x-bi-link-45deg class="h-3.5 w-3.5" />
+                                </span>
+                                <span class="text-xs font-bold text-white">Stream Video URL</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400">
+                                Automatically filled by R2 upload above
                             </span>
-                            <span class="text-xs font-bold text-white">Option 2: Cloud / CDN Stream URL</span>
                         </div>
-                        <p class="text-[10px] text-slate-400">Paste direct .mp4, Cloudflare R2, BunnyCDN, or .m3u8 link.</p>
                         <input type="url"
                                name="video_url"
                                x-model="videoUrl"
-                               placeholder="https://.../movie.mp4 or HLS m3u8"
+                               placeholder="https://...r2.cloudflarestorage.com/movies/... or custom CDN domain"
                                class="w-full rounded-xl bg-white border border-slate-300 p-2.5 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                     </div>
                 </div>

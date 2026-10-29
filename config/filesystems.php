@@ -52,6 +52,18 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'r2' => [
+            'driver' => 's3',
+            'key' => env('CLOUDFLARE_R2_ACCESS_KEY_ID'),
+            'secret' => env('CLOUDFLARE_R2_SECRET_ACCESS_KEY'),
+            'region' => 'auto',
+            'bucket' => env('CLOUDFLARE_R2_BUCKET', 'vjflix-media'),
+            'url' => env('CLOUDFLARE_R2_URL'),
+            'endpoint' => env('CLOUDFLARE_R2_ENDPOINT', 'https://98a77bf266ecfad024a016aa851d5c6f.r2.cloudflarestorage.com'),
+            'use_path_style_endpoint' => false,
+            'throw' => true,
+        ],
+
     ],
 
     /*
