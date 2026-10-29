@@ -60,7 +60,7 @@ return [
             'bucket' => env('CLOUDFLARE_R2_BUCKET', 'vjflix-media'),
             'url' => env('CLOUDFLARE_R2_URL'),
             'endpoint' => env('CLOUDFLARE_R2_ENDPOINT', 'https://98a77bf266ecfad024a016aa851d5c6f.r2.cloudflarestorage.com'),
-            'use_path_style_endpoint' => false,
+            'use_path_style_endpoint' => env('CLOUDFLARE_R2_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => true,
         ],
 

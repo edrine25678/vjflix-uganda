@@ -33,25 +33,32 @@ class MediaUploadController extends Controller
         $bucket = config('filesystems.disks.r2.bucket', 'vjflix-media');
         $disk = Storage::disk('r2');
 
-        // Check if disk supports S3 presigned upload URLs (native AwsS3V3Adapter)
-        if (method_exists($disk, 'temporaryUploadUrl')) {
-            $uploadData = $disk->temporaryUploadUrl($key, now()->addMinutes(60), [
-                'ContentType' => $contentType,
-            ]);
-            $uploadUrl = $uploadData['url'];
-        } elseif (method_exists($disk, 'getClient')) {
-            /** @var \Aws\S3\S3Client $s3Client */
-            $s3Client = $disk->getClient();
-            $command = $s3Client->getCommand('PutObject', [
-                'Bucket' => $bucket,
-                'Key' => $key,
-                'ContentType' => $contentType,
-            ]);
-            $presignedRequest = $s3Client->createPresignedRequest($command, '+60 minutes');
-            $uploadUrl = (string) $presignedRequest->getUri();
-        } else {
-            // Fallback for fake/local storage in testing
-            $uploadUrl = "https://{$bucket}.r2.cloudflarestorage.com/{$key}?mock_token=test";
+        try {
+            // Check if disk supports S3 presigned upload URLs (native AwsS3V3Adapter)
+            if (method_exists($disk, 'temporaryUploadUrl')) {
+                $uploadData = $disk->temporaryUploadUrl($key, now()->addMinutes(60), [
+                    'ContentType' => $contentType,
+                ]);
+                $uploadUrl = $uploadData['url'];
+            } elseif (method_exists($disk, 'getClient')) {
+                /** @var \Aws\S3\S3Client $s3Client */
+                $s3Client = $disk->getClient();
+                $command = $s3Client->getCommand('PutObject', [
+                    'Bucket' => $bucket,
+                    'Key' => $key,
+                    'ContentType' => $contentType,
+                ]);
+                $presignedRequest = $s3Client->createPresignedRequest($command, '+60 minutes');
+                $uploadUrl = (string) $presignedRequest->getUri();
+            } else {
+                // Fallback for fake/local storage in testing
+                $uploadUrl = "https://{$bucket}.r2.cloudflarestorage.com/{$key}?mock_token=test";
+            }
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cloudflare R2 signing error: ' . $e->getMessage() . '. Please verify CLOUDFLARE_R2_ACCESS_KEY_ID and CLOUDFLARE_R2_SECRET_ACCESS_KEY in your .env.',
+            ], 500);
         }
 
         // Resolve public stream URL

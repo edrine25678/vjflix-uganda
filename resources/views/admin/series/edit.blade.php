@@ -189,7 +189,95 @@
                     @endif
 
                     <!-- Add Episode to this Season Form -->
-                    <div x-data="{ open: false }" class="pt-2">
+                    <div x-data="{
+                        open: false,
+                        videoUrl: '',
+                        uploading: false,
+                        uploadProgress: 0,
+                        uploadSpeed: '',
+                        uploadFileName: '',
+                        uploadFileSize: '',
+                        uploadError: '',
+                        uploadSuccess: false,
+                        uploadEpisodeToR2(event) {
+                            const file = event.target.files[0];
+                            if (!file) return;
+
+                            this.uploading = true;
+                            this.uploadProgress = 0;
+                            this.uploadError = '';
+                            this.uploadSuccess = false;
+                            this.uploadFileName = file.name;
+                            this.uploadFileSize = (file.size / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+                            if (file.size < 1024 * 1024 * 1024) {
+                                this.uploadFileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                            }
+
+                            const token = document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute('content');
+                            const startTime = Date.now();
+
+                            fetch('{{ route('admin.media.generate-upload-url') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': token || '',
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    filename: file.name,
+                                    content_type: file.type || 'video/mp4',
+                                    folder: 'episodes'
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (!data.upload_url) {
+                                    throw new Error(data.message || 'Failed to generate secure upload URL.');
+                                }
+
+                                const xhr = new XMLHttpRequest();
+                                xhr.open('PUT', data.upload_url, true);
+                                if (file.type) {
+                                    xhr.setRequestHeader('Content-Type', file.type);
+                                }
+
+                                xhr.upload.onprogress = (e) => {
+                                    if (e.lengthComputable) {
+                                        const percent = Math.round((e.loaded / e.total) * 100);
+                                        this.uploadProgress = percent;
+                                        const elapsedSec = (Date.now() - startTime) / 1000;
+                                        if (elapsedSec > 0.5) {
+                                            const bytesPerSec = e.loaded / elapsedSec;
+                                            this.uploadSpeed = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
+                                        }
+                                    }
+                                };
+
+                                xhr.onload = () => {
+                                    if (xhr.status === 200 || xhr.status === 204) {
+                                        this.uploading = false;
+                                        this.uploadSuccess = true;
+                                        this.uploadProgress = 100;
+                                        this.videoUrl = data.public_url;
+                                    } else {
+                                        this.uploading = false;
+                                        this.uploadError = 'Upload to Cloudflare R2 returned status ' + xhr.status + '. Ensure your R2 bucket CORS allows PUT requests.';
+                                    }
+                                };
+
+                                xhr.onerror = () => {
+                                    this.uploading = false;
+                                    this.uploadError = 'Connection failed. Ensure Cloudflare R2 bucket CORS policy allows PUT from this origin.';
+                                };
+
+                                xhr.send(file);
+                            })
+                            .catch(err => {
+                                this.uploading = false;
+                                this.uploadError = err.message || 'Failed to request upload signature.';
+                            });
+                        }
+                    }" class="pt-2">
                         <button @click="open = !open" type="button" class="text-xs font-bold text-amber-400 hover:underline flex items-center gap-1">
                             <x-bi-plus-circle class="h-3.5 w-3.5" />
                             <span x-text="open ? 'Close Episode Form' : '+ Add Episode to Season {{ $season->season_number }}'"></span>
@@ -218,23 +306,80 @@
                                     </div>
                                 </div>
 
-                                <!-- Episode Video Source: Upload from Device or Paste URL -->
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-3 rounded-xl bg-slate-950 border border-slate-800">
-                                    <div class="space-y-1">
-                                        <label class="block text-[11px] font-bold uppercase text-amber-400">Option 1: Upload Video from Device</label>
-                                        <p class="text-[10px] text-slate-400">MP4, WebM, MKV file from computer</p>
-                                        <input type="file"
-                                               name="video_file"
-                                               accept="video/mp4,video/webm,video/quicktime,video/x-matroska,.mp4,.webm,.mov,.mkv"
-                                               class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer">
+                                <!-- Episode Video Source: Cloudflare R2 Direct Upload (2GB+) or Stream URL -->
+                                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <label class="block text-[11px] font-bold uppercase text-amber-400">
+                                            Episode Video Source *
+                                        </label>
+                                        <span class="text-[10px] text-slate-400">Direct Cloudflare R2 Upload (Supports 2GB+ files)</span>
                                     </div>
 
-                                    <div class="space-y-1">
-                                        <label class="block text-[11px] font-bold uppercase text-blue-400">Option 2: Video Stream URL</label>
-                                        <p class="text-[10px] text-slate-400">Or paste external .mp4 / .m3u8 URL</p>
+                                    <!-- Option 1: Direct Cloudflare R2 Presigned Upload -->
+                                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-2">
+                                                <span class="flex h-5 w-5 items-center justify-center rounded bg-amber-500/20 text-amber-400 text-[10px] font-bold">R2</span>
+                                                <span class="text-xs font-bold text-white">Direct Upload to Cloudflare R2</span>
+                                            </div>
+                                            <span class="text-[10px] text-emerald-400 font-semibold">Zero-Egress & Bypasses PHP Limits</span>
+                                        </div>
+
+                                        <input type="file"
+                                               accept="video/mp4,video/webm,video/quicktime,video/x-matroska,.mp4,.webm,.mov,.mkv"
+                                               @change="uploadEpisodeToR2($event)"
+                                               :disabled="uploading"
+                                               class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer disabled:opacity-50">
+
+                                        <!-- Upload Progress Bar -->
+                                        <div x-show="uploading" x-cloak class="mt-2 space-y-1.5 p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+                                            <div class="flex items-center justify-between text-xs">
+                                                <div class="flex items-center gap-2 text-slate-300 font-semibold truncate max-w-[70%]">
+                                                    <svg class="animate-spin h-3.5 w-3.5 text-amber-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                    <span class="truncate" x-text="uploadFileName"></span>
+                                                    <span class="text-[10px] text-slate-400" x-text="'(' + uploadFileSize + ')'"></span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-[11px] text-slate-400 font-mono" x-text="uploadSpeed"></span>
+                                                    <span class="text-amber-400 font-bold text-xs" x-text="uploadProgress + '%'"></span>
+                                                </div>
+                                            </div>
+                                            <div class="h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
+                                                <div class="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-200"
+                                                     :style="'width: ' + uploadProgress + '%'"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Upload Success Alert -->
+                                        <div x-show="uploadSuccess" x-cloak class="p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/50 text-xs flex items-center justify-between text-emerald-300 font-semibold">
+                                            <span>Uploaded to Cloudflare R2! Stream link populated below.</span>
+                                            <button type="button" @click="uploadSuccess = false; uploading = false;" class="text-[10px] text-emerald-400 hover:underline font-bold">
+                                                Upload another
+                                            </button>
+                                        </div>
+
+                                        <!-- Upload Error Alert -->
+                                        <div x-show="uploadError" x-cloak class="p-2 rounded-lg bg-red-500/20 border border-red-500/50 text-xs text-red-300 space-y-1">
+                                            <div class="font-bold text-red-400">Upload Failed</div>
+                                            <p class="text-[11px]" x-text="uploadError"></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Option 2: Video Stream URL -->
+                                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1.5">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-xs font-bold text-white">Stream Video URL</span>
+                                            </div>
+                                            <span class="text-[10px] text-slate-400">Auto-filled by R2 upload or enter manual link</span>
+                                        </div>
                                         <input type="url"
                                                name="video_url"
-                                               placeholder="https://domain.com/streams/episode.mp4 or m3u8"
+                                               x-model="videoUrl"
+                                               placeholder="https://...r2.cloudflarestorage.com/episodes/... or direct .mp4 URL"
                                                class="w-full rounded-lg bg-white border border-slate-300 p-2 text-xs text-black font-semibold placeholder-slate-400 focus:border-amber-500 focus:outline-none">
                                     </div>
                                 </div>
