@@ -189,95 +189,7 @@
                     @endif
 
                     <!-- Add Episode to this Season Form -->
-                    <div x-data="{
-                        open: false,
-                        videoUrl: '',
-                        uploading: false,
-                        uploadProgress: 0,
-                        uploadSpeed: '',
-                        uploadFileName: '',
-                        uploadFileSize: '',
-                        uploadError: '',
-                        uploadSuccess: false,
-                        uploadEpisodeToR2(event) {
-                            const file = event.target.files[0];
-                            if (!file) return;
-
-                            this.uploading = true;
-                            this.uploadProgress = 0;
-                            this.uploadError = '';
-                            this.uploadSuccess = false;
-                            this.uploadFileName = file.name;
-                            this.uploadFileSize = (file.size / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
-                            if (file.size < 1024 * 1024 * 1024) {
-                                this.uploadFileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
-                            }
-
-                            const token = document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute('content');
-                            const startTime = Date.now();
-
-                            fetch('{{ route('admin.media.generate-upload-url') }}', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': token || '',
-                                    'Accept': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    filename: file.name,
-                                    content_type: file.type || 'video/mp4',
-                                    folder: 'episodes'
-                                })
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (!data.upload_url) {
-                                    throw new Error(data.message || 'Failed to generate secure upload URL.');
-                                }
-
-                                const xhr = new XMLHttpRequest();
-                                xhr.open('PUT', data.upload_url, true);
-                                if (file.type) {
-                                    xhr.setRequestHeader('Content-Type', file.type);
-                                }
-
-                                xhr.upload.onprogress = (e) => {
-                                    if (e.lengthComputable) {
-                                        const percent = Math.round((e.loaded / e.total) * 100);
-                                        this.uploadProgress = percent;
-                                        const elapsedSec = (Date.now() - startTime) / 1000;
-                                        if (elapsedSec > 0.5) {
-                                            const bytesPerSec = e.loaded / elapsedSec;
-                                            this.uploadSpeed = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
-                                        }
-                                    }
-                                };
-
-                                xhr.onload = () => {
-                                    if (xhr.status === 200 || xhr.status === 204) {
-                                        this.uploading = false;
-                                        this.uploadSuccess = true;
-                                        this.uploadProgress = 100;
-                                        this.videoUrl = data.public_url;
-                                    } else {
-                                        this.uploading = false;
-                                        this.uploadError = 'Upload to Cloudflare R2 returned status ' + xhr.status + '. Ensure your R2 bucket CORS allows PUT requests.';
-                                    }
-                                };
-
-                                xhr.onerror = () => {
-                                    this.uploading = false;
-                                    this.uploadError = 'Connection failed. Ensure Cloudflare R2 bucket CORS policy allows PUT from this origin.';
-                                };
-
-                                xhr.send(file);
-                            })
-                            .catch(err => {
-                                this.uploading = false;
-                                this.uploadError = err.message || 'Failed to request upload signature.';
-                            });
-                        }
-                    }" class="pt-2">
+                    <div x-data="seriesEpisodeForm()" class="pt-2">
                         <button @click="open = !open" type="button" class="text-xs font-bold text-amber-400 hover:underline flex items-center gap-1">
                             <x-bi-plus-circle class="h-3.5 w-3.5" />
                             <span x-text="open ? 'Close Episode Form' : '+ Add Episode to Season {{ $season->season_number }}'"></span>
@@ -406,4 +318,99 @@
             @endforeach
         </div>
     </div>
+
+    <script>
+    function seriesEpisodeForm() {
+        return {
+            open: false,
+            videoUrl: '',
+            uploading: false,
+            uploadProgress: 0,
+            uploadSpeed: '',
+            uploadFileName: '',
+            uploadFileSize: '',
+            uploadError: '',
+            uploadSuccess: false,
+            uploadEpisodeToR2(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                this.uploading = true;
+                this.uploadProgress = 0;
+                this.uploadError = '';
+                this.uploadSuccess = false;
+                this.uploadFileName = file.name;
+                this.uploadFileSize = (file.size / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+                if (file.size < 1024 * 1024 * 1024) {
+                    this.uploadFileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                }
+
+                const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                const startTime = Date.now();
+
+                fetch('{{ route('admin.media.generate-upload-url') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token || '',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        filename: file.name,
+                        content_type: file.type || 'video/mp4',
+                        folder: 'episodes'
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.upload_url) {
+                        throw new Error(data.message || 'Failed to generate secure upload URL.');
+                    }
+
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('PUT', data.upload_url, true);
+                    if (file.type) {
+                        xhr.setRequestHeader('Content-Type', file.type);
+                    }
+
+                    xhr.upload.onprogress = (e) => {
+                        if (e.lengthComputable) {
+                            const percent = Math.round((e.loaded / e.total) * 100);
+                            this.uploadProgress = percent;
+                            const elapsedSec = (Date.now() - startTime) / 1000;
+                            if (elapsedSec > 0.5) {
+                                const bytesPerSec = e.loaded / elapsedSec;
+                                this.uploadSpeed = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
+                            }
+                        }
+                    };
+
+                    xhr.onload = () => {
+                        if (xhr.status === 200 || xhr.status === 204) {
+                            this.uploading = false;
+                            this.uploadSuccess = true;
+                            this.uploadProgress = 100;
+                            this.videoUrl = data.public_url;
+                        } else {
+                            this.uploading = false;
+                            this.uploadError = 'Upload to Cloudflare R2 returned status ' + xhr.status + '. Ensure your R2 bucket CORS allows PUT requests.';
+                        }
+                    };
+
+                    xhr.onerror = () => {
+                        this.uploading = false;
+                        this.uploadError = 'Connection failed. Ensure Cloudflare R2 bucket CORS policy allows PUT from this origin.';
+                    };
+
+                    xhr.send(file);
+                })
+                .catch(err => {
+                    this.uploading = false;
+                    this.uploadError = err.message || 'Failed to request upload signature.';
+                });
+            }
+        };
+    }
+    </script>
 </x-admin-layout>
+

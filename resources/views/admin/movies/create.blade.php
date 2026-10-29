@@ -1,158 +1,7 @@
 <x-admin-layout>
     <x-slot:title>Add New Movie — VJFlix CMS</x-slot:title>
 
-    <div class="space-y-6 max-w-4xl mx-auto" x-data="{
-        title: '{{ addslashes(old('title', $tmdbPrefill['translated_title_suggestion'] ?? ($tmdbPrefill['title'] ?? ''))) }}',
-        originalTitle: '{{ addslashes(old('original_title', $tmdbPrefill['original_title'] ?? '')) }}',
-        releaseYear: '{{ old('release_year', $tmdbPrefill['release_year'] ?? date('Y')) }}',
-        duration: '{{ old('duration', $tmdbPrefill['duration'] ?? 120) }}',
-        synopsis: '{{ addslashes(old('synopsis', $tmdbPrefill['synopsis'] ?? '')) }}',
-        description: '{{ addslashes(old('description', $tmdbPrefill['description'] ?? '')) }}',
-        videoUrl: '{{ old('video_url', '') }}',
-        trailerUrl: '{{ old('trailer_url', $tmdbPrefill['trailer_url'] ?? '') }}',
-        posterUrl: '{{ old('poster_url', $tmdbPrefill['poster_url'] ?? '') }}',
-        backdropUrl: '{{ old('backdrop_url', $tmdbPrefill['backdrop_url'] ?? '') }}',
-        tmdbQuery: '',
-        tmdbResults: [],
-        loadingTmdb: false,
-        showTmdbDropdown: false,
-        autoFilledNotice: false,
-        selectedMovieTitle: '',
-
-        searchTmdb(explicitQuery = '') {
-            const q = explicitQuery.trim() || this.tmdbQuery.trim() || this.title.trim();
-            if (q.length < 2) return;
-            this.loadingTmdb = true;
-            fetch(`/admin/tmdb/search?type=movie&query=${encodeURIComponent(q)}`)
-                .then(res => res.json())
-                .then(data => {
-                    this.tmdbResults = data.results || [];
-                    this.showTmdbDropdown = this.tmdbResults.length > 0;
-                })
-                .catch(() => { this.tmdbResults = []; })
-                .finally(() => { this.loadingTmdb = false; });
-        },
-
-        selectTmdbMovie(tmdbId) {
-            this.loadingTmdb = true;
-            fetch(`/admin/tmdb/details/movie/${tmdbId}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data && !data.error) {
-                        this.title = data.translated_title_suggestion || data.title;
-                        this.originalTitle = data.original_title || data.title;
-                        this.releaseYear = data.release_year || '';
-                        this.duration = data.duration || 120;
-                        this.synopsis = data.synopsis || '';
-                        this.description = data.description || '';
-                        this.posterUrl = data.poster_url || '';
-                        this.backdropUrl = data.backdrop_url || '';
-                        this.trailerUrl = data.trailer_url || '';
-                        this.selectedMovieTitle = data.title;
-
-                        // Check genre checkboxes
-                        if (data.genre_ids && Array.isArray(data.genre_ids)) {
-                            document.querySelectorAll('input[name=\'genres[]\']').forEach(cb => {
-                                cb.checked = data.genre_ids.includes(parseInt(cb.value));
-                            });
-                        }
-
-                        this.autoFilledNotice = true;
-                        this.showTmdbDropdown = false;
-                        this.tmdbResults = [];
-                    }
-                })
-                .catch(err => console.error(err))
-                .finally(() => { this.loadingTmdb = false; });
-        },
-
-        uploading: false,
-        uploadProgress: 0,
-        uploadSpeed: '',
-        uploadFileName: '',
-        uploadFileSize: '',
-        uploadError: '',
-        uploadSuccess: false,
-
-        uploadVideoToR2(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            this.uploading = true;
-            this.uploadProgress = 0;
-            this.uploadError = '';
-            this.uploadSuccess = false;
-            this.uploadFileName = file.name;
-            this.uploadFileSize = (file.size / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
-            if (file.size < 1024 * 1024 * 1024) {
-                this.uploadFileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
-            }
-
-            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const startTime = Date.now();
-
-            fetch('{{ route('admin.media.generate-upload-url') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token || '',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    filename: file.name,
-                    content_type: file.type || 'video/mp4',
-                    folder: 'movies'
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (!data.upload_url) {
-                    throw new Error(data.message || 'Failed to generate secure upload URL.');
-                }
-
-                const xhr = new XMLHttpRequest();
-                xhr.open('PUT', data.upload_url, true);
-                if (file.type) {
-                    xhr.setRequestHeader('Content-Type', file.type);
-                }
-
-                xhr.upload.onprogress = (e) => {
-                    if (e.lengthComputable) {
-                        const percent = Math.round((e.loaded / e.total) * 100);
-                        this.uploadProgress = percent;
-                        const elapsedSec = (Date.now() - startTime) / 1000;
-                        if (elapsedSec > 0.5) {
-                            const bytesPerSec = e.loaded / elapsedSec;
-                            this.uploadSpeed = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
-                        }
-                    }
-                };
-
-                xhr.onload = () => {
-                    if (xhr.status === 200 || xhr.status === 204) {
-                        this.uploading = false;
-                        this.uploadSuccess = true;
-                        this.uploadProgress = 100;
-                        this.videoUrl = data.public_url;
-                    } else {
-                        this.uploading = false;
-                        this.uploadError = 'Upload to Cloudflare R2 returned status ' + xhr.status + '. Ensure your R2 bucket CORS allows PUT requests.';
-                    }
-                };
-
-                xhr.onerror = () => {
-                    this.uploading = false;
-                    this.uploadError = 'Connection failed. Ensure Cloudflare R2 bucket CORS policy allows PUT from this origin.';
-                };
-
-                xhr.send(file);
-            })
-            .catch(err => {
-                this.uploading = false;
-                this.uploadError = err.message || 'Failed to request upload signature.';
-            });
-        }
-    }">
+    <div class="space-y-6 max-w-4xl mx-auto" x-data="movieCreateForm()">
         <div class="flex items-center justify-between">
             <div>
                 <a href="{{ route('admin.movies.index') }}" class="text-xs text-amber-400 hover:underline flex items-center gap-1 mb-1">
@@ -541,4 +390,161 @@
             </div>
         </form>
     </div>
+
+    <script>
+    function movieCreateForm() {
+        return {
+            title: @json(old('title', $tmdbPrefill['translated_title_suggestion'] ?? ($tmdbPrefill['title'] ?? ''))),
+            originalTitle: @json(old('original_title', $tmdbPrefill['original_title'] ?? '')),
+            releaseYear: @json(old('release_year', $tmdbPrefill['release_year'] ?? date('Y'))),
+            duration: @json(old('duration', $tmdbPrefill['duration'] ?? 120)),
+            synopsis: @json(old('synopsis', $tmdbPrefill['synopsis'] ?? '')),
+            description: @json(old('description', $tmdbPrefill['description'] ?? '')),
+            videoUrl: @json(old('video_url', '')),
+            trailerUrl: @json(old('trailer_url', $tmdbPrefill['trailer_url'] ?? '')),
+            posterUrl: @json(old('poster_url', $tmdbPrefill['poster_url'] ?? '')),
+            backdropUrl: @json(old('backdrop_url', $tmdbPrefill['backdrop_url'] ?? '')),
+            tmdbQuery: '',
+            tmdbResults: [],
+            loadingTmdb: false,
+            showTmdbDropdown: false,
+            autoFilledNotice: false,
+            selectedMovieTitle: '',
+
+            searchTmdb(explicitQuery = '') {
+                const q = explicitQuery.trim() || this.tmdbQuery.trim() || this.title.trim();
+                if (q.length < 2) return;
+                this.loadingTmdb = true;
+                fetch(`/admin/tmdb/search?type=movie&query=${encodeURIComponent(q)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        this.tmdbResults = data.results || [];
+                        this.showTmdbDropdown = this.tmdbResults.length > 0;
+                    })
+                    .catch(() => { this.tmdbResults = []; })
+                    .finally(() => { this.loadingTmdb = false; });
+            },
+
+            selectTmdbMovie(tmdbId) {
+                this.loadingTmdb = true;
+                fetch(`/admin/tmdb/details/movie/${tmdbId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && !data.error) {
+                            this.title = data.translated_title_suggestion || data.title;
+                            this.originalTitle = data.original_title || data.title;
+                            this.releaseYear = data.release_year || '';
+                            this.duration = data.duration || 120;
+                            this.synopsis = data.synopsis || '';
+                            this.description = data.description || '';
+                            this.posterUrl = data.poster_url || '';
+                            this.backdropUrl = data.backdrop_url || '';
+                            this.trailerUrl = data.trailer_url || '';
+                            this.selectedMovieTitle = data.title;
+
+                            if (data.genre_ids && Array.isArray(data.genre_ids)) {
+                                document.querySelectorAll('input[name="genres[]"]').forEach(cb => {
+                                    cb.checked = data.genre_ids.includes(parseInt(cb.value));
+                                });
+                            }
+
+                            this.autoFilledNotice = true;
+                            this.showTmdbDropdown = false;
+                            this.tmdbResults = [];
+                        }
+                    })
+                    .catch(err => console.error(err))
+                    .finally(() => { this.loadingTmdb = false; });
+            },
+
+            uploading: false,
+            uploadProgress: 0,
+            uploadSpeed: '',
+            uploadFileName: '',
+            uploadFileSize: '',
+            uploadError: '',
+            uploadSuccess: false,
+
+            uploadVideoToR2(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                this.uploading = true;
+                this.uploadProgress = 0;
+                this.uploadError = '';
+                this.uploadSuccess = false;
+                this.uploadFileName = file.name;
+                this.uploadFileSize = (file.size / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+                if (file.size < 1024 * 1024 * 1024) {
+                    this.uploadFileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                }
+
+                const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                const startTime = Date.now();
+
+                fetch('{{ route('admin.media.generate-upload-url') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token || '',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        filename: file.name,
+                        content_type: file.type || 'video/mp4',
+                        folder: 'movies'
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.upload_url) {
+                        throw new Error(data.message || 'Failed to generate secure upload URL.');
+                    }
+
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('PUT', data.upload_url, true);
+                    if (file.type) {
+                        xhr.setRequestHeader('Content-Type', file.type);
+                    }
+
+                    xhr.upload.onprogress = (e) => {
+                        if (e.lengthComputable) {
+                            const percent = Math.round((e.loaded / e.total) * 100);
+                            this.uploadProgress = percent;
+                            const elapsedSec = (Date.now() - startTime) / 1000;
+                            if (elapsedSec > 0.5) {
+                                const bytesPerSec = e.loaded / elapsedSec;
+                                this.uploadSpeed = (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
+                            }
+                        }
+                    };
+
+                    xhr.onload = () => {
+                        if (xhr.status === 200 || xhr.status === 204) {
+                            this.uploading = false;
+                            this.uploadSuccess = true;
+                            this.uploadProgress = 100;
+                            this.videoUrl = data.public_url;
+                        } else {
+                            this.uploading = false;
+                            this.uploadError = 'Upload to Cloudflare R2 returned status ' + xhr.status + '. Ensure your R2 bucket CORS allows PUT requests.';
+                        }
+                    };
+
+                    xhr.onerror = () => {
+                        this.uploading = false;
+                        this.uploadError = 'Connection failed. Ensure Cloudflare R2 bucket CORS policy allows PUT from this origin.';
+                    };
+
+                    xhr.send(file);
+                })
+                .catch(err => {
+                    this.uploading = false;
+                    this.uploadError = err.message || 'Failed to request upload signature.';
+                });
+            }
+        };
+    }
+    </script>
 </x-admin-layout>
+
